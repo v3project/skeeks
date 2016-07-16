@@ -1,0 +1,28 @@
+{
+    "name": "v3toys/skeeks",
+    "description": "Module for skeeks cms",
+    "keywords": ["module", "cms", "skeeks", "sx", "app", "yii2"],
+    "homepage": "http://www.skeeks.com/",
+    "type": "yii2-extension",
+    "license": "GPL-3.0+",
+    "support": {
+        "issues": "http://cms.skeeks.com",
+        "source": "https://github.com/v3toys/skeeks"
+    },
+    "authors": [
+        {
+            "name": "Semenov Alexander",
+            "email": "semenov@skeeks.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "skeeks/cms": "*",
+        "v3toys/yii2-api": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "v3toys\\skeeks\\": ""
+        }
+    }
+}
