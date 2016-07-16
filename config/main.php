@@ -8,6 +8,11 @@ return [
             'class' => 'v3toys\yii2\api\Api'
         ],
 
+        'v3toysSettings' =>
+        [
+            'class' => 'v3toys\skeeks\components\V3toysSettings'
+        ],
+
         'i18n' => 
         [
             'translations' =>
