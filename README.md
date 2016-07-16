@@ -25,10 +25,17 @@ Configuration app
 
 'components' =>
 [
-    'i18n' => [
+    'v3toysApi' =>
+    [
+        'class' => 'v3toys\yii2\api\Api'
+    ],
+
+    'i18n' =>
+    [
         'translations' =>
         [
-            'v3toys/skeeks' => [
+            'v3toys/skeeks' =>
+            [
                 'class'             => 'yii\i18n\PhpMessageSource',
                 'basePath'          => '@v3toys/skeeks/messages',
                 'fileMap' => [
@@ -38,10 +45,12 @@ Configuration app
         ]
     ],
 ],
+
 'modules' =>
 [
-    'v3toysModule' => [
-        'class'         => 'v3toys\skeeks\V3toysModule',
+    'v3toys' =>
+    [
+        'class'                 => 'v3toys\skeeks\V3toysModule',
     ]
 ]
 
