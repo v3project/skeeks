@@ -35,10 +35,10 @@ return
                         "url"       => ["v3toys/admin-api-orders"],
                     ],
 
-                    [
+                    /*[
                         "label"     => \Yii::t('v3toys/skeeks', "Заявки"),
                         "url"       => ["v3toys/admin-api-messages"],
-                    ],
+                    ],*/
                     [
                         "label"     => \Yii::t('v3toys/skeeks', "Товары"),
                         "url"       => ["v3toys/admin-api-products"],
