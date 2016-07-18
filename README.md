@@ -61,6 +61,27 @@ Configuration app
 
 ```
 
+
+Yupe import
+----------
+
+```
+php yii help v3toys/yupe-import/run
+
+/*
+--color
+
+--httpAuthLogin:  (defaults to 'furreal')
+
+--httpAuthPassword:  (defaults to 'PazzFrr')
+
+--yupeLogin, -l:  (defaults to 'admin')
+
+--yupePassword, -p:  (defaults to 'qwe12345')
+
+--yupeSite, -s:  (defaults to 'http://furreal.ru')
+*/
+```
 ___
 
 > [![skeeks!](https://gravatar.com/userimage/74431132/13d04d83218593564422770b616e5622.jpg)](http://skeeks.com)  
