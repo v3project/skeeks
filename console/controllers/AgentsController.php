@@ -7,6 +7,7 @@
  */
 namespace v3toys\skeeks\console\controllers;
 
+use skeeks\cms\shop\models\ShopCmsContentElement;
 use yii\console\Controller;
 
 /**
@@ -23,6 +24,17 @@ class AgentsController extends Controller
     public function actionProductsUpdate()
     {
         //TODO:: реализовать
+
+        $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
+        if (!$contentIds)
+        {
+            $this->stdout("Import products from yupe: {$total}\n", Console::BOLD);
+        }
+
+        //ShopCmsContentElement::find()->where(['content_id' => ])
+
+
+
     }
 
     /**

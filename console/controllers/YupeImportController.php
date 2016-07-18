@@ -95,6 +95,7 @@ class YupeImportController extends Controller
         $counter = 0;
         foreach ($products as $product)
         {
+            //print_R($product);die;
             $counter ++;
             Console::updateProgress($counter, $total);
 
@@ -155,6 +156,24 @@ class YupeImportController extends Controller
             } catch (\Exception $e) {
                 $message = 'Not upload image to: ' . $cmsContentElement->id . " ({$realUrl})";
                 $this->stdout("\t{$message}\n", Console::FG_RED);
+            }
+        }
+
+        if (ArrayHelper::getValue($product, 'images') && !$cmsContentElement->images) {
+            foreach (ArrayHelper::getValue($product, 'images') as $realUrl) {
+                try {
+                    $file = \Yii::$app->storage->upload($realUrl, [
+                        'name' => $cmsContentElement->name
+                    ]);
+                    $cmsContentElement->link('images', $file);
+                    $this->stdout("\tadded additional image\n", Console::FG_GREEN);
+
+                } catch (\Exception $e) {
+                    //\Yii::error('Not upload additional image to: ' . $cmsContentElement->id . " ({$realUrl})", 'import');
+                    $message = 'Not upload additional image to: ' . $cmsContentElement->id . " ({$realUrl})";
+                    $this->stdout("\t{$message}\n", Console::FG_RED);
+
+                }
             }
         }
 
@@ -340,7 +359,7 @@ class YupeImportController extends Controller
 
         $this->_httpAuth($request2);
         $request2->addHeaders([
-            'Cookie' => 'YUPE_TOKEN=7d8ffa6b5a98b6905e35456cffb622a978b8a173s%3A40%3A%224ee84dcbabd0a1857daac48491638fa468579140%22%3B; PHPSESSID=doncpfguq7vgnas52439vcv2d0; 59249ba4b622b81d4b624a773379de0f=9aed9897e389284a2b834ed9725cd73bb39554c1s%3A146%3A%22b00d2395c278b1daf793c80aa836fb68b7f1ccc5a%3A4%3A%7Bi%3A0%3Bs%3A1%3A%223%22%3Bi%3A1%3Bs%3A5%3A%22admin%22%3Bi%3A2%3Bi%3A604800%3Bi%3A3%3Ba%3A1%3A%7Bs%3A2%3A%22at%22%3Bs%3A32%3A%22A2xBppokQT8RIgD_rUYYw4m2qysDNT6B%22%3B%7D%7D%22%3B; language=57e4c243f03feb8e3223fe2dfd2328d0f5fc69dcs%3A2%3A%22ru%22%3B',
+            'Cookie' => 'YUPE_TOKEN=1865c79bb5ff02241aff75cce1d86fccbb3a2dd2s%3A40%3A%225bf9c4fee3d2c656026c377ef7f77c1b5030830a%22%3B; PHPSESSID=2ro87t1gu2rum0frhbrk4ubag0; language=57e4c243f03feb8e3223fe2dfd2328d0f5fc69dcs%3A2%3A%22ru%22%3B',
         ]);
 
         $response = $request2->send();

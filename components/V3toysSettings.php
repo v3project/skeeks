@@ -9,6 +9,8 @@ namespace v3toys\skeeks\components;
 use skeeks\cms\base\Component;
 
 use skeeks\cms\helpers\StringHelper;
+use skeeks\cms\models\CmsContent;
+use skeeks\widget\chosen\Chosen;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\base\Event;
@@ -37,18 +39,25 @@ class V3toysSettings extends Component
      */
     public $v3toysIdPropertyName = 'vendorId';
 
+    /**
+     * @var array Контент свяазанный с v3project
+     */
+    public $content_ids = [];
+
 
     public function rules()
     {
         return ArrayHelper::merge(parent::rules(), [
             ['v3toysIdPropertyName', 'string'],
+            ['content_ids', 'safe'],
         ]);
     }
 
     public function attributeLabels()
     {
         return ArrayHelper::merge(parent::attributeLabels(), [
-            'v3toysIdPropertyName'                => 'Название параметра у товаров — v3toys id',
+            'v3toysIdPropertyName'      => 'Название параметра у товаров — v3toys id',
+            'content_ids'               => 'Контент свяазанный с v3project',
         ]);
     }
 
@@ -56,6 +65,7 @@ class V3toysSettings extends Component
     {
         return ArrayHelper::merge(parent::attributeHints(), [
             'v3toysIdPropertyName' => 'Как называется свойство товаров, в котором храниться id товара из системы v3toys',
+            'content_ids' => 'Обновление наличия и цен будет происходить у элементов этого выбранного контента',
         ]);
     }
 
@@ -63,6 +73,10 @@ class V3toysSettings extends Component
     {
         echo $form->fieldSet('Общие настройки');
             echo $form->field($this, 'v3toysIdPropertyName');
+            echo $form->field($this, 'content_ids')->widget(Chosen::className(),[
+                'multiple' => true,
+                'items' => CmsContent::getDataForSelect(),
+            ]);
         echo $form->fieldSetEnd();
 
     }
