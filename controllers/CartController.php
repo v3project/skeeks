@@ -7,6 +7,7 @@
  */
 namespace v3toys\skeeks\controllers;
 use skeeks\cms\base\Controller;
+use v3toys\skeeks\forms\CreateOrderForm;
 
 /**
  * Class CartController
@@ -25,6 +26,11 @@ class CartController extends Controller
     public function actionCheckout()
     {
         $this->view->title = \Yii::t('skeeks/shop/app', 'Checkout').' | '.\Yii::t('skeeks/shop/app', 'Shop');
-        return $this->render($this->action->id);
+
+        $modelForm = new CreateOrderForm();
+
+        return $this->render($this->action->id, [
+            'model' => $modelForm
+        ]);
     }
 }

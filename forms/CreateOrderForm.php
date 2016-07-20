@@ -5,7 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 19.07.2016
  */
-namespace v3toys\skeeks\forms\CreateOrderForm;
+namespace v3toys\skeeks\forms;
 
 use yii\base\Model;
 
@@ -19,10 +19,14 @@ use yii\base\Model;
  *
  *
  * Class CreateOrderForm
- * @package v3toys\skeeks\forms\CreateOrderForm
+ * @package v3toys\skeeks\forms
  */
 class CreateOrderForm extends Model
 {
+    const SHIPPING_METHOD_COURIER   = 'COURIER';
+    const SHIPPING_METHOD_PICKUP    = 'PICKUP';
+    const SHIPPING_METHOD_POST      = 'POST';
+
     /**
      * @var string имя клиента
      */
@@ -55,41 +59,170 @@ class CreateOrderForm extends Model
      */
     public $shipping_method;
 
+        /**
+        *   shipping_data
+                если
+                shipping_method
+                =
+                COURIER
+         */
+    /**
+     *      город, в который нужно осуществить доставку
+            доступны только следующие значения:
+            Москва до МКАД
+            Московская область
+            Санкт-Петербург до КАД
+            Ленинградская область
+            Брянск
+            Владимир
+            Вологда
+            Екатеринбург
+            Иваново
+            Казань
+            Калуга
+            Кострома
+            Курск
+            Нижний Новгород
+            Орел
+            Ростов-на-Дону
+            Рязань
+            Тверь
+            Тула
+            Тюмень
+            Челябинск
+            Ярославль
+     * @var string
+     */
+    public $courier_city;
 
     /**
-     * @var
-     */
-    public $city;
-    /**
      * адрес доставки в городе
-     * @var
+     *
+     * @var  string
      */
-    public $address;
+    public $courier_address;
+
+
+
+        /**
+         *  shipping_data
+            если
+            shipping_method
+            =
+            PICKUP
+         */
+
+
+
+    /**
+     * город, в котором будет самовывоз
+     *
+     * доступны только следующие значения:
+            Москва
+            Санкт-Петербург
+            Великий Новгород
+            Волгоград
+            Брянск
+            Воронеж
+            Выборг
+            Вологда
+            Иваново
+            Екатеринбург
+            Казань
+            Калуга
+            Киров
+            Краснодар
+            Нижний Новгород
+            Новороссийск
+            Омск
+            Орел
+            Пермь
+            Псков
+            Ростов-на-Дону
+            Рязань
+            Смоленск
+            Самара
+            Тверь
+            Тула
+            Тюмень
+            Челябинск
+            Ярославль
+            Новосибирск
+            Астрахань
+            Белгород
+            Курск
+            Ступино
+            Солнечногорск
+            Сергиев Посад
+     *
+     * @var string
+     */
+    public $pickup_city;
+
     /**
      *  номер пункта самовывоза в выбранном городе (номера смотреть здесь)
         если в выбранном городе только один пункт самовывоза - указать значение 1
      *
-     * @var
+     * @var int
      */
-    public $point_id;
+    public $pickup_point_id;
+
+        /**
+         *  shipping_data
+            если
+            shipping_method
+            =
+            POST
+         */
 
     /**
      * почтовый индекс
-     * @var
+     * @var string
      */
-    public $index;
+    public $post_index;
     /**
      * 	регион
-     * @var
+     * @var string
      */
-    public $region;
+    public $post_region;
 
     /**
      * область
-     * @var
+     * @var string
      */
-    public $area;
-    public $recipient;
+    public $post_area;
+
+    /**
+     * город
+     * @var string
+     */
+    public $post_city;
+
+    /**
+     * адрес в городе
+     * @var string
+     */
+    public $post_address;
+
+    /**
+     * полное ФИО получателя
+     * @var string
+     */
+    public $post_recipient;
+
+    /**
+     * Доступные методы доставки
+     *
+     * @return array
+     */
+    static public function getShippingMethods()
+    {
+        return [
+            static::SHIPPING_METHOD_COURIER => 'доставка курьером',
+            static::SHIPPING_METHOD_PICKUP  => 'самовывоз',
+            static::SHIPPING_METHOD_POST    => 'доставка Почтой России',
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -100,12 +233,23 @@ class CreateOrderForm extends Model
             [['name', 'phone', 'email'], 'required'],
             [['email'], 'email'],
             [['shipping_method'], 'string'],
-            [['comment'], 'string'],
-            [['address'], 'string'],
-            [['index'], 'string'],
-            [['region'], 'string'],
-            [['recipient'], 'string'],
-            [['point_id'], 'integer'],
+            [['shipping_method'], 'in', 'range' => array_keys(static::getShippingMethods())],
+
+            //Доставка курьером
+            [['courier_city'], 'string'],
+            [['courier_address'], 'string'],
+
+            //Самовывоз
+            [['pickup_city'], 'string'],
+            [['pickup_point_id'], 'integer'],
+
+            //Почта
+            [['post_index'], 'string'],
+            [['post_region'], 'string'],
+            [['post_area'], 'string'],
+            [['post_city'], 'string'],
+            [['post_address'], 'string'],
+            [['post_recipient'], 'string'],
         ];
     }
 
@@ -120,8 +264,19 @@ class CreateOrderForm extends Model
             'email'                     => 'Email',
             'shipping_method'           => 'Доставка',
             'comment'                   => 'Комментарий',
-            'city'                      => 'Город',
-            'address'                   => 'Город',
+
+            'courier_city'              => 'Город',
+            'courier_address'           => 'Адрес',
+
+            'pickup_city'               => 'Город',
+            'pickup_point_id'           => 'Пункт самовывоза',
+
+            'post_index'                => 'Индекс',
+            'post_region'               => 'Регион',
+            'post_area'                 => 'Область',
+            'post_city'                 => 'Город',
+            'post_address'              => 'Адрес',
+            'post_recipient'            => 'полное ФИО получателя',
         ];
     }
 }
