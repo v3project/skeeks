@@ -7,6 +7,8 @@
  */
 namespace v3toys\skeeks\forms;
 
+use skeeks\cms\models\CmsUser;
+use skeeks\cms\validators\PhoneValidator;
 use yii\base\Model;
 
 /**
@@ -17,6 +19,8 @@ use yii\base\Model;
  *      getOrderDataById    — 3.1.7 Метод getOrderDataById - получение данных заказа по номеру
  *      createOrder         — 3.1.1 Метод createOrder - создает заказ и возвращает его номер
  *
+ *
+ * @property $user CmsUser
  *
  * Class CreateOrderForm
  * @package v3toys\skeeks\forms
@@ -165,7 +169,7 @@ class CreateOrderForm extends Model
      *
      * @var int
      */
-    public $pickup_point_id;
+    public $pickup_point_id = 1;
 
         /**
          *  shipping_data
@@ -211,6 +215,19 @@ class CreateOrderForm extends Model
     public $post_recipient;
 
     /**
+     *  признак оформления заказ со статусом "Прин. ночь"
+        возможные значения:
+     * @var boolean
+     */
+    public $is_call_me_15_min = true;
+
+
+    /**
+     * @var null|CmsUser
+     */
+    public $_user = null;
+
+    /**
      * Доступные методы доставки
      *
      * @return array
@@ -230,8 +247,10 @@ class CreateOrderForm extends Model
     public function rules()
     {
         return [
-            [['name', 'phone', 'email'], 'required'],
+            [['name', 'phone', 'email', 'shipping_method'], 'required'],
             [['email'], 'email'],
+            [['phone'], 'string'],
+            [['phone'], PhoneValidator::className()],
             [['shipping_method'], 'string'],
             [['shipping_method'], 'in', 'range' => array_keys(static::getShippingMethods())],
 
@@ -250,8 +269,40 @@ class CreateOrderForm extends Model
             [['post_city'], 'string'],
             [['post_address'], 'string'],
             [['post_recipient'], 'string'],
+
+            [['is_call_me_15_min'], 'boolean'],
+
+
+            [['email'], 'unique',
+                'targetClass'       => \Yii::$app->user->identityClass,
+                'targetAttribute'   => 'email',
+                'message'           => 'Отлично, вы уже зарегистрированны у нас. Авторизуйтесь на сайте.',
+                'filter'            => function ($query) {
+                    if ($this->user)
+                    {
+                        $query->andWhere(['!=', 'email', $this->user->email]);
+                    }
+
+                }
+                /*'when' => function ($model) {
+                    return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
+                }*/
+            ],
+
+            [['courier_city', 'courier_address'], 'required', 'when' => function ($model) {
+                return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
+            }],
+
+            [['pickup_city', 'pickup_point_id'], 'required', 'when' => function ($model) {
+                return $model->shipping_method == static::SHIPPING_METHOD_PICKUP;
+            }],
+
+            [['post_index', 'post_region', 'post_city', 'post_address', 'post_recipient'], 'required', 'when' => function ($model) {
+                return $model->shipping_method == static::SHIPPING_METHOD_POST;
+            }]
         ];
     }
+
 
     /**
      * @return array
@@ -277,6 +328,60 @@ class CreateOrderForm extends Model
             'post_city'                 => 'Город',
             'post_address'              => 'Адрес',
             'post_recipient'            => 'полное ФИО получателя',
+
+            'is_call_me_15_min'         => 'Готов принять звонок в течении 15 минут',
         ];
     }
+
+
+    /**
+     * @return $this
+     */
+    public function loadDefaultValues()
+    {
+        if ($this->user)
+        {
+            $this->email = $this->user->email;
+            $this->name = $this->user->displayName;
+            $this->phone = $this->user->phone;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function processCreateOrder()
+    {
+        if (!$this->user)
+        {
+            //create user
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return \common\models\User|mixed|null|\skeeks\cms\models\User|\yii\web\IdentityInterface
+     */
+    public function getUser()
+    {
+        if ($this->_user === null)
+        {
+            $this->_user = \Yii::$app->user->identity;
+        }
+
+        return $this->_user;
+    }
+    /**
+     * @return \common\models\User|mixed|null|\skeeks\cms\models\User|\yii\web\IdentityInterface
+     */
+    public function setUser($user)
+    {
+        $this->_user = $user;
+        return $this;
+    }
+
+
 }
