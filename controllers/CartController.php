@@ -9,8 +9,10 @@ namespace v3toys\skeeks\controllers;
 use skeeks\cms\base\Controller;
 use skeeks\cms\helpers\RequestResponse;
 use v3toys\skeeks\forms\CreateOrderForm;
+use v3toys\skeeks\V3toysModule;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * Class CartController
@@ -58,6 +60,25 @@ class CartController extends Controller
             if ($modelForm->load(\Yii::$app->request->post()) && $modelForm->validate())
             {
                 //create order
+                /*try
+                {*/
+                    $order = $modelForm->processCreateOrder();
+
+                    $rr->message = 'Заказ успешно создан';
+                    $rr->success = true;
+                    $rr->redirect = Url::to(['/shop/order/view', 'id' => $order->id]);
+                    $rr->data = [
+                        'order' => $order
+                    ];
+
+
+                /*} catch (\Exception $e)
+                {
+                    $rr->message = "Ошибка создания заказа: " . $e->getMessage();
+                    $rr->success = false;
+
+                    \Yii::error($rr->message, V3toysModule::className());
+                }*/
             } else
             {
                 $rr->message = 'Проверьте правильность заполнения полей';
