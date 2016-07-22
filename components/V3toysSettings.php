@@ -10,6 +10,7 @@ use skeeks\cms\base\Component;
 
 use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\models\CmsContent;
+use skeeks\cms\shop\models\ShopOrderStatus;
 use skeeks\cms\shop\models\ShopPersonType;
 use skeeks\widget\chosen\Chosen;
 use Yii;
@@ -59,6 +60,12 @@ class V3toysSettings extends Component
      */
     public $content_ids = [];
 
+    /**
+     * @var string Статус заказа, когда он отправлен в Submitted
+     */
+    public $v3toysOrderStatusSubmitted;
+
+
 
     public function rules()
     {
@@ -67,6 +74,7 @@ class V3toysSettings extends Component
             ['content_ids', 'safe'],
             ['v3toysShopPersonTypeId', 'integer'],
             ['affiliate_key', 'string'],
+            ['v3toysOrderStatusSubmitted', 'string'],
         ]);
     }
 
@@ -77,6 +85,7 @@ class V3toysSettings extends Component
             'content_ids'                   => 'Контент свяазанный с v3project',
             'v3toysShopPersonTypeId'        => 'Профиль покупателя v3project',
             'affiliate_key'                 => 'Код аффилиата полученный в v3project',
+            'v3toysOrderStatusSubmitted'    => 'Статус заказа, когда он отправлен в Submitted',
         ]);
     }
 
@@ -104,6 +113,9 @@ class V3toysSettings extends Component
             ]);
             echo $form->field($this, 'v3toysShopPersonTypeId')->widget(Chosen::className(),[
                 'items' => ArrayHelper::map(ShopPersonType::find()->all(), 'id', 'name'),
+            ]);
+            echo $form->field($this, 'v3toysOrderStatusSubmitted')->widget(Chosen::className(),[
+                'items' => ArrayHelper::map(ShopOrderStatus::find()->all(), 'code', 'name'),
             ]);
         echo $form->fieldSetEnd();
     }

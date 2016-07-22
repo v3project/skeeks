@@ -7,7 +7,12 @@
  */
 namespace v3toys\skeeks\console\controllers;
 
+use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\shop\models\ShopCmsContentElement;
+use skeeks\cms\shop\models\ShopOrder;
+use skeeks\cms\shop\models\ShopOrderStatus;
+use v3toys\skeeks\helpers\ShopOrderHelper;
+use v3toys\skeeks\V3toysModule;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
@@ -102,7 +107,40 @@ class AgentsController extends Controller
      */
     public function actionSubmitNewOrders()
     {
-        //TODO:: реализовать
+        if ($orders = ShopOrder::find()->where(['status_code' => ShopOrderStatus::STATUS_CODE_START])->all())
+        {
+            $totalOrders = count($orders);
+            $this->stdout("Заказов к отправке в v3toys: {$totalOrders}\n", Console::BOLD);
+
+            //Есть заказы к отрпавке
+            /**
+             * @var ShopOrder $order
+             */
+            foreach ($orders as $order)
+            {
+                $orderHelper = new ShopOrderHelper(['shopOrder' => $order]);
+                $response = \Yii::$app->v3toysApi->createOrder($orderHelper->getApiRequestData());
+
+                if ($response->isError)
+                {
+                    $message = "Заказ #{$order->id} не отправлен в апи: {$response->error_code} {$response->error_message}";
+                    \Yii::error($message, V3toysModule::className());
+                    $this->stdout("\t$message\n", Console::FG_RED);
+                }
+
+                if ($response->isOk)
+                {
+                    $order->status_code = \Yii::$app->v3toysSettings->v3toysOrderStatusSubmitted;
+                    $order->save();
+
+                    $v3ToysOrderId = ArrayHelper::getValue((array) $response->data, 'order_id');
+                    $this->stdout("Заказ отправлен в v3toys и получил #{$v3ToysOrderId}\n", Console::FG_GREEN);
+                }
+            }
+        } else
+        {
+            $this->stdout("Нет заказов к отправке в v3toys\n", Console::BOLD);
+        }
     }
 
     /**
