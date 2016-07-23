@@ -51,6 +51,7 @@ class CartController extends Controller
      */
     public function actionFinish()
     {
+
         if (!$key = \Yii::$app->request->get('key'))
         {
             throw new NotFoundHttpException('Заказ не найден');
@@ -60,6 +61,9 @@ class CartController extends Controller
         {
             throw new NotFoundHttpException("Заказ #{$key} не найден");
         }
+
+        $this->view->title = "Заказ номер {$v3toysOrder->id} успешно оформлен";
+
 
         return $this->render($this->action->id, ['model' => $v3toysOrder]);
     }
