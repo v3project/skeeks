@@ -8,10 +8,11 @@
 namespace v3toys\skeeks\controllers;
 use skeeks\cms\base\Controller;
 use skeeks\cms\helpers\RequestResponse;
-use v3toys\skeeks\forms\CreateOrderForm;
+use v3toys\skeeks\models\V3toysOrder;
 use v3toys\skeeks\V3toysModule;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\helpers\Url;
 
 /**
@@ -50,26 +51,26 @@ class CartController extends Controller
     {
         $this->view->title = \Yii::t('skeeks/shop/app', 'Checkout').' | '.\Yii::t('skeeks/shop/app', 'Shop');
 
-        $modelForm = new CreateOrderForm();
-        $modelForm->loadDefaultValues();
+        $v3toysOrder = V3toysOrder::createCurrent();
+        $v3toysOrder->loadDefaultValues();
 
         $rr = new RequestResponse();
 
         if ($rr->isRequestAjaxPost())
         {
-            if ($modelForm->load(\Yii::$app->request->post()) && $modelForm->validate())
+            if ($v3toysOrder->load(\Yii::$app->request->post()) && $v3toysOrder->save())
             {
                 //create order
                 /*try
                 {*/
-                    $order = $modelForm->processCreateOrder();
+                    //$order = $v3toysOrder->processCreateOrder();
 
                     $rr->message = 'Заказ успешно создан';
                     $rr->success = true;
-                    $rr->redirect = Url::to(['/shop/order/view', 'id' => $order->id]);
+                    /*$rr->redirect = Url::to(['/v3toys/order/view', 'id' => $order->id]);
                     $rr->data = [
                         'order' => $order
-                    ];
+                    ];*/
 
 
                 /*} catch (\Exception $e)
@@ -81,7 +82,7 @@ class CartController extends Controller
                 }*/
             } else
             {
-                $rr->message = 'Проверьте правильность заполнения полей';
+                $rr->message = 'Проверьте правильность заполнения полей: ' . Json::encode($v3toysOrder->getFirstErrors());
                 $rr->success = false;
             }
 
@@ -89,7 +90,7 @@ class CartController extends Controller
         }
 
         return $this->render($this->action->id, [
-            'model' => $modelForm
+            'model' => $v3toysOrder
         ]);
     }
 
@@ -100,7 +101,7 @@ class CartController extends Controller
     public function actionCheckoutValidate()
     {
         $rr = new RequestResponse();
-        $modelForm = new CreateOrderForm();
-        return $rr->ajaxValidateForm($modelForm);
+        $v3toysOrder = V3toysOrder::createCurrent();
+        return $rr->ajaxValidateForm($v3toysOrder);
     }
 }

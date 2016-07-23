@@ -31,7 +31,7 @@ return
                     ],
 
                     [
-                        "label"     => \Yii::t('v3toys/skeeks', "Заказы"),
+                        "label"     => \Yii::t('v3toys/skeeks', "Заказы по телефону"),
                         "url"       => ["v3toys/admin-api-orders"],
                     ],
 
@@ -40,6 +40,11 @@ return
                         "url"       => ["v3toys/admin-api-products"],
                     ],
                 ]
+            ],
+
+            [
+                "label"     => "Заказы",
+                "url"       => ["v3toys/admin-order"],
             ],
 
             [

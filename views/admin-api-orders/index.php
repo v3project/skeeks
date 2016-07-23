@@ -10,7 +10,7 @@ $response = \Yii::$app->v3toysApi->send('getOrdersIdsByPeriod', [
     'start' => "2014-11-01 00:00:00"
 ]);
 ?>
-<p>2.1.1 Метод getOrdersIdsByPeriod - получение списка номеров заказов за период времени</p>
+<p>3.1.6 Метод getOrdersIdsByPeriod - получение списка номеров заказов за период времени, оформленных по телефону</p>
 
 <? if ($response->isError) : ?>
     <? echo $response->error_code; ?>

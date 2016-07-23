@@ -12,6 +12,7 @@ use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopOrder;
 use skeeks\cms\shop\models\ShopOrderStatus;
 use v3toys\skeeks\helpers\ShopOrderHelper;
+use v3toys\skeeks\models\V3toysOrder;
 use v3toys\skeeks\V3toysModule;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
@@ -107,19 +108,18 @@ class AgentsController extends Controller
      */
     public function actionSubmitNewOrders()
     {
-        if ($orders = ShopOrder::find()->where(['status_code' => ShopOrderStatus::STATUS_CODE_START])->all())
+        if ($orders = V3toysOrder::find()->where(['v3toys_order_id' => null])->all())
         {
             $totalOrders = count($orders);
             $this->stdout("Заказов к отправке в v3toys: {$totalOrders}\n", Console::BOLD);
 
             //Есть заказы к отрпавке
             /**
-             * @var ShopOrder $order
+             * @var V3toysOrder $order
              */
             foreach ($orders as $order)
             {
-                $orderHelper = new ShopOrderHelper(['shopOrder' => $order]);
-                $response = \Yii::$app->v3toysApi->createOrder($orderHelper->getApiRequestData());
+                $response = \Yii::$app->v3toysApi->createOrder($order->getApiRequestData());
 
                 if ($response->isError)
                 {
@@ -130,11 +130,19 @@ class AgentsController extends Controller
 
                 if ($response->isOk)
                 {
-                    $order->status_code = \Yii::$app->v3toysSettings->v3toysOrderStatusSubmitted;
-                    $order->save();
 
                     $v3ToysOrderId = ArrayHelper::getValue((array) $response->data, 'order_id');
-                    $this->stdout("Заказ отправлен в v3toys и получил #{$v3ToysOrderId}\n", Console::FG_GREEN);
+                    $order->v3toys_order_id = $v3ToysOrderId;
+                    if ($order->save())
+                    {
+                        $this->stdout("Заказ отправлен в v3toys и получил #{$v3ToysOrderId}\n", Console::FG_GREEN);
+                    } else
+                    {
+                        $message = "Заказ отправлен в v3toys и получил #{$v3ToysOrderId}, но не сохранен в нашей базе\n";
+                        \Yii::warning($message, V3toysModule::className());
+                        $this->stdout($message, Console::FG_YELLOW);
+                    }
+
                 }
             }
         } else

@@ -32,6 +32,8 @@ class m160723_100558_create_table__v3toys_order extends Migration
             'created_at'            => $this->integer(),
             'updated_at'            => $this->integer(),
 
+            'user_id'               => $this->integer(),
+
             'shop_order_id'         => $this->integer(),
             'v3toys_order_id'       => $this->integer(),
 
@@ -39,14 +41,21 @@ class m160723_100558_create_table__v3toys_order extends Migration
             'phone'                 => $this->string(50)->notNull()->comment('Телефон'),
             'email'                 => $this->string(255)->notNull()->comment('Email'),
             'comment'               => $this->text()->comment('Комментарий'),
+
             'is_call_me_15_min'     => $this->integer(1)->notNull()->defaultValue(1)->comment('Готов принять звонок в течении 15 минут'),
+
+            'products'              => $this->text()->comment('Товары'),
+
+            'discount'              => $this->decimal(18, 2)->comment('Скидка на заказ, указывается в рублях, без копеек'),
+            'shipping_cost'         => $this->decimal(18, 2)->comment('стоимость доставки'),
+
             'shipping_method'       => $this->string(20)->notNull()->comment('Доставка'),
 
             'courier_city'          => $this->string(255)->comment('Город'),
             'courier_address'       => $this->string(255)->comment('Адрес'),
 
             'pickup_city'           => $this->string(255)->comment('Город'),
-            'pickup_point_id'       => $this->string(255)->comment('Пункт самовывоза'),
+            'pickup_point_id'       => $this->string(255)->defaultValue(1)->comment('Пункт самовывоза'),
 
             'post_index'            => $this->string(255)->comment('Индекс'),
             'post_region'           => $this->string(255)->comment('Регион'),
@@ -54,7 +63,6 @@ class m160723_100558_create_table__v3toys_order extends Migration
             'post_city'             => $this->string(255)->comment('Город'),
             'post_address'          => $this->string(255)->comment('Адрес'),
             'post_recipient'        => $this->string(255)->comment('Полное ФИО получателя'),
-
 
         ], $tableOptions);
 
@@ -81,6 +89,11 @@ class m160723_100558_create_table__v3toys_order extends Migration
         $this->addForeignKey(
             'v3toys_order__updated_by', "{{%v3toys_order}}",
             'updated_by', '{{%cms_user}}', 'id', 'SET NULL', 'SET NULL'
+        );
+
+        $this->addForeignKey(
+            'v3toys_order__user_id', "{{%v3toys_order}}",
+            'user_id', '{{%cms_user}}', 'id', 'SET NULL', 'SET NULL'
         );
 
         $this->addForeignKey(
