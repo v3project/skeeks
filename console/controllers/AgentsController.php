@@ -92,7 +92,38 @@ class AgentsController extends Controller
      */
     public function actionOrdersUpdate()
     {
-        //TODO:: реализовать
+        if ($orders = V3toysOrder::find()->all())
+        {
+            $totalOrders = count($orders);
+            $this->stdout("Заказов к обновлению: {$totalOrders}\n", Console::BOLD);
+            /**
+             * @var $order V3toysOrder
+             */
+            foreach ($orders as $order)
+            {
+                $response = \Yii::$app->v3toysApi->getOrderStatusById($order->id);
+
+                if ($response->isOk)
+                {
+                    $newStatus = ArrayHelper::getValue($response->data, 'status_id');
+                    if ((int) $newStatus != (int) $order->v3toys_status_id)
+                    {
+                        $order->v3toys_status_id = $newStatus;
+                        if ($order->save())
+                        {
+                            $this->stdout("Заказ #{$order->id} новый статус : {$newStatus}\n", Console::FG_GREEN);
+                        } else
+                        {
+                            $this->stdout("Заказ #{$order->id} не обновлен статус : {$newStatus}\n", Console::FG_RED);
+                        }
+                    }
+
+                } else
+                {
+                    $this->stdout("Ошибка апи : {$response->error_message}\n", Console::FG_RED);
+                }
+            }
+        }
     }
 
     /**

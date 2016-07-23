@@ -53,6 +53,8 @@ use Yii;
  * @property string $post_city
  * @property string $post_address
  * @property string $post_recipient
+ * @property integer $v3toys_status_id
+ * @property string $key
  *
  * @property ShopOrder $shopOrder
  * @property CmsUser $user
@@ -196,9 +198,9 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         return ArrayHelper::merge(
         [
-            [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'shop_order_id', 'v3toys_order_id', 'is_call_me_15_min'], 'integer'],
+            [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'shop_order_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min'], 'integer'],
             [['name', 'phone', 'email', 'shipping_method'], 'required'],
-            [['comment'], 'string'],
+            [['comment', 'key'], 'string'],
             [['discount', 'shipping_cost'], 'number'],
             [['name', 'email', 'courier_city', 'courier_address', 'pickup_city', 'pickup_point_id', 'post_index', 'post_region', 'post_area', 'post_city', 'post_address', 'post_recipient'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 50],
@@ -210,6 +212,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
         ],
 
         [
+            [['key'], 'default', 'value' => \Yii::$app->security->generateRandomString()],
             [['products'], 'safe'],
             [['products'], 'required'],
             [['email'], 'email'],
@@ -517,32 +520,13 @@ class V3toysOrder extends \skeeks\cms\models\Core
         return $this->hasOne(CmsUser::className(), ['id' => 'updated_by']);
     }
 
-
     /**
-     * @return V3toysOrderStatus
+     * @return \yii\db\ActiveQuery
      */
     public function getStatus()
     {
-        $response = \Yii::$app->v3toysApi->getOrderStatusById($this->id);
-
-        if ($response->isOk)
-        {
-            return new V3toysOrderStatus([
-                'v3toys_id'     => ArrayHelper::getValue($response->data, 'status_id'),
-                'title'         => ArrayHelper::getValue($response->data, 'status'),
-            ]);
-        } else
-        {
-            return new V3toysOrderStatus([
-                'v3toys_id'     => '',
-                'title'         => 'Заказ создан',
-            ]);
-        }
+        return $this->hasOne(V3toysOrderStatus::className(), ['v3toys_id' => 'v3toys_status_id']);
     }
-
-
-
-
 
     /**
      * @var string имя клиента

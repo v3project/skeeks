@@ -10,6 +10,7 @@ namespace v3toys\skeeks\console\controllers;
 use skeeks\cms\relatedProperties\propertyTypes\PropertyTypeText;
 use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopPersonTypeProperty;
+use v3toys\skeeks\models\V3toysOrderStatus;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
@@ -23,6 +24,55 @@ use yii\helpers\Json;
  */
 class InitController extends Controller
 {
+
+    /**
+     * Инициализация возможных статусов заказов из api
+     */
+    public function actionOrderStatuses()
+    {
+        $response = \Yii::$app->v3toysApi->getStatus();
+
+        if ($response->isError)
+        {
+            $this->stdout("Ошибка апи: {$response->error_message}\n", Console::FG_RED);
+            return false;
+        }
+
+        if ($response->data)
+        {
+            $total = count($response->data);
+            $this->stdout("Статусов в апи: {$total}\n", Console::BOLD);
+
+            foreach ((array) $response->data as $statusData)
+            {
+                $name       = ArrayHelper::getValue($statusData, 'title');
+                $v3toys_id  = ArrayHelper::getValue($statusData, 'id');
+
+                if (V3toysOrderStatus::findOne(['v3toys_id' => $v3toys_id]))
+                {
+                    $this->stdout("\t {$name} - exist\n", Console::FG_YELLOW);
+
+                } else
+                {
+                    $status             = new V3toysOrderStatus();
+                    $status->name       = $name;
+                    $status->v3toys_id  = $v3toys_id;
+
+                    if ($status->save())
+                    {
+                        $this->stdout("\t {$name} - added\n", Console::FG_GREEN);
+                    } else
+                    {
+                        $error = Json::encode($status->getFirstErrors());
+                        $this->stdout("\t {$name} - not added: {$error}\n", Console::FG_RED);
+                    }
+
+                }
+            }
+        }
+
+    }
+
     /**
      * Настройка и инициализация параметров покупателя
      * Команда создает недостающией свойства покупателя
@@ -410,4 +460,5 @@ class InitController extends Controller
         }
 
     }
+
 }

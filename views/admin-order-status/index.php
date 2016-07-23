@@ -25,22 +25,19 @@
         'pjax'              => $pjax,
         'adminController'   => $controller,
         'columns'           => [
-            'id',
+            'v3toys_id',
             'name',
-            'phone',
-            'email',
-            'shipping_method',
-            'shop_order_id',
-            'v3toys_order_id',
-            [
-                'value' => function(\v3toys\skeeks\models\V3toysOrder $v3toysOrder)
-                {
-                    return $v3toysOrder->v3toys_status_id ? $v3toysOrder->status->name : null;
-                }
-            ]
+
         ]
     ]); ?>
 
 <? $pjax::end() ?>
 
+<? \yii\bootstrap\Alert::begin([
+    'options' => [
+        'class' => 'alert-info',
+    ],
+]); ?>
+    <b>php yii v3toys/init/order-statuses</b> - используйте эту комманду для импорта статусов из api
+<? \yii\bootstrap\Alert::end(); ?>
 

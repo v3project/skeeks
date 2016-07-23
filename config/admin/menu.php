@@ -49,12 +49,26 @@ return
 
             [
                 "label"     => "Настройки",
-                "url"       => ["cms/admin-settings", "component" => 'v3toys\skeeks\components\V3toysSettings'],
                 "img"       => ['\skeeks\cms\modules\admin\assets\AdminAsset', 'images/icons/settings-big.png'],
-                "activeCallback"       => function(\skeeks\cms\modules\admin\helpers\AdminMenuItem $adminMenuItem)
-                {
-                    return (bool) (\Yii::$app->request->getUrl() == $adminMenuItem->getUrl());
-                },
+
+                'items' =>
+                [
+                    [
+                        "label"     => "Статусы заказов",
+                        "url"       => ["v3toys/admin-order-status"],
+                    ],
+
+                    [
+                        "label"     => "Настройки проекта",
+                        "url"       => ["cms/admin-settings", "component" => 'v3toys\skeeks\components\V3toysSettings'],
+                        "img"       => ['\skeeks\cms\modules\admin\assets\AdminAsset', 'images/icons/settings-big.png'],
+                        "activeCallback"       => function(\skeeks\cms\modules\admin\helpers\AdminMenuItem $adminMenuItem)
+                        {
+                            return (bool) (\Yii::$app->request->getUrl() == $adminMenuItem->getUrl());
+                        },
+                    ],
+
+                ]
             ],
         ]
     ],

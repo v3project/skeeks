@@ -31,7 +31,7 @@ return [
 
         'urlManager' => [
             'rules' => [
-                '~v3-<_a:(checkout|payment)>'          => 'v3toys/cart/<_a>',
+                '~v3-<_a:(checkout|finish)>'          => 'v3toys/cart/<_a>',
             ]
         ],
     ],

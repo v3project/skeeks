@@ -1,28 +1,55 @@
 <?php
-/**
- * @author Semenov Alexander <semenov@skeeks.com>
- * @link http://skeeks.com/
- * @copyright 2010 SkeekS (СкикС)
- * @date 19.07.2016
- */
+
 namespace v3toys\skeeks\models;
 
 use Yii;
-use yii\base\Model;
 
 /**
- * Class V3toysOrder
- * @package v3toys\skeeks\models
+ * This is the model class for table "{{%v3toys_order_status}}".
+ *
+ * @property integer $id
+ * @property integer $v3toys_id
+ * @property string $name
+ * @property string $description
+ * @property integer $priority
+ * @property string $color
  */
-class V3toysOrderStatus extends Model
+class V3toysOrderStatus extends \yii\db\ActiveRecord
 {
     /**
-     * @var int id в системе v3toys
+     * @inheritdoc
      */
-    public $v3toys_id;
+    public static function tableName()
+    {
+        return '{{%v3toys_order_status}}';
+    }
 
     /**
-     * @var string Русское название
+     * @inheritdoc
      */
-    public $title;
+    public function rules()
+    {
+        return [
+            [['v3toys_id', 'name'], 'required'],
+            [['v3toys_id', 'priority'], 'integer'],
+            [['description'], 'string'],
+            [['name'], 'string', 'max' => 255],
+            [['color'], 'string', 'max' => 32],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('v3toys/skeeks', 'ID'),
+            'v3toys_id' => Yii::t('v3toys/skeeks', 'V3toys ID'),
+            'name' => Yii::t('v3toys/skeeks', 'Name'),
+            'description' => Yii::t('v3toys/skeeks', 'Description'),
+            'priority' => Yii::t('v3toys/skeeks', 'Priority'),
+            'color' => Yii::t('v3toys/skeeks', 'Color'),
+        ];
+    }
 }

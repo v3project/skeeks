@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class CartController
@@ -46,6 +47,25 @@ class CartController extends Controller
 
     /**
      * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionFinish()
+    {
+        if (!$key = \Yii::$app->request->get('key'))
+        {
+            throw new NotFoundHttpException('Заказ не найден');
+        }
+
+        if (!$v3toysOrder = V3toysOrder::findOne(['key' => $key]))
+        {
+            throw new NotFoundHttpException("Заказ #{$key} не найден");
+        }
+
+        return $this->render($this->action->id, ['model' => $v3toysOrder]);
+    }
+
+    /**
+     * @return string
      */
     public function actionCheckout()
     {
@@ -67,11 +87,7 @@ class CartController extends Controller
 
                     $rr->message = 'Заказ успешно создан';
                     $rr->success = true;
-                    /*$rr->redirect = Url::to(['/v3toys/order/view', 'id' => $order->id]);
-                    $rr->data = [
-                        'order' => $order
-                    ];*/
-
+                    $rr->redirect = Url::to(['/v3toys/cart/finish', 'key' => $v3toysOrder->key]);
 
                 /*} catch (\Exception $e)
                 {
@@ -82,7 +98,7 @@ class CartController extends Controller
                 }*/
             } else
             {
-                $rr->message = 'Проверьте правильность заполнения полей: ' . Json::encode($v3toysOrder->getFirstErrors());
+                $rr->message = 'Проверьте правильность заполнения полей';
                 $rr->success = false;
             }
 

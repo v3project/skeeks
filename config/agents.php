@@ -15,5 +15,21 @@ return
         'agent_interval'    => 60,
         'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
         'is_period'         => 'N'
+    ],
+
+    'v3toys/agents/orders-update' =>
+    [
+        'description'       => 'Обновление статусов заказов из v3toys',
+        'agent_interval'    => 60,
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
+    ],
+
+    'v3toys/init/order-statuses' =>
+    [
+        'description'       => 'Импорт статусов из v3toys в базу сайта',
+        'agent_interval'    => 3600*24, //1 раз в сутки
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
     ]
 ];
