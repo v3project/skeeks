@@ -367,6 +367,9 @@ class YupeImportController extends Controller
         if ($response->isOk)
         {
             return (array) Json::decode($response->content);
+        } else
+        {
+            $this->stdout($response->content, Console::FG_RED);
         }
 
         return [];

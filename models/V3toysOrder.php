@@ -122,13 +122,18 @@ class V3toysOrder extends \skeeks\cms\models\Core
             //Если пользователя не было, пробуем создать
             if (!$this->user_id)
             {
+                if (!$user = CmsUser::findOne(['email' => $this->email]))
+                {
+                    $user = $this->_createCmsUser();
+                }
+
                 //create user
-                $newUser = $this->_createCmsUser();
-                $this->user_id = $newUser->id;
+                $this->user_id = $user->id;
                 $this->save();
+                $this->refresh();
 
                 //И сразу же авторизовать
-                \Yii::$app->user->login($this->user, 0);
+                //\Yii::$app->user->login($this->user, 0);
             }
 
 
@@ -151,7 +156,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
 
             if ($fuser->validate())
             {
-                $order = ShopOrder::createOrderByFuser($fuser);
+                $order = ShopOrder::createOrderByFuser($fuser, false);
 
                 $this->shop_order_id = $order->id;
                 $this->save();
@@ -221,7 +226,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
 
             [['is_call_me_15_min'], 'boolean'],
 
-            [['email'], 'unique',
+            /*[['email'], 'unique',
                 'targetClass'       => \Yii::$app->user->identityClass,
                 'targetAttribute'   => 'email',
                 'message'           => 'Отлично, вы уже зарегистрированны у нас. Авторизуйтесь на сайте.',
@@ -232,10 +237,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
                     }
 
                 }
-                /*'when' => function ($model) {
-                    return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
-                }*/
-            ],
+            ],*/
 
             [['courier_city', 'courier_address'], 'required', 'when' => function ($model) {
                 return $model->shipping_method == static::SHIPPING_METHOD_COURIER;

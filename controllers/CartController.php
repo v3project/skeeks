@@ -84,22 +84,27 @@ class CartController extends Controller
         {
             if ($v3toysOrder->load(\Yii::$app->request->post()) && $v3toysOrder->save())
             {
-                //create order
-                /*try
-                {*/
-                    //$order = $v3toysOrder->processCreateOrder();
-
-                    $rr->message = 'Заказ успешно создан';
-                    $rr->success = true;
-                    $rr->redirect = Url::to(['/v3toys/cart/finish', 'key' => $v3toysOrder->key]);
-
-                /*} catch (\Exception $e)
+                try
                 {
-                    $rr->message = "Ошибка создания заказа: " . $e->getMessage();
-                    $rr->success = false;
+                    \Yii::$app->mailer->view->theme->pathMap['@app/mail'][] = '@v3toys/skeeks/mail';
 
-                    \Yii::error($rr->message, V3toysModule::className());
-                }*/
+                    \Yii::$app->mailer->compose('create-order', [
+                        'model'  => $v3toysOrder
+                    ])
+                        ->setFrom([\Yii::$app->cms->adminEmail => \Yii::$app->cms->appName . ''])
+                        ->setTo($v3toysOrder->email)
+                        ->setSubject(\Yii::$app->cms->appName . ': ' . \Yii::t('skeeks/shop/app', 'New order') .' #' . $v3toysOrder->id)
+                        ->send();
+
+                } catch (\Exception $e)
+                {
+                    \Yii::error('Email submit error: ' . $e->getMessage());
+                }
+
+                $rr->message = 'Заказ успешно создан';
+                $rr->success = true;
+                $rr->redirect = Url::to(['/v3toys/cart/finish', 'key' => $v3toysOrder->key]);
+
             } else
             {
                 $rr->message = 'Проверьте правильность заполнения полей';
