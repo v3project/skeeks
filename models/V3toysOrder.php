@@ -62,6 +62,14 @@ use Yii;
  *
  * @property V3toysOrderStatus $status
  *
+ * @property array $productsForApi
+ * @property string $phoneForApi
+ *
+ * @property Money $money
+ * @property Money $moneyOriginal
+ * @property Money $moneyDiscount
+ * @property Money $moneyDelivery
+ *
  *
  *
  * Форма используется для создания заказа
@@ -131,47 +139,6 @@ class V3toysOrder extends \skeeks\cms\models\Core
                 $this->user_id = $user->id;
                 $this->save();
                 $this->refresh();
-
-                //И сразу же авторизовать
-                //\Yii::$app->user->login($this->user, 0);
-            }
-
-
-            $this->initShopBuyer();
-            $shopBuyer = $this->getShopBuyer();
-
-            $fuser = \Yii::$app->shop->shopFuser;
-
-            $fuser->user_id  = $this->user->id;
-            $fuser->scenario = ShopFuser::SCENARIO_CREATE_ORDER;
-            $fuser->buyer_id = $shopBuyer->id;
-            $fuser->person_type_id = $shopBuyer->shop_person_type_id;
-
-            //TODO:: рефакторинг
-            if ($paySystem = ShopPaySystem::find()->orderBy(['priority' => SORT_ASC])->one())
-            {
-                $fuser->pay_system_id = $paySystem->id;
-            }
-
-
-            if ($fuser->validate())
-            {
-                $order = ShopOrder::createOrderByFuser($fuser, false);
-
-                $this->shop_order_id = $order->id;
-                $this->save();
-
-                if (!$order->isNewRecord)
-                {
-                    return $order;
-
-                } else
-                {
-                    throw new Exception(\Yii::t('skeeks/shop/app', 'Incorrect data of the new order').": " . array_shift($order->getFirstErrors()));
-                }
-            } else
-            {
-                throw new Exception(Json::encode($fuser->errors));
             }
 
         } catch (\Exception $e)
@@ -326,11 +293,14 @@ class V3toysOrder extends \skeeks\cms\models\Core
                     'product_id'    => (int) $shopBasket->product->cmsContentElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
                     'price'         => $shopBasket->price,
                     'quantity'      => $shopBasket->quantity,
+                    'name'          => $shopBasket->product->cmsContentElement->name,
+                    'id'            => $shopBasket->product->cmsContentElement->id,
                 ];
             }
         }
 
         $object->products = $products;
+        $object->discount = \Yii::$app->shop->shopFuser->moneyDiscount->getValue();
 
         return $object;
     }
@@ -358,67 +328,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
         return $user;
     }
 
-    /**
-     *
-     * Заполнение профиля пользователя данными
-     *
-     * @return $this
-     * @throws Exception
-     * @throws \skeeks\cms\relatedProperties\models\InvalidParamException
-     */
-    public function initShopBuyer()
-    {
-        $shopBuyer = $this->getShopBuyer();
 
-        $properties = $shopBuyer->relatedPropertiesModel;
-        foreach ($properties->toArray() as $code => $value)
-        {
-            if ($this->offsetExists($code))
-            {
-                $properties->setAttribute($code, $this->{$code});
-            }
-        }
-
-        if (!$properties->save())
-        {
-            throw new Exception('Не сохранены данные пользователя');
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * Получение профиля покупателя, если у пользователя еще нет профиля покупателя, то необходимо создать согласно настройкам.
-     *
-     * @return array|null|ShopBuyer
-     * @throws Exception
-     * @throws \skeeks\cms\shop\models\InvalidParamException
-     */
-    public function getShopBuyer()
-    {
-        //Уже выбран покупатель
-
-        //Тип покупателя из настроек магазина
-        if (!$shopPersonType = \Yii::$app->v3toysSettings->shopPersonType)
-        {
-            throw new Exception('Магазин не настроен, не указан профиль покупателя');
-        }
-
-        if (!$shopBuyer = $shopPersonType->getShopBuyers()->andWhere(['cms_user_id' => $this->user->id])->one())
-        {
-            $shopBuyer                  = $shopPersonType->createModelShopBuyer();
-            $shopBuyer->cms_user_id     = $this->user->id;
-            $shopBuyer->name            = $this->name . " [{$this->email}]";
-
-            if (!$shopBuyer->save())
-            {
-                throw new Exception('Не удалось создать профиль покупателя');
-            }
-        }
-
-        return $shopBuyer;
-    }
 
 
     /**
@@ -467,6 +377,26 @@ class V3toysOrder extends \skeeks\cms\models\Core
 
         return $result;
     }
+
+    /**
+     * @return array
+     */
+    public function getProductsForApi()
+    {
+        $result = [];
+
+        if ($this->products)
+        {
+            foreach ((array) $this->products as $productdata)
+            {
+                ArrayHelper::remove($productdata, 'id');
+                ArrayHelper::remove($productdata, 'name');
+                $result[] = $productdata;
+            }
+        }
+
+        return $result;
+    }
     /**
      * @return array
      */
@@ -480,11 +410,67 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'phone'                 => $this->getPhoneFotApi(),
             'email'                 => $this->email,
             'created_at'            => date("Y-m-d H:i:s", $this->created_at),
-            'products'              => $this->products,
+            'products'              => $this->productsForApi,
             'shipping_method'       => $this->shipping_method,
             'shipping_cost'         => 0,
             'shipping_data'         => $this->getShippindData(),
         ];
+    }
+
+
+
+
+
+    /**
+     *
+     * Итоговая стоимость корзины с учетом скидок, то что будет платить человек
+     *
+     * @return Money
+     */
+    public function getMoney()
+    {
+        $money = $this->moneyOriginal;
+        if ($this->moneyDelivery)
+        {
+            $money = $money->add($this->moneyDelivery);
+        }
+
+        return $money;
+    }
+
+    /**
+     * @return \skeeks\modules\cms\money\Money
+     */
+    public function getMoneyDelivery()
+    {
+        return \Yii::$app->money->newMoney($this->shipping_cost);
+    }
+
+    /**
+     * @return \skeeks\modules\cms\money\Money
+     */
+    public function getMoneyDiscount()
+    {
+        return \Yii::$app->money->newMoney($this->discount);
+    }
+
+    /**
+     *
+     * Итоговая стоимость корзины, без учета скидок
+     *
+     * @return Money
+     */
+    public function getMoneyOriginal()
+    {
+        $money = \Yii::$app->money->newMoney();
+
+        foreach ((array) $this->products as $productData)
+        {
+            $price = ArrayHelper::getValue($productData, 'price') * ArrayHelper::getValue($productData, 'quantity');
+            $money = $money->add(\Yii::$app->money->newMoney($price));
+        }
+
+        return $money;
     }
 
 

@@ -84,7 +84,12 @@ class CartController extends Controller
         {
             if ($v3toysOrder->load(\Yii::$app->request->post()) && $v3toysOrder->save())
             {
-                try
+                foreach (\Yii::$app->shop->shopFuser->shopBaskets as $shopBasket)
+                {
+                    $shopBasket->delete();
+                }
+
+                /*try
                 {
                     \Yii::$app->mailer->view->theme->pathMap['@app/mail'][] = '@v3toys/skeeks/mail';
 
@@ -99,7 +104,7 @@ class CartController extends Controller
                 } catch (\Exception $e)
                 {
                     \Yii::error('Email submit error: ' . $e->getMessage());
-                }
+                }*/
 
                 $rr->message = 'Заказ успешно создан';
                 $rr->success = true;
