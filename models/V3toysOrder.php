@@ -64,6 +64,10 @@ use Yii;
  *
  * @property array $productsForApi
  * @property string $phoneForApi
+ * @property string $shippindDataForApi
+ * @property string $deliveryName
+ *
+ * @property V3toysOrderBasket[] $baskets
  *
  * @property Money $money
  * @property Money $moneyOriginal
@@ -290,11 +294,11 @@ class V3toysOrder extends \skeeks\cms\models\Core
             foreach (\Yii::$app->shop->shopFuser->shopBaskets as $shopBasket)
             {
                 $products[] = [
-                    'product_id'    => (int) $shopBasket->product->cmsContentElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
-                    'price'         => $shopBasket->price,
-                    'quantity'      => $shopBasket->quantity,
-                    'name'          => $shopBasket->product->cmsContentElement->name,
-                    'id'            => $shopBasket->product->cmsContentElement->id,
+                    'v3toys_product_id'     => (int) $shopBasket->product->cmsContentElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
+                    'price'                 => $shopBasket->price,
+                    'quantity'              => $shopBasket->quantity,
+                    'name'                  => (string) $shopBasket->product->cmsContentElement->name,
+                    'product_id'            => (int) $shopBasket->product->cmsContentElement->id,
                 ];
             }
         }
@@ -329,14 +333,12 @@ class V3toysOrder extends \skeeks\cms\models\Core
     }
 
 
-
-
     /**
      * Телефон в правильном формате для апи
      *
      * @return string
      */
-    public function getPhoneFotApi()
+    public function getPhoneForApi()
     {
         $phone = $this->phone;
 
@@ -351,7 +353,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
     }
 
 
-    public function getShippindData()
+    public function getShippindDataForApi()
     {
         $result = [];
 
@@ -389,9 +391,11 @@ class V3toysOrder extends \skeeks\cms\models\Core
         {
             foreach ((array) $this->products as $productdata)
             {
-                ArrayHelper::remove($productdata, 'id');
-                ArrayHelper::remove($productdata, 'name');
-                $result[] = $productdata;
+                $result[] = [
+                    'product_id'    => ArrayHelper::getValue($productdata, 'v3toys_product_id'),
+                    'price'         => ArrayHelper::getValue($productdata, 'price'),
+                    'quantity'      => ArrayHelper::getValue($productdata, 'quantity'),
+                ];
             }
         }
 
@@ -407,16 +411,53 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'fake'                  => 0,
             'full_name'             => $this->name,
             'comment'               => $this->comment,
-            'phone'                 => $this->getPhoneFotApi(),
+            'phone'                 => $this->phoneForApi,
             'email'                 => $this->email,
             'created_at'            => date("Y-m-d H:i:s", $this->created_at),
             'products'              => $this->productsForApi,
             'shipping_method'       => $this->shipping_method,
             'shipping_cost'         => 0,
-            'shipping_data'         => $this->getShippindData(),
+            'shipping_data'         => $this->shippindDataForApi,
         ];
     }
 
+
+    protected $_baskets = null;
+
+    /**
+     * @return V3toysOrderBasket[]
+     */
+    public function getBaskets()
+    {
+        if ($this->_baskets !== null)
+        {
+            return $this->_baskets;
+        }
+
+        $result = [];
+
+        if ($this->products)
+        {
+            foreach ($this->products as $productData)
+            {
+                $obj = new V3toysOrderBasket();
+                $obj->setAttributes($productData, false);
+                $result[] = $obj;
+            }
+        }
+
+        $this->_baskets = $result;
+
+        return $this->_baskets;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeliveryName()
+    {
+        return (string) ArrayHelper::getValue(static::getShippingMethods(), $this->shipping_method);
+    }
 
 
 
@@ -430,6 +471,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
     public function getMoney()
     {
         $money = $this->moneyOriginal;
+
         if ($this->moneyDelivery)
         {
             $money = $money->add($this->moneyDelivery);
@@ -456,7 +498,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
 
     /**
      *
-     * Итоговая стоимость корзины, без учета скидок
+     * Цена всех товаров
      *
      * @return Money
      */
@@ -464,10 +506,9 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         $money = \Yii::$app->money->newMoney();
 
-        foreach ((array) $this->products as $productData)
+        foreach ($this->baskets as $basket)
         {
-            $price = ArrayHelper::getValue($productData, 'price') * ArrayHelper::getValue($productData, 'quantity');
-            $money = $money->add(\Yii::$app->money->newMoney($price));
+            $money = $money->add($basket->moneyTotal);
         }
 
         return $money;

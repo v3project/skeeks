@@ -26,18 +26,60 @@
         'adminController'   => $controller,
         'columns'           => [
             'id',
+            [
+                'class' => \skeeks\cms\grid\CreatedAtColumn::className(),
+            ],
+            [
+                'attribute' => 'user_id',
+                'class' => \skeeks\cms\grid\UserColumnData::className(),
+            ],
             'name',
             'phone',
             'email',
-            'shipping_method',
-            'shop_order_id',
-            'v3toys_order_id',
             [
+                'attribute' => 'shipping_method',
+                'filter' => \v3toys\skeeks\models\V3toysOrder::getShippingMethods(),
+                'value' => function(\v3toys\skeeks\models\V3toysOrder $v3toysOrder)
+                {
+                    return $v3toysOrder->deliveryName;
+                }
+            ],
+            'v3toys_order_id',
+
+            [
+                'attribute' => 'v3toys_status_id',
+                'filter' => \yii\helpers\ArrayHelper::map(
+                    \v3toys\skeeks\models\V3toysOrderStatus::find()->all(),
+                    'v3toys_id', 'name'
+                ),
                 'value' => function(\v3toys\skeeks\models\V3toysOrder $v3toysOrder)
                 {
                     return $v3toysOrder->v3toys_status_id ? $v3toysOrder->status->name : null;
                 }
-            ]
+            ],
+
+            [
+                'label' => 'К оплате',
+                'value' => function(\v3toys\skeeks\models\V3toysOrder $v3toysOrder)
+                {
+                    return \Yii::$app->money->convertAndFormat($v3toysOrder->money);
+                }
+            ],
+            [
+                'label' => 'Скидка',
+                'value' => function(\v3toys\skeeks\models\V3toysOrder $v3toysOrder)
+                {
+                    return \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDiscount);
+                }
+            ],
+
+            [
+                'label' => 'Доставка',
+                'value' => function(\v3toys\skeeks\models\V3toysOrder $v3toysOrder)
+                {
+                    return \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDelivery);
+                }
+            ],
         ]
     ]); ?>
 
