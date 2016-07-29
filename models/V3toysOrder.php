@@ -135,6 +135,14 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function _beforeCreateOrder($e)
     {
+        $this->initShipping();
+    }
+
+    /**
+     * @return $this
+     */
+    public function initShipping()
+    {
         if ($this->pickup_city_id)
         {
             $this->pickup_city = $this->pickupCity->name;
@@ -146,6 +154,8 @@ class V3toysOrder extends \skeeks\cms\models\Core
             $this->courier_city = $this->courierCity->name;
             $this->shipping_cost = $this->courierCity->price;
         }
+
+        return $this;
     }
     /**
      * После создания заказа, пробуем создать все что нужно в cms но это уже не обязательно, поэтому если что то, где то не сработает не столь важно
