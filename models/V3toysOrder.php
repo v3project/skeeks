@@ -73,6 +73,8 @@ use Yii;
  * @property string $phoneForApi
  * @property string $shippindDataForApi
  * @property string $deliveryName
+ * @property string $deliveryFullName
+ * @property string $paymentName
  *
  * @property V3toysOrderBasket[] $baskets
  *
@@ -443,6 +445,31 @@ class V3toysOrder extends \skeeks\cms\models\Core
         }
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentName()
+    {
+        if ($this->shipping_method == static::SHIPPING_METHOD_POST)
+        {
+            return 'Наложенный платеж';
+        } else
+        {
+            return 'Наличные при получении заказа';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeliveryFullName()
+    {
+        $data = $this->getShippindDataForApi();
+        ArrayHelper::remove($data, 'point_id');
+
+        return $this->deliveryName . ": " . implode(', ', $data);
     }
 
     /**
