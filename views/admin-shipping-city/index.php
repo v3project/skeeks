@@ -46,6 +46,6 @@
         'class' => 'alert-info',
     ],
 ]); ?>
-    <b>php yii v3toys/init/order-statuses</b> - используйте эту комманду для импорта статусов из api
+    <b>php yii v3toys/init/shipping-city</b> - используйте эту комманду для импорта статусов из api
 <? \yii\bootstrap\Alert::end(); ?>
 

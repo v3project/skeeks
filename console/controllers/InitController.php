@@ -10,7 +10,9 @@ namespace v3toys\skeeks\console\controllers;
 use skeeks\cms\relatedProperties\propertyTypes\PropertyTypeText;
 use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopPersonTypeProperty;
+use v3toys\skeeks\models\V3toysOrder;
 use v3toys\skeeks\models\V3toysOrderStatus;
+use v3toys\skeeks\models\V3toysShippingCity;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
@@ -70,10 +72,69 @@ class InitController extends Controller
                 }
             }
         }
-
     }
 
     /**
+     * Загрузка данных по городам доставки
+     */
+    public function actionSippingCity()
+    {
+        $shippingData = [
+            [
+                'name' => 'Москва',
+                'shipping_type' => V3toysOrder::SHIPPING_METHOD_PICKUP,
+                'price' => '99'
+            ],
+            [
+                'name' => 'Санкт-Петербург',
+                'shipping_type' => V3toysOrder::SHIPPING_METHOD_PICKUP,
+                'price' => '99'
+            ],
+            [
+                'name' => 'Ленинградская область',
+                'shipping_type' => V3toysOrder::SHIPPING_METHOD_COURIER,
+                'price' => '299'
+            ],
+            [
+                'name' => 'Московская область',
+                'shipping_type' => V3toysOrder::SHIPPING_METHOD_COURIER,
+                'price' => '199'
+            ],
+            [
+                'name' => 'Санкт-Петербург до КАД',
+                'shipping_type' => V3toysOrder::SHIPPING_METHOD_COURIER,
+                'price' => '299'
+            ],
+            [
+                'name' => 'Москва до МКАД',
+                'shipping_type' => V3toysOrder::SHIPPING_METHOD_COURIER,
+                'price' => '199'
+            ],
+        ];
+
+        foreach ($shippingData as $data)
+        {
+            if (!$city = V3toysShippingCity::find()->where(['name' => ArrayHelper::getValue($data, 'name')])->one())
+            {
+                $city = new V3toysShippingCity();
+            }
+
+            $city->setAttributes($data);
+            if ($city->save())
+            {
+                $this->stdout("{$city->name}\n", Console::FG_GREEN);
+            } else
+            {
+                $json = Json::encode($city->firstErrors);
+                $this->stdout("{$city->name} — error: {$json}\n", Console::FG_RED);
+            }
+        }
+    }
+
+    /**
+     *
+     * TODO:: is depricated
+     *
      * Настройка и инициализация параметров покупателя
      * Команда создает недостающией свойства покупателя
      */

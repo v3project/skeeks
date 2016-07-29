@@ -299,8 +299,8 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'post_address' => Yii::t('v3toys/skeeks', 'Адрес'),
             'post_recipient' => Yii::t('v3toys/skeeks', 'Полное ФИО получателя'),
             'shipping_city_id' => Yii::t('app', 'Shipping City ID'),
-            'courier_city_id' => Yii::t('app', 'Courier City ID'),
-            'pickup_city_id' => Yii::t('app', 'Pickup City ID'),
+            'courier_city_id' => Yii::t('app', 'Город'),
+            'pickup_city_id' => Yii::t('app', 'Город'),
         ];;
     }
 
