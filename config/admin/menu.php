@@ -59,6 +59,11 @@ return
                     ],
 
                     [
+                        "label"     => "Города доставки",
+                        "url"       => ["v3toys/admin-shipping-city"],
+                    ],
+
+                    [
                         "label"     => "Настройки проекта",
                         "url"       => ["cms/admin-settings", "component" => 'v3toys\skeeks\components\V3toysSettings'],
                         "img"       => ['\skeeks\cms\modules\admin\assets\AdminAsset', 'images/icons/settings-big.png'],

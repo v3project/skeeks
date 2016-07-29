@@ -31,8 +31,6 @@ class AgentsController extends Controller
      */
     public function actionProductsUpdate()
     {
-        //TODO:: реализовать
-
         $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
         if (!$contentIds)
         {
@@ -92,7 +90,7 @@ class AgentsController extends Controller
      */
     public function actionOrdersUpdate()
     {
-        if ($orders = V3toysOrder::find()->all())
+        if ($orders = V3toysOrder::find()->where(['>=', 'created_at', time() - 3600*24])->all())
         {
             $totalOrders = count($orders);
             $this->stdout("Заказов к обновлению: {$totalOrders}\n", Console::BOLD);
@@ -139,7 +137,7 @@ class AgentsController extends Controller
      */
     public function actionSubmitNewOrders()
     {
-        if ($orders = V3toysOrder::find()->where(['v3toys_order_id' => null])->all())
+        if ($orders = V3toysOrder::find()->where(['v3toys_order_id' => null])->andWhere(['>=', 'created_at', time() - 3600*24])->all())
         {
             $totalOrders = count($orders);
             $this->stdout("Заказов к отправке в v3toys: {$totalOrders}\n", Console::BOLD);

@@ -15,6 +15,7 @@ use skeeks\cms\shop\models\ShopFuser;
 use skeeks\cms\shop\models\ShopOrder;
 use skeeks\cms\shop\models\ShopPaySystem;
 use skeeks\cms\validators\PhoneValidator;
+use skeeks\modules\cms\money\Money;
 use v3toys\skeeks\V3toysModule;
 use yii\base\Exception;
 use yii\base\Model;
@@ -55,6 +56,9 @@ use Yii;
  * @property string $post_recipient
  * @property integer $v3toys_status_id
  * @property string $key
+ * @property integer $shipping_city_id
+ * @property integer $courier_city_id
+ * @property integer $pickup_city_id
  *
  * @property ShopOrder $shopOrder
  * @property CmsUser $user
@@ -62,6 +66,9 @@ use Yii;
  *
  * @property V3toysOrderStatus $status
  *
+ * @property V3toysShippingCity $pickupCity
+ * @property V3toysShippingCity $courierCity
+ * @property V3toysShippingCity $shippingCity
  * @property array $productsForApi
  * @property string $phoneForApi
  * @property string $shippindDataForApi
@@ -107,9 +114,9 @@ class V3toysOrder extends \skeeks\cms\models\Core
     static public function getShippingMethods()
     {
         return [
-            static::SHIPPING_METHOD_COURIER => 'доставка курьером',
-            static::SHIPPING_METHOD_PICKUP  => 'самовывоз',
-            static::SHIPPING_METHOD_POST    => 'доставка Почтой России',
+            static::SHIPPING_METHOD_COURIER => 'Доставка курьером',
+            static::SHIPPING_METHOD_PICKUP  => 'Самовывоз',
+            static::SHIPPING_METHOD_POST    => 'Доставка Почтой России',
         ];
     }
 
@@ -119,9 +126,27 @@ class V3toysOrder extends \skeeks\cms\models\Core
         parent::init();
 
         $this->on(static::EVENT_AFTER_INSERT, [$this, '_afterCreateOrder']);
+        $this->on(static::EVENT_BEFORE_INSERT, [$this, '_beforeCreateOrder']);
     }
 
+    /**
+     * Автоматическое добавление стоимости доставки при создании заказа
+     * @param $e
+     */
+    public function _beforeCreateOrder($e)
+    {
+        if ($this->pickup_city_id)
+        {
+            $this->pickup_city = $this->pickupCity->name;
+            $this->shipping_cost = $this->pickupCity->price;
+        }
 
+        if ($this->courier_city_id)
+        {
+            $this->courier_city = $this->courierCity->name;
+            $this->shipping_cost = $this->courierCity->price;
+        }
+    }
     /**
      * После создания заказа, пробуем создать все что нужно в cms но это уже не обязательно, поэтому если что то, где то не сработает не столь важно
      *
@@ -174,13 +199,16 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         return ArrayHelper::merge(
         [
-            [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'shop_order_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min'], 'integer'],
+            [['pickup_city_id', 'courier_city_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'shop_order_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min', 'shipping_city_id'], 'integer'],
             [['name', 'phone', 'email', 'shipping_method'], 'required'],
             [['comment', 'key'], 'string'],
             [['discount', 'shipping_cost'], 'number'],
             [['name', 'email', 'courier_city', 'courier_address', 'pickup_city', 'pickup_point_id', 'post_index', 'post_region', 'post_area', 'post_city', 'post_address', 'post_recipient'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 50],
             [['shipping_method'], 'string', 'max' => 20],
+            [['pickup_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => V3toysShippingCity::className(), 'targetAttribute' => ['pickup_city_id' => 'id']],
+            [['courier_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => V3toysShippingCity::className(), 'targetAttribute' => ['courier_city_id' => 'id']],
+            [['shipping_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => V3toysShippingCity::className(), 'targetAttribute' => ['shipping_city_id' => 'id']],
             [['shop_order_id'], 'exist', 'skipOnError' => true, 'targetClass' => ShopOrder::className(), 'targetAttribute' => ['shop_order_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['updated_by' => 'id']],
@@ -210,11 +238,11 @@ class V3toysOrder extends \skeeks\cms\models\Core
                 }
             ],*/
 
-            [['courier_city', 'courier_address'], 'required', 'when' => function ($model) {
+            [['courier_city_id', 'courier_address'], 'required', 'when' => function ($model) {
                 return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
             }],
 
-            [['pickup_city', 'pickup_point_id'], 'required', 'when' => function ($model) {
+            [['pickup_city_id', 'pickup_point_id'], 'required', 'when' => function ($model) {
                 return $model->shipping_method == static::SHIPPING_METHOD_PICKUP;
             }],
 
@@ -258,7 +286,34 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'post_city' => Yii::t('v3toys/skeeks', 'Город'),
             'post_address' => Yii::t('v3toys/skeeks', 'Адрес'),
             'post_recipient' => Yii::t('v3toys/skeeks', 'Полное ФИО получателя'),
+            'shipping_city_id' => Yii::t('app', 'Shipping City ID'),
+            'courier_city_id' => Yii::t('app', 'Courier City ID'),
+            'pickup_city_id' => Yii::t('app', 'Pickup City ID'),
         ];;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getShippingCity()
+    {
+        return $this->hasOne(V3toysShippingCity::className(), ['id' => 'shipping_city_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPickupCity()
+    {
+        return $this->hasOne(V3toysShippingCity::className(), ['id' => 'pickup_city_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCourierCity()
+    {
+        return $this->hasOne(V3toysShippingCity::className(), ['id' => 'courier_city_id']);
     }
 
 

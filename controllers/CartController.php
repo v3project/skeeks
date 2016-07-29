@@ -134,4 +134,24 @@ class CartController extends Controller
         $v3toysOrder = V3toysOrder::createCurrent();
         return $rr->ajaxValidateForm($v3toysOrder);
     }
+
+    /**
+     * @return string
+     */
+    public function actionGetPrices()
+    {
+        $rr = new RequestResponse();
+        $v3toysOrder = V3toysOrder::createCurrent();
+        $v3toysOrder->setAttributes(\Yii::$app->request->post('V3toysOrder'), false);
+        $rr->success = true;
+
+        $rr->data = [
+            'money' => ArrayHelper::merge($v3toysOrder->money->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->money)]),
+            'moneyOriginal' => ArrayHelper::merge($v3toysOrder->moneyOriginal->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyOriginal)]),
+            'moneyDelivery' => ArrayHelper::merge($v3toysOrder->moneyDelivery->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDelivery)]),
+            'moneyDiscount' => ArrayHelper::merge($v3toysOrder->moneyDiscount->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDiscount)]),
+        ];
+
+        return $rr;
+    }
 }
