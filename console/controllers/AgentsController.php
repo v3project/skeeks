@@ -12,6 +12,7 @@ use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopOrder;
 use skeeks\cms\shop\models\ShopOrderStatus;
 use v3toys\skeeks\helpers\ShopOrderHelper;
+use v3toys\skeeks\models\V3toysMessage;
 use v3toys\skeeks\models\V3toysOrder;
 use v3toys\skeeks\V3toysModule;
 use yii\console\Controller;
@@ -129,7 +130,38 @@ class AgentsController extends Controller
      */
     public function actionMessagesUpdate()
     {
-        //TODO:: реализовать
+        if ($orders = V3toysMessage::find()->where(['>=', 'created_at', time() - 3600*24])->all())
+        {
+            $totalOrders = count($orders);
+            $this->stdout("Заявок к обновлению: {$totalOrders}\n", Console::BOLD);
+            /**
+             * @var $order V3toysMessage
+             */
+            foreach ($orders as $order)
+            {
+                $response = \Yii::$app->v3toysApi->getMessageStatus($order->id);
+
+                if ($response->isOk)
+                {
+                    $status = ArrayHelper::getValue($response->data, 'status');
+                    if ((string) $status != (string) $order->status_name)
+                    {
+                        $order->status_name = $status;
+                        if ($order->save())
+                        {
+                            $this->stdout("Заявка #{$order->id} новый статус : {$status}\n", Console::FG_GREEN);
+                        } else
+                        {
+                            $this->stdout("Заявка #{$order->id} не обновлен статус : {$status}\n", Console::FG_RED);
+                        }
+                    }
+
+                } else
+                {
+                    $this->stdout("Ошибка апи : {$response->error_message}\n", Console::FG_RED);
+                }
+            }
+        }
     }
 
     /**
@@ -185,6 +217,41 @@ class AgentsController extends Controller
      */
     public function actionSubmitNewMessages()
     {
-        //TODO:: реализовать
+        if ($orders = V3toysMessage::find()
+            ->andWhere([
+                'or',
+                ['status_name' => ''],
+                ['status_name' => null],
+            ])
+            ->andWhere(['>=', 'created_at', time() - 3600*24])
+            ->all())
+        {
+            $totalOrders = count($orders);
+            $this->stdout("Заявок к отправке в v3toys: {$totalOrders}\n", Console::BOLD);
+
+            //Есть заказы к отрпавке
+            /**
+             * @var V3toysMessage $order
+             */
+            foreach ($orders as $order)
+            {
+                $response = \Yii::$app->v3toysApi->createMessage($order->getApiRequestData());
+
+                if ($response->isError)
+                {
+                    $message = "Заявка #{$order->id} не отправлен в апи: {$response->error_code} {$response->error_message}";
+                    \Yii::error($message, V3toysModule::className());
+                    $this->stdout("\t$message\n", Console::FG_RED);
+                }
+
+                if ($response->isOk)
+                {
+                    $this->stdout("Заявка отправлена в v3toys\n", Console::FG_GREEN);
+                }
+            }
+        } else
+        {
+            $this->stdout("Нет заказов к отправке в v3toys\n", Console::BOLD);
+        }
     }
 }

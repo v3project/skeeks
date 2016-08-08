@@ -48,6 +48,11 @@ return
             ],
 
             [
+                "label"     => "Заказы в 1 клик",
+                "url"       => ["v3toys/admin-message"],
+            ],
+
+            [
                 "label"     => "Настройки",
                 "img"       => ['\skeeks\cms\modules\admin\assets\AdminAsset', 'images/icons/settings-big.png'],
 

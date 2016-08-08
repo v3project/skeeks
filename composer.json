@@ -18,7 +18,7 @@
     "minimum-stability": "dev",
     "require": {
         "skeeks/cms": "*",
-        "v3toys/yii2-api": "dev-master"
+        "v3toys/yii2-api": "*"
     },
     "autoload": {
         "psr-4": {
