@@ -360,13 +360,17 @@ class V3toysOrder extends \skeeks\cms\models\Core
         {
             foreach (\Yii::$app->shop->shopFuser->shopBaskets as $shopBasket)
             {
-                $products[] = [
-                    'v3toys_product_id'     => (int) $shopBasket->product->cmsContentElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
-                    'price'                 => $shopBasket->price,
-                    'quantity'              => $shopBasket->quantity,
-                    'name'                  => (string) $shopBasket->product->cmsContentElement->name,
-                    'product_id'            => (int) $shopBasket->product->cmsContentElement->id,
-                ];
+                if ($shopBasket->product)
+                {
+                    $products[] = [
+                        'v3toys_product_id'     => (int) $shopBasket->product->cmsContentElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
+                        'price'                 => $shopBasket->price,
+                        'quantity'              => $shopBasket->quantity,
+                        'name'                  => (string) $shopBasket->product->cmsContentElement->name,
+                        'product_id'            => (int) $shopBasket->product->cmsContentElement->id,
+                    ];
+                }
+
             }
         }
 

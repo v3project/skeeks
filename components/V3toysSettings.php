@@ -10,6 +10,7 @@ use skeeks\cms\base\Component;
 
 use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\models\CmsContent;
+use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopOrderStatus;
 use skeeks\cms\shop\models\ShopPersonType;
 use skeeks\widget\chosen\Chosen;
@@ -126,5 +127,38 @@ class V3toysSettings extends Component
     public function getShopPersonType()
     {
         return ShopPersonType::findOne((int) $this->v3toysShopPersonTypeId);
+    }
+
+
+    /**
+     * @param ShopCmsContentElement $shopCmsContentElement
+     */
+    public function getShippingDataByProduct(ShopCmsContentElement $shopCmsContentElement)
+    {
+        if (!\Yii::$app->dadataSuggest->address)
+        {
+            return [];
+        }
+
+        $response = \Yii::$app->v3projectApi->orderGetGuidingShippingData([
+            'geobject' => \Yii::$app->dadataSuggest->address->data,
+            'order' => [
+                'products' => [
+                    [
+                        'v3p_product_id' => $shopCmsContentElement->relatedPropertiesModel->getAttribute($this->v3toysIdPropertyName),
+                        'quantity' => 1,
+                        'realize_price' => $shopCmsContentElement->shopProduct->baseProductPrice->money->getValue(),
+                    ]
+                ],
+            ],
+            'filters' => [
+                'max_distance_from_outlet_to_geobject' => 20
+            ]
+        ]);
+
+        if ($response->isOk)
+        {
+            print_r($response->data);
+        }
     }
 }
