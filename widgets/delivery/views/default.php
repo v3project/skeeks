@@ -25,13 +25,15 @@ $widget = $this->context;
             <div class="date"><strong>Ближайшая доставка:</strong>  Вторник, 05 апреля 2016</div>
         </div>
         <div class="order-delivery--radios col-md-12">
-            <div class="radio with-icon">
-                <input type="radio" name="radioDelivery" id="delivery-self" value="SELF" checked/>
-                <label for="delivery-self">
-                    <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-self.jpg'); ?>" alt=""></span>
-                    Самовывоз <span class="small">- 250 руб.</span>
-                </label>
-            </div>
+            <? if (\yii\helpers\ArrayHelper::getValue(\Yii::$app->v3toysSettings->currentShippingData, 'post')) : ?>
+                <div class="radio with-icon">
+                    <input type="radio" name="radioDelivery" id="delivery-self" value="SELF" checked/>
+                    <label for="delivery-self">
+                        <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-self.jpg'); ?>" alt=""></span>
+                        Самовывоз <span class="small">- 250 руб.</span>
+                    </label>
+                </div>
+            <? endif; ?>
             <? if (\yii\helpers\ArrayHelper::getValue(\Yii::$app->v3toysSettings->currentShippingData, 'post')) : ?>
                 <div class="radio with-icon">
                     <input type="radio" name="radioDelivery" id="delivery-post" value="POST"/>

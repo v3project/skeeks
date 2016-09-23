@@ -424,3 +424,8 @@ ul#search-address-list li:before
 {
     border: none;
 }
+
+.delivery-form
+{
+    display: none;
+}
