@@ -1,0 +1,426 @@
+
+.order-delivery .btn.btn-send {
+    margin: 35px 0 25px
+}
+.order-delivery--region {
+    margin: 0 0 30px
+}
+.order-delivery--region .city {
+    margin: 0 0 12px
+}
+.order-delivery--region .city .lbl {
+    font-size: 1.25em;
+    font-weight: 700;
+    margin: 0 10px 0 0
+}
+.order-delivery--region .city .link {
+    font-size: 1.5em;
+    white-space: nowrap
+}
+.order-delivery--region .city .link:after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 4px 0;
+    border-color: #009acf transparent transparent;
+    margin: 0 0 0 5px;
+    vertical-align: middle
+}
+.order-delivery--region .city .link a {
+    border-bottom: dotted 2px rgba(0, 154, 207, .7)
+}
+.order-delivery--region .date {
+    color: #8a8a8a
+}
+.order-delivery--radios {
+    zoom: 1;
+    border-bottom: 1px solid rgba(192, 192, 192, 0.49);
+    margin-bottom: 10px;
+}
+.order-delivery--radios:after,
+.order-delivery--radios:before {
+    content: " ";
+    display: table
+}
+.order-delivery--radios .radio {
+    float: left;
+    margin-right: 80px
+}
+@media (max-width: 1199px) {
+    .order-delivery--radios .radio {
+        margin-right: 50px
+    }
+}
+@media (max-width: 991px) {
+    .cart-footer--total {
+        text-align: left
+    }
+    .order-delivery--radios .radio {
+        float: none;
+        margin-right: 0
+    }
+}
+.order-delivery--txt-note {
+    font-size: 1.166667em;
+    margin: 0 0 30px
+}
+.order-delivery--txt-note strong {
+    font-size: 1.142857em
+}
+.order-delivery--subtitle {
+    font-size: 1.333333em;
+    font-weight: 700;
+    color: #4c4c4c;
+    margin: 0 0 15px
+}
+.order-delivery--payment {
+    margin: 0 0 12px -2px
+}
+.order-delivery--payment .radio {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 50px
+}
+.order-delivery--price {
+    font-size: 1.5em
+}
+.order-delivery--total {
+    font-size: 2.666667em;
+    font-weight: 700
+}
+.order-delivery--total .number {
+    font-size: 1.1875em
+}
+.order-delivery--map {
+    zoom: 1;
+    margin: 0 0 50px
+}
+.order-delivery--map:after,
+.order-delivery--map:before {
+    content: " ";
+    display: table
+}
+.order-delivery--map .order-delivery--map--list {
+    float: left;
+    width: 390px;
+    position: relative;
+    border: 1px solid #dfdfdf
+}
+.order-delivery--map .order-delivery--map--list .form-group {
+    padding: 10px;
+    margin: 0;
+    height: 54px;
+    border-bottom: solid 1px #dfdfdf
+}
+.order-delivery--map .order-delivery--map--list .scroll-list {
+    overflow: auto;
+    height: 331px;
+    margin: 0px;
+}
+.order-delivery--map .order-delivery--map--yandex {
+    float: right;
+    width: 100%;
+    margin: 0 0 0 -390px
+}
+.order-delivery--map .order-delivery--map--yandex--in {
+    margin-left: 390px
+}
+.order-delivery--map .yandex-map {
+    height: 385px
+}
+@media (max-width: 767px) {
+    .order-delivery--total {
+        font-size: 2em
+    }
+    .order-delivery--total .number {
+        font-size: 1em
+    }
+    .order-delivery--map .order-delivery--map--list {
+        float: none;
+        width: auto
+    }
+    .order-delivery--map .order-delivery--map--list .scroll-list {
+        height: 200px
+    }
+    .order-delivery--map .order-delivery--map--yandex {
+        float: none;
+        margin-left: 0
+    }
+    .order-delivery--map .order-delivery--map--yandex--in {
+        margin-left: 0
+    }
+    .order-delivery--map .yandex-map {
+        height: 300px
+    }
+}
+
+
+.address-item {
+    display: block;
+    padding: 10px 12px;
+    color: #131313;
+    /*font-size: 1.083333em;*/
+    font-size: 14px;
+    line-height: 22px
+}
+.address-item:hover {
+    color: #fff;
+    background: #009acf
+}
+.address-item:hover strong {
+    color: #fff!important
+}
+.metro {
+    display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin: 0 5px 0 0;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 700;
+    background: #b63a83;
+    line-height: 22px;
+    text-align: center
+}
+.metro.purple {
+    background-color: #b63a83
+}
+.metro.green {
+    background-color: #49923c
+}
+.metro.orange {
+    background-color: #e69508
+}
+.thanks-text {
+    margin: 0 0 30px
+}
+.thanks-text .thanks-text--title {
+    font-size: 2em;
+    margin: 0 0 8px;
+    line-height: normal
+}
+.thanks-text .thanks-text--cont {
+    font-size: 1.166667em
+}
+@media (max-width: 767px) {
+    .thanks-text .thanks-text--title {
+        font-size: 1.333333em
+    }
+}
+.order-payment {
+    text-align: center;
+    margin: 0 0 40px
+}
+.order-payment .order-payment--caption {
+    font-weight: 700;
+    font-size: 1.166667em;
+    margin: 0 0 25px
+}
+.order-payment .order-payment--logos {
+    margin: 0 0 18px
+}
+.order-payment .order-payment--logos img {
+    margin: 0 3px 5px
+}
+.order-payment .order-payment--info {
+    font-size: 1.166667em;
+    line-height: 1.7;
+    margin: 0 0 20px
+}
+.order-payment .order-payment--info strong {
+    white-space: nowrap;
+    margin: 0 0 0 5px
+}
+.order-payment .order-payment--total {
+    font-weight: 700;
+    font-size: 2.666667em;
+    line-height: 1;
+    margin: 0 0 25px
+}
+.order-payment .order-payment--total .number {
+    font-size: 1.1875em
+}
+@media (max-width: 767px) {
+    .order-payment .order-payment--total {
+        font-size: 2em
+    }
+    .order-payment .order-payment--total .number {
+        font-size: 1em
+    }
+}
+.delivery-page {
+    padding-top: 30px
+}
+.delivery-page .delivery-page--text-block {
+    margin-bottom: 50px
+}
+.table-container.tbl-address {
+    margin-bottom: 15px;
+    margin-top: 5px
+}
+.table-container.tbl-address table {
+    border-top: solid 1px #dfdfdf
+}
+.table-container.tbl-address table td,
+.table-container.tbl-address table th {
+    background: 0 0;
+    padding-top: 7px;
+    padding-bottom: 7px
+}
+.table-container.tbl-address table td {
+    color: #4c4c4c
+}
+.table-container.tbl-address table tr:nth-child(odd) td,
+.table-container.tbl-address table tr:nth-child(odd) th {
+    background-color: transparent
+}
+.table-container.tbl-address table tr:nth-child(even) td,
+.table-container.tbl-address table tr:nth-child(even) th {
+    background-color: #e5e5e5
+}
+.delivery-address {
+    margin: 0 0 30px
+}
+.delivery-address .radio input[type=radio]+label {
+    color: #131313
+}
+.delivery-address .delivery-address--map {
+    height: 325px
+}
+
+
+
+/* ==========================================================================
+   Checkbox & Radio
+   ========================================================================== */
+.checkbox,
+.radio {
+  margin: 0 0 12px;
+  position: relative;
+  margin-top: 0 !important;
+}
+.checkbox input[type="checkbox"],
+.radio input[type="checkbox"],
+.checkbox input[type="radio"],
+.radio input[type="radio"] {
+  position: absolute;
+  visibility: hidden;
+}
+.checkbox input[type="checkbox"]:checked + label,
+.radio input[type="checkbox"]:checked + label,
+.checkbox input[type="radio"]:checked + label,
+.radio input[type="radio"]:checked + label {
+  font-weight: 700;
+}
+.checkbox label,
+.radio label {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  line-height: 14px;
+  padding: 0 0 0 26px;
+  font-size: 1.083333em;
+}
+.checkbox label:before,
+.radio label:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.checkbox input[type="checkbox"] + label:before,
+.radio input[type="checkbox"] + label:before {
+  -webkit-border-radius: 3px;
+          border-radius: 3px;
+  width: 14px;
+  height: 14px;
+  border: solid 1px #a0a0a0;
+  background: #fff;
+}
+.checkbox input[type="checkbox"]:checked + label:before,
+.radio input[type="checkbox"]:checked + label:before {
+  background: #fff url('../images/check.png') no-repeat 50% 50%;
+  border-color: #131313;
+}
+.checkbox.checkbox-typical,
+.radio.checkbox-typical {
+  margin-bottom: 25px;
+}
+.checkbox.checkbox-typical label,
+.radio.checkbox-typical label {
+  font-weight: 400 !important;
+  font-size: 1.166667em;
+}
+.checkbox input[type="radio"] + label,
+.radio input[type="radio"] + label {
+  padding-left: 44px;
+  line-height: 36px;
+  font-size: 1.333333em;
+  font-weight: 700;
+}
+.checkbox input[type="radio"] + label:hover,
+.radio input[type="radio"] + label:hover {
+  color: #009acf;
+}
+.order-delivery--radios .checkbox input[type="radio"] + label:before,
+.order-delivery--radios .radio input[type="radio"] + label:before {
+    border: none;
+  width: 36px;
+  height: 36px;
+  background: url('../img/radio.png') no-repeat 50% 0;
+}
+.checkbox input[type="radio"] + label .small,
+.radio input[type="radio"] + label .small {
+  font-size: 0.875em /*14/16*/;
+  font-weight: 400;
+}
+.checkbox input[type="radio"]:checked + label,
+.radio input[type="radio"]:checked + label {
+  color: #009acf;
+}
+.checkbox input[type="radio"]:checked + label:before,
+.radio input[type="radio"]:checked + label:before {
+  background-position: 50% 100%;
+    border: none;
+}
+.checkbox.with-icon .icon,
+.radio.with-icon .icon {
+  height: 100px;
+  text-align: center;
+  margin: 0 0 12px;
+  display: block;
+}
+.checkbox.with-icon input[type="radio"] + label:before,
+.radio.with-icon input[type="radio"] + label:before {
+  top: 112px;
+}
+@media (max-width: 991px) {
+  .checkbox.with-icon .icon,
+  .radio.with-icon .icon {
+    display: none;
+  }
+  .checkbox.with-icon input[type="radio"] + label:before,
+  .radio.with-icon input[type="radio"] + label:before {
+    top: 0;
+  }
+}
+
+
+.icon img
+{
+    max-height: 100px;
+}
+
+ul#search-address-list li
+{
+    padding: 0px;
+}
+ul#search-address-list li:before
+{
+    border: none;
+}

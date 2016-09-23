@@ -25,6 +25,7 @@ use yii\widgets\ActiveForm;
 
 /**
  * @property ShopPersonType $shopPersonType
+ * @property [] $currentShippingData
  *
  * Class V3toysSettings
  * @package v3toys\skeeks\components
@@ -161,4 +162,40 @@ class V3toysSettings extends Component
             print_r($response->data);
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getCurrentShippingData()
+    {
+        if (!\Yii::$app->dadataSuggest->address)
+        {
+            return [];
+        }
+
+        $response = \Yii::$app->v3projectApi->orderGetGuidingShippingData([
+            'geobject' => \Yii::$app->dadataSuggest->address->toArray(),
+            'order' => [
+                'products' => [
+                    [
+                        'v3p_product_id' => 176837,
+                        'quantity' => 1,
+                        'realize_price' => 438,
+                    ]
+                ],
+            ],
+            'filters' => [
+                'max_distance_from_outlet_to_geobject' => 50
+            ]
+        ]);
+
+        if ($response->isOk)
+        {
+            return $response->data;
+        }
+
+        return [];
+    }
+
+
 }

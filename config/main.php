@@ -5,8 +5,12 @@ return [
     [
         'v3toysApi' => 
         [
-            //'class' => 'v3toys\yii2\api\Api'
             'class' => 'v3toys\skeeks\V3toysApi'
+        ],
+
+        'v3projectApi' =>
+        [
+            'class' => 'v3toys\skeeks\V3projectApi'
         ],
 
         'v3toysSettings' =>
