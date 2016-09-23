@@ -22,15 +22,17 @@ $widget = $this->context;
                         <?= \Yii::$app->dadataSuggest->address ? \Yii::$app->dadataSuggest->address->unrestrictedValue : "Выбрать город"; ?>
                 </a></span>
             </div>
-            <div class="date"><strong>Ближайшая доставка:</strong>  Вторник, 05 апреля 2016</div>
+            <? if (\yii\helpers\ArrayHelper::getValue(\Yii::$app->v3toysSettings->currentShippingData, 'courier')) : ?>
+                <div class="date"><strong>Ближайшая доставка:</strong>  <?= \yii\helpers\ArrayHelper::getValue(\Yii::$app->v3toysSettings->currentShippingData, 'courier.guiding_to_shipping_date'); ?></div>
+            <? endif; ?>
         </div>
         <div class="order-delivery--radios col-md-12">
-            <? if (\yii\helpers\ArrayHelper::getValue(\Yii::$app->v3toysSettings->currentShippingData, 'post')) : ?>
+            <? if (\yii\helpers\ArrayHelper::getValue(\Yii::$app->v3toysSettings->currentShippingData, 'pickup')) : ?>
                 <div class="radio with-icon">
                     <input type="radio" name="radioDelivery" id="delivery-self" value="SELF" checked/>
                     <label for="delivery-self">
                         <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-self.jpg'); ?>" alt=""></span>
-                        Самовывоз <span class="small">- 250 руб.</span>
+                        Самовывоз <span class="small">- от <?= \Yii::$app->v3toysSettings->currentMinPickupPrice; ?> руб.</span>
                     </label>
                 </div>
             <? endif; ?>
@@ -87,60 +89,20 @@ $widget = $this->context;
                 <input type="text" id="search-address" class="form-control" placeholder="Поиск по улице, метро, названию"/>
             </div>
             <ul class="scroll-list" id="search-address-list">
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro purple">M</span><strong class="color-purple">Сходненская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Сергея Есенина д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro green">M</span><strong class="color-green">Маяковская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Ленина д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro green">M</span><strong class="color-green">Маяковская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. 50 лет Октября д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro purple">M</span><strong class="color-purple">Сходненская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Сергея Есенина д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro green">M</span><strong class="color-green">Маяковская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Сергея Есенина д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro green">M</span><strong class="color-green">Маяковская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Сергея Есенина д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro purple">M</span><strong class="color-purple">Сходненская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Сергея Есенина д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro green">M</span><strong class="color-green">Маяковская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Сергея Есенина д115
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="address-item">
-                        <span class="metro green">M</span><strong class="color-green">Маяковская</strong> - <strong>бесплатно</strong><br/>
-                        м. Пушкинское, ул. Сергея Есенина д115
-                    </a>
-                </li>
+                <? if ($outletsData = \yii\helpers\ArrayHelper::getValue(\Yii::$app->v3toysSettings->currentShippingData, 'pickup.outlets')) : ?>
+                    <? $outlets = \v3toys\skeeks\models\V3toysOutletModel::getAllByDeliveryData($outletsData) ?>
+                    <? foreach($outlets as $outlet) : ?>
+                        <li>
+                            <a href="#" class="address-item">
+                                <? if ($outlet->metro_title) : ?>
+                                    <span class="metro">M</span> <strong><?= $outlet->metro_title; ?></strong>
+                                <? endif; ?>
+                                <!--<span class="metro">M</span>--><strong>г. <?= $outlet->city; ?></strong> - <strong><?= \yii\helpers\ArrayHelper::getValue($outlet->deliveryData, 'guiding_realize_price'); ?></strong><br/>
+                                <?= $outlet->address; ?>
+                            </a>
+                        </li>
+                    <? endforeach; ?>
+                <? endif; ?>
             </ul>
         </div>
         <div class="order-delivery--map--yandex">
@@ -273,4 +235,3 @@ $widget = $this->context;
         <p>Не забудьте ознакомиться с <a href="#">правилами курьерской доставки</a></p>
     </div>
 </section>
-</form>

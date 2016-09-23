@@ -25,7 +25,9 @@ use yii\widgets\ActiveForm;
 
 /**
  * @property ShopPersonType $shopPersonType
+ *
  * @property [] $currentShippingData
+ * @property [] $outletsData
  *
  * Class V3toysSettings
  * @package v3toys\skeeks\components
@@ -131,6 +133,20 @@ class V3toysSettings extends Component
     }
 
 
+
+
+
+
+
+
+
+
+
+
+        /**
+         * Новое api
+         */
+
     /**
      * @param ShopCmsContentElement $shopCmsContentElement
      */
@@ -197,5 +213,25 @@ class V3toysSettings extends Component
         return [];
     }
 
+    /**
+     * @return int
+     */
+    public function getCurrentMinPickupPrice()
+    {
+        $minPrice = 0;
+
+        if ($outlets = ArrayHelper::getValue($this->currentShippingData, 'pickup.outlets'))
+        {
+            foreach ($outlets as $outletData)
+            {
+                if ($outletPrice = ArrayHelper::getValue($outletData, 'guiding_realize_price'))
+                {
+                    $minPrice = $outletPrice;
+                }
+            }
+        }
+
+        return $minPrice;
+    }
 
 }
