@@ -189,6 +189,11 @@ class V3toysOutletModel extends Model
     {
         $result = [];
 
+        if (!$deliveryData)
+        {
+            return [];
+        }
+
         foreach ($deliveryData as $row)
         {
             if ($model = static::getById(ArrayHelper::getValue($row, 'v3p_outlet_id')))

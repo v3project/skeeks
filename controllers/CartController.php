@@ -155,4 +155,22 @@ class CartController extends Controller
 
         return $rr;
     }
+
+
+    /**
+     * Получение данных по доставке
+     *
+     * @return RequestResponse
+     */
+    public function actionGetCurrentShipping()
+    {
+        $rr = new RequestResponse();
+        $rr->success = true;
+
+        $rr->data = [
+            'shipping' => \Yii::$app->v3toysSettings->currentShipping
+        ];
+
+        return $rr;
+    }
 }

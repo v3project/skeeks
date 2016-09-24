@@ -16,11 +16,11 @@ class V3toysDeliveryWidgetAsset extends AssetBundle
         'css/delivery-style.css',
     ];
     public $js = [
-        'https://api-maps.yandex.ru/2.1/?lang=ru_RU',
         'plugins/jquery.fastLiveFilter.js',
         'js/delivery.js',
     ];
     public $depends = [
         'skeeks\sx\assets\Core',
+        'skeeks\cms\ya\map\assets\YaMapAsset',
     ];
 }

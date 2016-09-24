@@ -11,6 +11,12 @@ use v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset;
 use yii\base\Widget;
 use yii\helpers\Json;
 
+/**
+ * Мощьный полноценный виджет об условиях доставки
+ *
+ * Class V3toysDeliveryWidget
+ * @package v3toys\skeeks\widgets\delivery
+ */
 class V3toysDeliveryWidget extends Widget
 {
     public $options     = [];

@@ -29,7 +29,8 @@ use yii\widgets\ActiveForm;
  *
  * @property [] $currentShippingData
  * @property [] $outletsData
- * @property StringHelper $currentShipping
+ * @property ShippingHelper $currentShipping
+ * @property bool $isCurrentShippingCache
  *
  * Class V3toysSettings
  * @package v3toys\skeeks\components
@@ -182,6 +183,20 @@ class V3toysSettings extends Component
     }
 
     /**
+     * @return bool
+     */
+    public function getIsCurrentShippingCache()
+    {
+        if (!\Yii::$app->dadataSuggest->address)
+        {
+            return false;
+        }
+
+        $geoobject = \Yii::$app->dadataSuggest->address->toArray();
+        $cacheKey = md5(serialize($geoobject) . 50);
+        return (bool) \Yii::$app->cache->get($cacheKey);
+    }
+    /**
      *
      * Получение данных по доставке + кэширование данных
      *
@@ -226,7 +241,7 @@ class V3toysSettings extends Component
             if ($response->isOk)
             {
                 $data = $response->data;
-                \Yii::$app->cache->set($cacheKey, $data);
+                \Yii::$app->cache->set($cacheKey, $data, 3600 * 12);
             }
         }
 
