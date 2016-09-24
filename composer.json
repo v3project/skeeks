@@ -18,6 +18,7 @@
     "minimum-stability": "dev",
     "require": {
         "skeeks/cms": "*",
+        "skeeks/cms-ya-map": "*",
         "v3toys/yii2-api": "*"
     },
     "autoload": {
