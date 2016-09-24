@@ -410,6 +410,26 @@
   }
 }
 
+.order-delivery--map--list input
+{
+    height: 34px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: 0;
+    border-color: #dfdfdf;
+    background: #fff;
+    /*font-size: 1.166667em;
+    color: #131313;*/
+}
+
+.order-delivery--map--list input:focus
+{
+    height: 34px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: 0;
+}
+
 
 .icon img
 {
