@@ -33,6 +33,8 @@ class V3toysDeliveryWidget extends Widget
     {
         V3toysDeliveryWidgetAsset::register($this->view);
 
+        $this->clientOptions['outlets'] = (array) \Yii::$app->v3toysSettings->currentShipping->isPickup ? \Yii::$app->v3toysSettings->currentShipping->outlets : [];
+        $this->clientOptions['geoobject'] = \Yii::$app->dadataSuggest->address;
         $js = Json::encode($this->clientOptions);
 
         $this->view->registerJs(<<<JS

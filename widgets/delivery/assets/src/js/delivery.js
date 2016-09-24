@@ -10,24 +10,36 @@
 
         _init: function()
         {
-            ymaps.ready(init);
+            var self = this;
 
-            var myMap,
-                    myPlacemark;
+            this.Map        = null;
 
-            function init(){
-                myMap = new ymaps.Map("map", {
+            ymaps.ready(function()
+            {
+                self.Map = new ymaps.Map("map", {
                     center: [55.76, 37.64],
                     zoom: 13
                 });
 
-                myPlacemark = new ymaps.Placemark([55.76, 37.64], {
+                console.log(self.get('geoobject'));
+                console.log(self.get('outlets'));
+                if (self.get('outlets').length > 0)
+                {
+                    _.each(self.get('outlets'), function(row, value)
+                    {
+                        console.log(value);
+                        console.log(row);
+                    });
+                }
+
+                /*myPlacemark = new ymaps.Placemark([55.76, 37.64], {
                     hintContent: 'Москва!',
                     balloonContent: 'Столица России'
                 });
 
-                myMap.geoObjects.add(myPlacemark);
-            }
+                self.Map.geoObjects.add(myPlacemark);*/
+            });
+
         },
 
         _onDomReady: function()

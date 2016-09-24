@@ -64,6 +64,21 @@ class V3toysOutletModel extends Model
         ];
     }
 
+    public function fields()
+    {
+        return ArrayHelper::merge(parent::fields(), [
+            'coords'
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCoords()
+    {
+        return [(float) $this->lat, (float) $this->lon];
+    }
+
     /**
      * @inheritdoc
      */

@@ -70,7 +70,7 @@ $widget = $this->context;
 
     <section class="delivery-form delivery-page--text-block" id="delivery-form-SELF">
         <div class="text-block text-block-14">
-            <p>Текст для самовывоза</p>
+            <p>Пункты самовывоза</p>
         </div>
 
         <div class="order-delivery--map">
@@ -80,9 +80,12 @@ $widget = $this->context;
                     <input type="text" id="search-address" class="form-control" placeholder="Поиск по улице, метро, названию"/>
                 </div>
                 <ul class="scroll-list" id="search-address-list">
-                    <? if (\Yii::$app->v3toysSettings->currentShipping->outlets) : ?>
+                    <? if (\Yii::$app->v3toysSettings->currentShipping->isPickup && \Yii::$app->v3toysSettings->currentShipping->outlets) : ?>
                         <? foreach(\Yii::$app->v3toysSettings->currentShipping->outlets as $outlet) : ?>
-                            <li>
+                            <?= \yii\helpers\Html::beginTag('li', [
+                                'data' => $outlet->toArray(),
+                                'id' => "sx-outlet-" . $outlet->v3p_outlet_id
+                            ]); ?>
                                 <a href="#" class="address-item">
                                     <? if ($outlet->metro_title) : ?>
                                         <span class="metro">M</span> <strong><?= $outlet->metro_title; ?></strong>
@@ -90,7 +93,7 @@ $widget = $this->context;
                                     <!--<span class="metro">M</span>--><strong>г. <?= $outlet->city; ?></strong> - <strong><?= \yii\helpers\ArrayHelper::getValue($outlet->deliveryData, 'guiding_realize_price'); ?> руб.</strong><br/>
                                     <?= $outlet->address; ?>
                                 </a>
-                            </li>
+                            <?= \yii\helpers\Html::endTag('li'); ?>
                         <? endforeach; ?>
                     <? endif; ?>
                 </ul>
