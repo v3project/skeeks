@@ -36,7 +36,6 @@
 }
 .order-delivery--radios {
     zoom: 1;
-    border-bottom: 1px solid rgba(192, 192, 192, 0.49);
     margin-bottom: 10px;
 }
 .order-delivery--radios:after,
@@ -173,6 +172,13 @@
     color: #fff!important
 }
 
+.sx-active-outlet .address-item {
+    color: #fff;
+    background: #009acf
+}
+.address-item:hover strong {
+    color: #fff!important
+}
 .metro {
     display: inline-block;
     vertical-align: middle;

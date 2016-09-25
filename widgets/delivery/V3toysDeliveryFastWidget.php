@@ -25,13 +25,13 @@ class V3toysDeliveryFastWidget extends Widget
 
     public $viewFile    = 'default-fast';
 
+
     public function init()
     {
         parent::init();
 
         $this->options['id']        = $this->id;
         $this->clientOptions['id']  = $this->id;
-
     }
 
     public function run()

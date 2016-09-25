@@ -8,7 +8,7 @@
 namespace v3toys\skeeks\widgets\delivery\assets;
 use skeeks\cms\base\AssetBundle;
 
-class V3toysDeliveryWidgetAsset extends AssetBundle
+class V3toysDeliveryRadioWidgetAsset extends AssetBundle
 {
     public $sourcePath = '@v3toys/skeeks/widgets/delivery/assets/src';
 
@@ -16,7 +16,7 @@ class V3toysDeliveryWidgetAsset extends AssetBundle
         'css/delivery-style.css',
     ];
     public $js = [
-        'js/delivery.js',
+        'js/delivery-radio.js',
     ];
     public $depends = [
         'skeeks\sx\assets\Core',

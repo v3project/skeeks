@@ -138,6 +138,19 @@ class CartController extends Controller
     /**
      * @return string
      */
+    public function actionSaveSession()
+    {
+        $rr = new RequestResponse();
+        $v3toysOrder = V3toysOrder::createCurrent();
+        $v3toysOrder->setAttributes(\Yii::$app->request->post('V3toysOrder'), false);
+        $v3toysOrder->initShipping();
+
+        return $rr;
+    }
+
+    /**
+     * @return string
+     */
     public function actionGetPrices()
     {
         $rr = new RequestResponse();

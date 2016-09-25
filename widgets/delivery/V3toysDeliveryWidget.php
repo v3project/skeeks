@@ -27,6 +27,26 @@ class V3toysDeliveryWidget extends Widget
 
     public $label       = 'Условия доставки';
 
+    /**
+     * @var string контент для почты
+     */
+    public $contentPost       = '';
+    /**
+     * @var string контент самовывоза
+     */
+    public $contentPickup     = '';
+    /**
+     * @var string контент для курьера
+     */
+    public $contentCourier    = '';
+
+    /**
+     * @var string Выбор региона
+     */
+    public $contentSelectRegion    = '';
+    public $contentRadioElement    = '';
+
+
     public function init()
     {
         parent::init();
@@ -39,8 +59,6 @@ class V3toysDeliveryWidget extends Widget
     {
         V3toysDeliveryWidgetAsset::register($this->view);
 
-        $this->clientOptions['outlets'] = (array) \Yii::$app->v3toysSettings->currentShipping->isPickup ? \Yii::$app->v3toysSettings->currentShipping->outlets : [];
-        $this->clientOptions['geoobject'] = \Yii::$app->dadataSuggest->address;
         $js = Json::encode($this->clientOptions);
 
         $this->view->registerJs(<<<JS

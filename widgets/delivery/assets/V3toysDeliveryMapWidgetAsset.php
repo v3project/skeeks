@@ -8,7 +8,7 @@
 namespace v3toys\skeeks\widgets\delivery\assets;
 use skeeks\cms\base\AssetBundle;
 
-class V3toysDeliveryWidgetAsset extends AssetBundle
+class V3toysDeliveryMapWidgetAsset extends AssetBundle
 {
     public $sourcePath = '@v3toys/skeeks/widgets/delivery/assets/src';
 
@@ -16,9 +16,11 @@ class V3toysDeliveryWidgetAsset extends AssetBundle
         'css/delivery-style.css',
     ];
     public $js = [
-        'js/delivery.js',
+        'plugins/jquery.fastLiveFilter.js',
+        'js/delivery-map.js',
     ];
     public $depends = [
         'skeeks\sx\assets\Core',
+        'skeeks\cms\ya\map\assets\YaMapAsset',
     ];
 }
