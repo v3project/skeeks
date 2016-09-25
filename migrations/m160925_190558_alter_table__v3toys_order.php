@@ -8,11 +8,11 @@
 use yii\db\Schema;
 use yii\db\Migration;
 
-class m160808_190558_alter_table__v3toys_message extends Migration
+class m160925_190558_alter_table__v3toys_order extends Migration
 {
     public function safeUp()
     {
-        $this->addColumn('{{%v3toys_message}}', 'status_name', $this->string(255));
+        $this->addColumn('{{%v3toys_order}}', 'geoobject', $this->text());
     }
 
     public function safeDown()

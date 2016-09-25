@@ -20,15 +20,35 @@
                     'autoFitToViewport' : 'alvays',
                     controls: ['zoomControl', 'fullscreenControl']
                 }
-            });;
+            });
+
+            this.bind('change', function(e, data)
+            {
+                self.jElement.val(data.jElement.data('v3p_outlet_id'));
+                self.jElement.change();
+
+                var jActive = self.getActiveElement();
+                if (jActive.length > 0)
+                {
+                    $(".sx-map-point-selected", self.jWrapper).show();
+                    $(".sx-map-point-selected span", self.jWrapper).empty().append(jActive.data('title'));
+                }
+            });
+        },
+
+        getActiveElement: function()
+        {
+            return $(".sx-active-outlet");
         },
 
         _onDomReady: function()
         {
             var self = this;
 
-            this.Wrapper = $("#" + this.get('id'));
-            this.AddressList = $(".scroll-list", this.Wrapper);
+            this.jElement = $("#" + this.get('id'));
+
+            this.jWrapper = $("#" + this.get('wrapperId'));
+            this.AddressList = $(".scroll-list", this.jWrapper);
 
             self
                 ._initSearchAddress()
@@ -110,6 +130,18 @@
                         }
                     }
                 }, 300);
+
+                _.delay(function()
+                {
+                    if ($("#sx-outlet-" + self.jElement.val()).length > 0)
+                    {
+                        $("#sx-outlet-" + self.jElement.val()).click();
+                    } else
+                    {
+                        self.jElement.val('');
+                    }
+
+                }, 400);
             });
 
             return this;

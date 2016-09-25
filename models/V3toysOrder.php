@@ -54,6 +54,7 @@ use Yii;
  * @property string $post_city
  * @property string $post_address
  * @property string $post_recipient
+ * @property string $geoobject
  * @property integer $v3toys_status_id
  * @property string $key
  * @property integer $shipping_city_id
@@ -137,28 +138,8 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function _beforeCreateOrder($e)
     {
-        $this->initShipping();
     }
 
-    /**
-     * @return $this
-     */
-    public function initShipping()
-    {
-        if ($this->pickup_city_id)
-        {
-            $this->pickup_city = $this->pickupCity->name;
-            $this->shipping_cost = $this->pickupCity->price;
-        }
-
-        if ($this->courier_city_id)
-        {
-            $this->courier_city = $this->courierCity->name;
-            $this->shipping_cost = $this->courierCity->price;
-        }
-
-        return $this;
-    }
     /**
      * После создания заказа, пробуем создать все что нужно в cms но это уже не обязательно, поэтому если что то, где то не сработает не столь важно
      *
@@ -199,7 +180,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
             HasJsonFieldsBehavior::className() =>
             [
                 'class'     => HasJsonFieldsBehavior::className(),
-                'fields'    => ['products']
+                'fields'    => ['products', 'geoobject']
             ],
         ]);
     }
@@ -211,17 +192,14 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         return ArrayHelper::merge(
         [
-            [['pickup_city_id', 'courier_city_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'shop_order_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min', 'shipping_city_id'], 'integer'],
+            [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min'], 'integer'],
             [['name', 'phone', 'email', 'shipping_method'], 'required'],
             [['comment', 'key'], 'string'],
             [['discount', 'shipping_cost'], 'number'],
             [['name', 'email', 'courier_city', 'courier_address', 'pickup_city', 'pickup_point_id', 'post_index', 'post_region', 'post_area', 'post_city', 'post_address', 'post_recipient'], 'string', 'max' => 255],
+            [['geoobject'], 'safe'],
             [['phone'], 'string', 'max' => 50],
             [['shipping_method'], 'string', 'max' => 20],
-            [['pickup_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => V3toysShippingCity::className(), 'targetAttribute' => ['pickup_city_id' => 'id']],
-            [['courier_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => V3toysShippingCity::className(), 'targetAttribute' => ['courier_city_id' => 'id']],
-            [['shipping_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => V3toysShippingCity::className(), 'targetAttribute' => ['shipping_city_id' => 'id']],
-            [['shop_order_id'], 'exist', 'skipOnError' => true, 'targetClass' => ShopOrder::className(), 'targetAttribute' => ['shop_order_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['updated_by' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['user_id' => 'id']],
@@ -250,15 +228,15 @@ class V3toysOrder extends \skeeks\cms\models\Core
                 }
             ],*/
 
-            [['courier_city_id', 'courier_address'], 'required', 'when' => function ($model) {
+            [['courier_address'], 'required', 'when' => function ($model) {
                 return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
             }],
 
-            [['pickup_city_id', 'pickup_point_id'], 'required', 'when' => function ($model) {
+            [['pickup_point_id'], 'required', 'when' => function ($model) {
                 return $model->shipping_method == static::SHIPPING_METHOD_PICKUP;
             }],
 
-            [['post_index', 'post_region', 'post_city', 'post_address', 'post_recipient'], 'required', 'when' => function ($model) {
+            [['post_index', 'post_address', 'post_recipient'], 'required', 'when' => function ($model) {
                 return $model->shipping_method == static::SHIPPING_METHOD_POST;
             }]
         ]);
@@ -277,7 +255,6 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'created_at' => Yii::t('v3toys/skeeks', 'Created At'),
             'updated_at' => Yii::t('v3toys/skeeks', 'Updated At'),
             'user_id' => Yii::t('v3toys/skeeks', 'User ID'),
-            'shop_order_id' => Yii::t('v3toys/skeeks', 'Shop Order ID'),
             'v3toys_order_id' => Yii::t('v3toys/skeeks', 'V3toys Order ID'),
             'name' => Yii::t('v3toys/skeeks', 'Имя и фамилия'),
             'phone' => Yii::t('v3toys/skeeks', 'Телефон'),
@@ -298,37 +275,18 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'post_city' => Yii::t('v3toys/skeeks', 'Город'),
             'post_address' => Yii::t('v3toys/skeeks', 'Адрес'),
             'post_recipient' => Yii::t('v3toys/skeeks', 'Полное ФИО получателя'),
-            'shipping_city_id' => Yii::t('app', 'Shipping City ID'),
-            'courier_city_id' => Yii::t('app', 'Город'),
-            'pickup_city_id' => Yii::t('app', 'Город'),
         ];;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShippingCity()
-    {
-        return $this->hasOne(V3toysShippingCity::className(), ['id' => 'shipping_city_id']);
-    }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return $this
      */
-    public function getPickupCity()
+    public function saveToSession()
     {
-        return $this->hasOne(V3toysShippingCity::className(), ['id' => 'pickup_city_id']);
+        \Yii::$app->session->set("sx-v3toys-order", $this->toArray());
+        return $this;
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCourierCity()
-    {
-        return $this->hasOne(V3toysShippingCity::className(), ['id' => 'courier_city_id']);
-    }
-
-
     /**
      * Создание объекта для текущей ситуации
      *
@@ -337,6 +295,10 @@ class V3toysOrder extends \skeeks\cms\models\Core
     static public function createCurrent()
     {
         $object = new static(['user_id' => \Yii::$app->user->id]);
+
+        $object->setAttributes(
+            (array) \Yii::$app->session->get("sx-v3toys-order")
+        );
 
         if ($object->user)
         {
@@ -353,6 +315,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
                 $object->phone    = $object->user->phone;
             }
         }
+
 
         $products = [];
 
@@ -374,8 +337,31 @@ class V3toysOrder extends \skeeks\cms\models\Core
             }
         }
 
-        $object->products = $products;
-        $object->discount = \Yii::$app->shop->shopFuser->moneyDiscount->getValue();
+        $object->products   = $products;
+        if (\Yii::$app->dadataSuggest->address)
+        {
+            $object->geoobject  = \Yii::$app->dadataSuggest->address->toArray();
+        }
+        $object->discount   = \Yii::$app->shop->shopFuser->moneyDiscount->getValue();
+
+        if (\Yii::$app->dadataSuggest->address)
+        {
+            //print_r(\Yii::$app->dadataSuggest->address->toArray());die;
+            $object->post_region = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'region');
+            if (ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'city'))
+            {
+                $object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'city');
+            } else if (ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'settlement'))
+            {
+                $object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'settlement');
+            }
+            $object->post_area = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'area');
+            $object->post_index = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'postal_code');
+
+            $object->post_address = \Yii::$app->dadataSuggest->address->shortAddressString;
+            $object->courier_address = \Yii::$app->dadataSuggest->address->shortAddressString;
+        }
+
 
         return $object;
     }
@@ -653,193 +639,4 @@ class V3toysOrder extends \skeeks\cms\models\Core
         return $this->hasOne(V3toysOrderStatus::className(), ['v3toys_id' => 'v3toys_status_id']);
     }
 
-    /**
-     * @var string имя клиента
-     */
-    //public $name;
-
-    /**
-     * @var string телефон клиента формат ^7[3,4,8,9][0-9]{9}$
-     */
-    //public $phone;
-
-    /**
-     * @var string email клиента
-     */
-    //public $email;
-
-    /**
-     * комментарий от клиента, пожелания и данные по оплате так же указываются здесь
-     * @var string
-     */
-    //public $comment;
-
-    /**
-     * способ доставки
-            доступны только следующие значения:
-            COURIER - доставка курьером
-            PICKUP - самовывоз
-            POST - доставка Почтой России
-     *
-     * @var string
-     */
-    //public $shipping_method;
-
-        /**
-        *   shipping_data
-                если
-                shipping_method
-                =
-                COURIER
-         */
-    /**
-     *      город, в который нужно осуществить доставку
-            доступны только следующие значения:
-            Москва до МКАД
-            Московская область
-            Санкт-Петербург до КАД
-            Ленинградская область
-            Брянск
-            Владимир
-            Вологда
-            Екатеринбург
-            Иваново
-            Казань
-            Калуга
-            Кострома
-            Курск
-            Нижний Новгород
-            Орел
-            Ростов-на-Дону
-            Рязань
-            Тверь
-            Тула
-            Тюмень
-            Челябинск
-            Ярославль
-     * @var string
-     */
-    //public $courier_city;
-
-    /**
-     * адрес доставки в городе
-     *
-     * @var  string
-     */
-    //public $courier_address;
-
-
-
-        /**
-         *  shipping_data
-            если
-            shipping_method
-            =
-            PICKUP
-         */
-
-
-
-    /**
-     * город, в котором будет самовывоз
-     *
-     * доступны только следующие значения:
-            Москва
-            Санкт-Петербург
-            Великий Новгород
-            Волгоград
-            Брянск
-            Воронеж
-            Выборг
-            Вологда
-            Иваново
-            Екатеринбург
-            Казань
-            Калуга
-            Киров
-            Краснодар
-            Нижний Новгород
-            Новороссийск
-            Омск
-            Орел
-            Пермь
-            Псков
-            Ростов-на-Дону
-            Рязань
-            Смоленск
-            Самара
-            Тверь
-            Тула
-            Тюмень
-            Челябинск
-            Ярославль
-            Новосибирск
-            Астрахань
-            Белгород
-            Курск
-            Ступино
-            Солнечногорск
-            Сергиев Посад
-     *
-     * @var string
-     */
-    //public $pickup_city;
-
-    /**
-     *  номер пункта самовывоза в выбранном городе (номера смотреть здесь)
-        если в выбранном городе только один пункт самовывоза - указать значение 1
-     *
-     * @var int
-     */
-    //public $pickup_point_id = 1;
-
-        /**
-         *  shipping_data
-            если
-            shipping_method
-            =
-            POST
-         */
-
-    /**
-     * почтовый индекс
-     * @var string
-     */
-    //public $post_index;
-    /**
-     * 	регион
-     * @var string
-     */
-    //public $post_region;
-
-    /**
-     * область
-     * @var string
-     */
-    //public $post_area;
-
-    /**
-     * город
-     * @var string
-     */
-    //public $post_city;
-
-    /**
-     * адрес в городе
-     * @var string
-     */
-    //public $post_address;
-
-    /**
-     * полное ФИО получателя
-     * @var string
-     */
-    //public $post_recipient;
-
-    /**
-     *  признак оформления заказ со статусом "Прин. ночь"
-        возможные значения:
-     * @var boolean
-     */
-    //public $is_call_me_15_min = true;
 }

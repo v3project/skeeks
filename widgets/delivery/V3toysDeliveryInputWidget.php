@@ -16,6 +16,8 @@ use yii\helpers\Json;
 use yii\widgets\InputWidget;
 
 /**
+ * Выбор варианта способа доставки
+ *
  * Class V3toysDeliveryFastWidget
  * @package v3toys\skeeks\widgets\delivery
  */
@@ -32,10 +34,9 @@ class V3toysDeliveryInputWidget extends InputWidget
     {
         parent::init();
 
-        $this->options['id']        = $this->id;
-        $this->wrapperOptions['id']  = $this->id . "-wrapper";
+        $this->wrapperOptions['id']  = $this->options['id'] . "-wrapper";
 
-        $this->clientOptions['id']  = $this->id;
+        $this->clientOptions['id']  = $this->options['id'];
         $this->clientOptions['wrapperId']  = $this->wrapperOptions['id'];
 
     }

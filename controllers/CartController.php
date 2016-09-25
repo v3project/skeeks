@@ -140,10 +140,12 @@ class CartController extends Controller
      */
     public function actionSaveSession()
     {
-        $rr = new RequestResponse();
-        $v3toysOrder = V3toysOrder::createCurrent();
+        $rr             = new RequestResponse();
+
+        $v3toysOrder    = V3toysOrder::createCurrent();
         $v3toysOrder->setAttributes(\Yii::$app->request->post('V3toysOrder'), false);
-        $v3toysOrder->initShipping();
+
+        $v3toysOrder->saveToSession();
 
         return $rr;
     }
@@ -156,7 +158,6 @@ class CartController extends Controller
         $rr = new RequestResponse();
         $v3toysOrder = V3toysOrder::createCurrent();
         $v3toysOrder->setAttributes(\Yii::$app->request->post('V3toysOrder'), false);
-        $v3toysOrder->initShipping();
         $rr->success = true;
 
         $rr->data = [

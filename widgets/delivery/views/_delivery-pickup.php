@@ -7,8 +7,6 @@
  */
 /* @var $this yii\web\View */
 ?>
-<? $map = \v3toys\skeeks\widgets\delivery\V3toysDeliveryMapWidget::begin(); ?>
-    <!--<div class="text-block text-block-14">
-        <p>Пункты самовывоза</p>
-    </div>-->
-<? $map::end(); ?>
+<?= \v3toys\skeeks\widgets\delivery\V3toysDeliveryMapWidget::widget([
+    'name' => 'pickup'
+]); ?>

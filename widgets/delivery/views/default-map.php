@@ -9,6 +9,12 @@
 /* @var $widget \v3toys\skeeks\widgets\delivery\V3toysDeliveryFastWidget */
 $widget = $this->context;
 ?>
+<div style="display: none;">
+    <?= $formElement; ?>
+</div>
+<div class="sx-map-point-selected" style="display: none; margin-bottom: 10px;">
+    <strong>Выбран пункт: </strong><span></span>
+</div>
 <div class="order-delivery--map--list">
     <div class="form-group">
         <input type="text" id="search-address" class="form-control" placeholder="Поиск по улице, метро, названию"/>
