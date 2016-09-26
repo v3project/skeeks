@@ -44,22 +44,19 @@ use Yii;
  * @property string $discount
  * @property string $shipping_cost
  * @property string $shipping_method
- * @property string $courier_city
+ *
  * @property string $courier_address
- * @property string $pickup_city
+ *
  * @property string $pickup_point_id
+ *
  * @property string $post_index
- * @property string $post_region
- * @property string $post_area
- * @property string $post_city
  * @property string $post_address
  * @property string $post_recipient
- * @property string $geoobject
+ *
+ * @property string $dadata_address
+ *
  * @property integer $v3toys_status_id
  * @property string $key
- * @property integer $shipping_city_id
- * @property integer $courier_city_id
- * @property integer $pickup_city_id
  *
  * @property ShopOrder $shopOrder
  * @property CmsUser $user
@@ -137,8 +134,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
      * @param $e
      */
     public function _beforeCreateOrder($e)
-    {
-    }
+    {}
 
     /**
      * После создания заказа, пробуем создать все что нужно в cms но это уже не обязательно, поэтому если что то, где то не сработает не столь важно
@@ -180,7 +176,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
             HasJsonFieldsBehavior::className() =>
             [
                 'class'     => HasJsonFieldsBehavior::className(),
-                'fields'    => ['products', 'geoobject']
+                'fields'    => ['products', 'dadata_address']
             ],
         ]);
     }
@@ -197,7 +193,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
             [['comment', 'key'], 'string'],
             [['discount', 'shipping_cost'], 'number'],
             [['name', 'email', 'courier_city', 'courier_address', 'pickup_city', 'pickup_point_id', 'post_index', 'post_region', 'post_area', 'post_city', 'post_address', 'post_recipient'], 'string', 'max' => 255],
-            [['geoobject'], 'safe'],
+            [['dadata_address'], 'safe'],
             [['phone'], 'string', 'max' => 50],
             [['shipping_method'], 'string', 'max' => 20],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['created_by' => 'id']],
@@ -265,14 +261,9 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'discount' => Yii::t('v3toys/skeeks', 'Скидка на заказ, указывается в рублях, без копеек'),
             'shipping_cost' => Yii::t('v3toys/skeeks', 'стоимость доставки'),
             'shipping_method' => Yii::t('v3toys/skeeks', 'Доставка'),
-            'courier_city' => Yii::t('v3toys/skeeks', 'Город'),
             'courier_address' => Yii::t('v3toys/skeeks', 'Адрес'),
-            'pickup_city' => Yii::t('v3toys/skeeks', 'Город'),
             'pickup_point_id' => Yii::t('v3toys/skeeks', 'Пункт самовывоза'),
             'post_index' => Yii::t('v3toys/skeeks', 'Индекс'),
-            'post_region' => Yii::t('v3toys/skeeks', 'Регион'),
-            'post_area' => Yii::t('v3toys/skeeks', 'Область'),
-            'post_city' => Yii::t('v3toys/skeeks', 'Город'),
             'post_address' => Yii::t('v3toys/skeeks', 'Адрес'),
             'post_recipient' => Yii::t('v3toys/skeeks', 'Полное ФИО получателя'),
         ];;
@@ -337,29 +328,30 @@ class V3toysOrder extends \skeeks\cms\models\Core
             }
         }
 
+        //Наполнение заказа текущими продуктами из корзины
         $object->products   = $products;
         if (\Yii::$app->dadataSuggest->address)
         {
-            $object->geoobject  = \Yii::$app->dadataSuggest->address->toArray();
+            $object->dadata_address  = \Yii::$app->dadataSuggest->address->toArray();
         }
         $object->discount   = \Yii::$app->shop->shopFuser->moneyDiscount->getValue();
 
         if (\Yii::$app->dadataSuggest->address)
         {
             //print_r(\Yii::$app->dadataSuggest->address->toArray());die;
-            $object->post_region = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'region');
+            //$object->post_region = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'region');
             if (ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'city'))
             {
-                $object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'city');
+                //$object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'city');
             } else if (ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'settlement'))
             {
-                $object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'settlement');
+                //$object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'settlement');
             }
-            $object->post_area = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'area');
+            //$object->post_area = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'area');
             $object->post_index = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'postal_code');
 
-            $object->post_address = \Yii::$app->dadataSuggest->address->shortAddressString;
-            $object->courier_address = \Yii::$app->dadataSuggest->address->shortAddressString;
+            $object->post_address       = \Yii::$app->dadataSuggest->address->shortAddressString;
+            $object->courier_address    = \Yii::$app->dadataSuggest->address->shortAddressString;
         }
 
 
@@ -605,14 +597,6 @@ class V3toysOrder extends \skeeks\cms\models\Core
     public function getUser()
     {
         return $this->hasOne(CmsUser::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getShopOrder()
-    {
-        return $this->hasOne(ShopOrder::className(), ['id' => 'shop_order_id']);
     }
 
     /**

@@ -19,8 +19,20 @@
     "require": {
         "skeeks/cms": "*",
         "skeeks/cms-ya-map": "*",
-        "v3toys/yii2-api": "*"
+        "v3toys/yii2-api": "*",
+        "v3toys/yii2-v3project-api": "dev-master",
+        "skeeks/cms-dadata-suggest": "dev-master"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url":  "https://github.com/skeeks-cms/cms-dadata-suggest.git"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/v3toys/yii2-v3project-api.git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "v3toys\\skeeks\\": ""
