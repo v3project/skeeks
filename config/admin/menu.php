@@ -63,10 +63,10 @@ return
                         "url"       => ["v3toys/admin-order-status"],
                     ],
 
-                    [
+                    /*[
                         "label"     => "Города доставки",
                         "url"       => ["v3toys/admin-shipping-city"],
-                    ],
+                    ],*/
 
                     [
                         "label"     => "Настройки проекта",
