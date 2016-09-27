@@ -20,14 +20,10 @@
         "skeeks/cms": "*",
         "skeeks/cms-ya-map": "*",
         "v3toys/yii2-api": "*",
-        "v3toys/yii2-v3project-api": "dev-master",
-        "skeeks/cms-dadata-suggest": "dev-master"
+        "v3toys/yii2-v3project-api": "*",
+        "skeeks/cms-dadata-suggest": "*"
     },
     "repositories": [
-        {
-            "type": "git",
-            "url":  "https://github.com/skeeks-cms/cms-dadata-suggest.git"
-        },
         {
             "type": "git",
             "url":  "https://github.com/v3toys/yii2-v3project-api.git"
