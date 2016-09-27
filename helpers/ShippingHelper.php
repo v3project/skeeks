@@ -86,11 +86,21 @@ class ShippingHelper extends Component
 
         if ($outlets = ArrayHelper::getValue($this->apiData, 'pickup.outlets'))
         {
+
             foreach ($outlets as $outletData)
             {
                 if ($outletPrice = ArrayHelper::getValue($outletData, 'guiding_realize_price'))
                 {
-                    $minPrice = $outletPrice;
+                    if ($minPrice == 0 && $outletPrice != 0)
+                    {
+                        $minPrice = $outletPrice;
+                        continue;
+                    }
+
+                    if ($outletPrice < $minPrice)
+                    {
+                        $minPrice = $outletPrice;
+                    }
                 }
             }
         }

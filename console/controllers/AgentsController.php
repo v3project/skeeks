@@ -88,10 +88,11 @@ class AgentsController extends Controller
 
     /**
      * Обновление данных по заказам
+     * @param int $countDay за последние количество дней
      */
-    public function actionOrdersUpdate()
+    public function actionOrdersUpdate($countDay = 3)
     {
-        if ($orders = V3toysOrder::find()->where(['>=', 'created_at', time() - 3600*24])->all())
+        if ($orders = V3toysOrder::find()->where(['>=', 'created_at', time() - 3600*24*$countDay])->all())
         {
             $totalOrders = count($orders);
             $this->stdout("Заказов к обновлению: {$totalOrders}\n", Console::BOLD);

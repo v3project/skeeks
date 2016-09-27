@@ -33,6 +33,14 @@ return
         'is_period'         => 'N'
     ],
 
+    'v3toys/agents/orders-update 300' =>
+    [
+        'description'       => 'Обновление всех заказов из v3toys',
+        'agent_interval'    => 3600*24, //1 раз в сутки
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
+    ],
+
     'v3toys/agents/submit-new-messages' =>
     [
         'description'       => 'Отправка новых заявок в v3toys',

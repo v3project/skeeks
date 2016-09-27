@@ -154,6 +154,18 @@ class V3toysSettings extends Component
     private $_shipping = null;
 
     /**
+     * @param array $geoobject
+     * @param int $max_distance_from_outlet_to_geobject
+     *
+     * @return ShippingHelper
+     */
+    public function getShipping($geoobject = [], $max_distance_from_outlet_to_geobject = 50)
+    {
+        return new ShippingHelper([
+            'apiData' => $this->getShippingData($geoobject, $max_distance_from_outlet_to_geobject)
+        ]);
+    }
+    /**
      * Удобрый объект с информацией о текущей доставке.
      *
      * @return StringHelper
