@@ -9,14 +9,12 @@
 /* @var $searchModel \skeeks\cms\models\Search */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-<? $pjax = \yii\widgets\Pjax::begin(); ?>
+<? $pjax = \skeeks\cms\modules\admin\widgets\Pjax::begin(); ?>
 
-    <?php /*echo $this->render('@skeeks/cms/views/admin-cms-content-element/_search', [
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
-        'content_id' => $content_id,
-        'cmsContent' => $cmsContent,
-    ]); */?>
+    <?php echo $this->render('_search', [
+        'searchModel'   => $searchModel,
+        'dataProvider'  => $dataProvider
+    ]); ?>
 
     <?= \skeeks\cms\modules\admin\widgets\GridViewStandart::widget([
         'dataProvider'      => $dataProvider,

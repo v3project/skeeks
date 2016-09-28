@@ -431,7 +431,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
 
         if ($this->shipping_method == static::SHIPPING_METHOD_COURIER)
         {
-            $result['city']     = "Москва";
+            $result['city']     = "Москва до МКАД";
             $result['address']  = $this->dadataAddress->unrestrictedValue;
 
         } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP)
@@ -449,6 +449,29 @@ class V3toysOrder extends \skeeks\cms\models\Core
             $result['recipient'] = $this->post_recipient;
         }
 
+        return $result;
+    }
+
+    public function getOldShippindDataForApi()
+    {
+        $result = [];
+        if ($this->shipping_method == static::SHIPPING_METHOD_COURIER)
+        {
+            $result['city'] = $this->courier_city;
+            $result['address'] = $this->courier_address;
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP)
+        {
+            $result['city'] = $this->pickup_city;
+            $result['point_id'] = $this->pickup_point_id;
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST)
+        {
+            $result['index'] = $this->post_index;
+            $result['region'] = $this->post_region;
+            $result['area'] = $this->post_area;
+            $result['city'] = $this->post_city;
+            $result['address'] = $this->post_address;
+            $result['recipient'] = $this->post_recipient;
+        }
         return $result;
     }
 
@@ -486,7 +509,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
         } else
         {
             //Старое апи
-            $data = $this->getShippindDataForApi();
+            $data = $this->getOldShippindDataForApi();
             ArrayHelper::remove($data, 'point_id');
 
             return $this->deliveryName . " (" . implode(', ', $data) . ")";

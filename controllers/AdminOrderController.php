@@ -36,4 +36,11 @@ class AdminOrderController extends AdminModelEditorController
 
         parent::init();
     }
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        ArrayHelper::remove($actions, 'create');
+        return $actions;
+    }
 }
