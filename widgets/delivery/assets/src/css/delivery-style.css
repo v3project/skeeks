@@ -45,11 +45,11 @@
 }
 .order-delivery--radios .radio {
     float: left;
-    margin-right: 80px
+    /*margin-right: 80px*/
 }
 @media (max-width: 1199px) {
     .order-delivery--radios .radio {
-        margin-right: 50px
+        /*margin-right: 50px*/
     }
 }
 @media (max-width: 991px) {
@@ -117,6 +117,7 @@
     overflow: auto;
     height: 331px;
     margin: 0px;
+    background: white;
 }
 .order-delivery--map .order-delivery--map--yandex {
     float: right;
@@ -304,27 +305,27 @@
 /* ==========================================================================
    Checkbox & Radio
    ========================================================================== */
-.checkbox,
-.radio {
+.sx-select-region .checkbox,
+.sx-select-region .radio {
   margin: 0 0 12px;
   position: relative;
   margin-top: 0 !important;
 }
-.checkbox input[type="checkbox"],
-.radio input[type="checkbox"],
-.checkbox input[type="radio"],
-.radio input[type="radio"] {
+.sx-select-region .checkbox input[type="checkbox"],
+.sx-select-region .radio input[type="checkbox"],
+.sx-select-region .checkbox input[type="radio"],
+.sx-select-region .radio input[type="radio"] {
   position: absolute;
   visibility: hidden;
 }
-.checkbox input[type="checkbox"]:checked + label,
-.radio input[type="checkbox"]:checked + label,
-.checkbox input[type="radio"]:checked + label,
-.radio input[type="radio"]:checked + label {
+.sx-select-region .checkbox input[type="checkbox"]:checked + label,
+.sx-select-region .radio input[type="checkbox"]:checked + label,
+.sx-select-region .checkbox input[type="radio"]:checked + label,
+.sx-select-region .radio input[type="radio"]:checked + label {
   font-weight: 700;
 }
-.checkbox label,
-.radio label {
+.sx-select-region .checkbox label,
+.sx-select-region .radio label {
   display: inline-block;
   vertical-align: top;
   position: relative;
@@ -332,16 +333,16 @@
   padding: 0 0 0 26px;
   font-size: 1.083333em;
 }
-.checkbox label:before,
-.radio label:before {
+.sx-select-region .checkbox label:before,
+.sx-select-region .radio label:before {
   content: '';
   display: block;
   position: absolute;
   left: 0;
   top: 0;
 }
-.checkbox input[type="checkbox"] + label:before,
-.radio input[type="checkbox"] + label:before {
+.sx-select-region .checkbox input[type="checkbox"] + label:before,
+.sx-select-region .radio input[type="checkbox"] + label:before {
   -webkit-border-radius: 3px;
           border-radius: 3px;
   width: 14px;
@@ -349,40 +350,40 @@
   border: solid 1px #a0a0a0;
   background: #fff;
 }
-.checkbox input[type="checkbox"]:checked + label:before,
-.radio input[type="checkbox"]:checked + label:before {
+.sx-select-region .checkbox input[type="checkbox"]:checked + label:before,
+.sx-select-region .radio input[type="checkbox"]:checked + label:before {
   background: #fff url('../images/check.png') no-repeat 50% 50%;
   border-color: #131313;
 }
-.checkbox.checkbox-typical,
-.radio.checkbox-typical {
+.sx-select-region .checkbox.checkbox-typical,
+.sx-select-region .radio.checkbox-typical {
   margin-bottom: 25px;
 }
-.checkbox.checkbox-typical label,
-.radio.checkbox-typical label {
+.sx-select-region .checkbox.checkbox-typical label,
+.sx-select-region .radio.checkbox-typical label {
   font-weight: 400 !important;
   font-size: 1.166667em;
 }
-.checkbox input[type="radio"] + label,
-.radio input[type="radio"] + label {
+.sx-select-region .checkbox input[type="radio"] + label,
+.sx-select-region .radio input[type="radio"] + label {
   padding-left: 44px;
   line-height: 36px;
   font-size: 1.333333em;
   font-weight: 700;
 }
-.checkbox input[type="radio"] + label:hover,
-.radio input[type="radio"] + label:hover {
+.sx-select-region .checkbox input[type="radio"] + label:hover,
+.sx-select-region .radio input[type="radio"] + label:hover {
   color: #009acf;
 }
-.order-delivery--radios .checkbox input[type="radio"] + label:before,
-.order-delivery--radios .radio input[type="radio"] + label:before {
+.sx-select-region .order-delivery--radios .checkbox input[type="radio"] + label:before,
+.sx-select-region .order-delivery--radios .radio input[type="radio"] + label:before {
     border: none;
   width: 36px;
   height: 36px;
   background: url('../img/radio.png') no-repeat 50% 0;
 }
-.checkbox input[type="radio"] + label .small,
-.radio input[type="radio"] + label .small {
+.sx-select-region .checkbox input[type="radio"] + label .small,
+.sx-select-region .radio input[type="radio"] + label .small {
   font-size: 0.875em /*14/16*/;
   font-weight: 400;
 }
@@ -390,20 +391,20 @@
 .radio input[type="radio"]:checked + label {
   color: #009acf;
 }
-.checkbox input[type="radio"]:checked + label:before,
-.radio input[type="radio"]:checked + label:before {
+.sx-select-region .checkbox input[type="radio"]:checked + label:before,
+.sx-select-region .radio input[type="radio"]:checked + label:before {
   background-position: 50% 100%;
     border: none;
 }
-.checkbox.with-icon .icon,
-.radio.with-icon .icon {
+.sx-select-region .checkbox.with-icon .icon,
+.sx-select-region .radio.with-icon .icon {
   height: 100px;
   text-align: center;
   margin: 0 0 12px;
   display: block;
 }
-.checkbox.with-icon input[type="radio"] + label:before,
-.radio.with-icon input[type="radio"] + label:before {
+.sx-select-region .checkbox.with-icon input[type="radio"] + label:before,
+.sx-select-region .radio.with-icon input[type="radio"] + label:before {
   top: 112px;
 }
 @media (max-width: 991px) {
