@@ -14,7 +14,7 @@
             "name": "Semenov Alexander",
             "email": "semenov@skeeks.com"
         }
-    ],
+    ], 
     "minimum-stability": "dev",
     "require": {
         "skeeks/cms": "*",

@@ -15,6 +15,20 @@ $widget = $this->context;
         <?= $formElement; ?>
     </div>
     <div class="row sx-visible-radios">
+        <? if (\Yii::$app->v3toysSettings->currentShipping->isCourier) : ?>
+            <div class="radio with-icon col-md-4">
+                <input type="radio" name="<?= $widget->id ?>-visible-input" id="<?= $widget->id ?>-delivery-courier"
+                    value="<?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_COURIER; ?>"
+                    <?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_COURIER == $widget->getCurrentValue() ? "checked" : ""; ?>/>
+                <label for="<?= $widget->id ?>-delivery-courier">
+                    <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-courier.png'); ?>" alt=""></span>
+                    Курьер <span class="small">- <?= \Yii::$app->money->convertAndFormat(
+                            \Yii::$app->v3toysSettings->currentShipping->courierMinPrice
+                        ); ?></span>
+                </label>
+            </div>
+        <? endif; ?>
+
         <? if (\Yii::$app->v3toysSettings->currentShipping->isPickup) : ?>
             <div class="radio with-icon col-md-4">
                 <input type="radio" name="<?= $widget->id ?>-visible-input" id="<?= $widget->id ?>-delivery-pickup"
@@ -41,18 +55,6 @@ $widget = $this->context;
                 </label>
             </div>
         <? endif; ?>
-        <? if (\Yii::$app->v3toysSettings->currentShipping->isCourier) : ?>
-            <div class="radio with-icon col-md-4">
-                <input type="radio" name="<?= $widget->id ?>-visible-input" id="<?= $widget->id ?>-delivery-courier"
-                    value="<?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_COURIER; ?>"
-                    <?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_COURIER == $widget->getCurrentValue() ? "checked" : ""; ?>/>
-                <label for="<?= $widget->id ?>-delivery-courier">
-                    <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-courier.png'); ?>" alt=""></span>
-                    Курьер <span class="small">- <?= \Yii::$app->money->convertAndFormat(
-                            \Yii::$app->v3toysSettings->currentShipping->courierMinPrice
-                        ); ?></span>
-                </label>
-            </div>
-        <? endif; ?>
+
     </div>
 <?= \yii\helpers\Html::endTag("div"); ?>
