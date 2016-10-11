@@ -31,6 +31,7 @@ use yii\widgets\ActiveForm;
  * @property [] $outletsData
  * @property ShippingHelper $currentShipping
  * @property bool $isCurrentShippingCache
+ * @property array  $notifyEmails
  *
  * Class V3toysSettings
  * @package v3toys\skeeks\components
@@ -73,6 +74,9 @@ class V3toysSettings extends Component
     public $v3toysOrderStatusSubmitted;
 
 
+    public $notify_emails;
+
+
 
     public function rules()
     {
@@ -82,6 +86,7 @@ class V3toysSettings extends Component
             ['v3toysShopPersonTypeId', 'integer'],
             ['affiliate_key', 'string'],
             ['v3toysOrderStatusSubmitted', 'string'],
+            ['notify_emails', 'string'],
         ]);
     }
 
@@ -93,6 +98,7 @@ class V3toysSettings extends Component
             'v3toysShopPersonTypeId'        => 'Профиль покупателя v3project',
             'affiliate_key'                 => 'Код аффилиата полученный в v3project',
             'v3toysOrderStatusSubmitted'    => 'Статус заказа, когда он отправлен в Submitted',
+            'notify_emails'                 => 'Email адреса уведомлений',
         ]);
     }
 
@@ -106,6 +112,7 @@ class V3toysSettings extends Component
             'content_ids'               => 'Обновление наличия и цен будет происходить у элементов этого выбранного контента',
             'v3toysShopPersonTypeId'    => 'Необходимо настроить тип покупателя, и его свойства, для связи с данными v3toys [ <b>php yii v3toys/init/update-person-type</b> ]',
             'affiliate_key'             => 'Ключ связан с ip адресом сайта, необходимо сообщить свой IP. Проверить IP можно тут: ' . $a,
+            'notify_emails'             => 'Укажите email адреса через запятую, на них будет приходить информация о новых заказах.',
         ]);
     }
 
@@ -118,13 +125,33 @@ class V3toysSettings extends Component
                 'multiple' => true,
                 'items' => CmsContent::getDataForSelect(),
             ]);
-            echo $form->field($this, 'v3toysShopPersonTypeId')->widget(Chosen::className(),[
+            echo $form->field($this, 'notify_emails')->textarea(['rows' => 3]);
+            /*echo $form->field($this, 'v3toysShopPersonTypeId')->widget(Chosen::className(),[
                 'items' => ArrayHelper::map(ShopPersonType::find()->all(), 'id', 'name'),
-            ]);
-            echo $form->field($this, 'v3toysOrderStatusSubmitted')->widget(Chosen::className(),[
+            ]);*/
+            /*echo $form->field($this, 'v3toysOrderStatusSubmitted')->widget(Chosen::className(),[
                 'items' => ArrayHelper::map(ShopOrderStatus::find()->all(), 'code', 'name'),
-            ]);
+            ]);*/
         echo $form->fieldSetEnd();
+    }
+
+    /**
+     * @return array
+     */
+    public function getNotifyEmails()
+    {
+        $emailsAll = [];
+        if ($this->notify_emails)
+        {
+            $emails = explode(",", $this->notify_emails);
+
+            foreach ($emails as $email)
+            {
+                $emailsAll[] = trim($email);
+            }
+        }
+
+        return $emailsAll;
     }
 
     /**

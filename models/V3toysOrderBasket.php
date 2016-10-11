@@ -18,6 +18,7 @@ use yii\base\Model;
  * @property Money $moneyTotal
  * @property ShopProduct $product
  * @property string $url
+ * @property string $absoluteUrl
  * @property CmsStorageFile $image
  *
  * @package v3toys\skeeks\models
@@ -69,6 +70,26 @@ class V3toysOrderBasket extends Model
             } else
             {
                 return $this->product->cmsContentElement->url;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAbsoluteUrl()
+    {
+        if ($this->product)
+        {
+            //Это предложение у него есть родительский элемент
+            if ($parent = $this->product->cmsContentElement->parentContentElement)
+            {
+                return $parent->absoluteUrl;
+            } else
+            {
+                return $this->product->cmsContentElement->absoluteUrl;
             }
         }
 

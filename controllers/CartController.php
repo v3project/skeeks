@@ -89,7 +89,7 @@ class CartController extends Controller
                     $shopBasket->delete();
                 }
 
-                /*try
+                try
                 {
                     \Yii::$app->mailer->view->theme->pathMap['@app/mail'][] = '@v3toys/skeeks/mail';
 
@@ -98,13 +98,29 @@ class CartController extends Controller
                     ])
                         ->setFrom([\Yii::$app->cms->adminEmail => \Yii::$app->cms->appName . ''])
                         ->setTo($v3toysOrder->email)
-                        ->setSubject(\Yii::$app->cms->appName . ': ' . \Yii::t('skeeks/shop/app', 'New order') .' #' . $v3toysOrder->id)
+                        ->setSubject(\Yii::$app->cms->appName . ': новый заказ #' . $v3toysOrder->id)
                         ->send();
+
+                    if (\Yii::$app->v3toysSettings->notifyEmails)
+                    {
+                        foreach (\Yii::$app->v3toysSettings->notifyEmails as $email)
+                        {
+                            \Yii::$app->mailer->view->theme->pathMap['@app/mail'][] = '@v3toys/skeeks/mail';
+
+                            \Yii::$app->mailer->compose('create-order', [
+                                'model'  => $v3toysOrder
+                            ])
+                                ->setFrom([\Yii::$app->cms->adminEmail => \Yii::$app->cms->appName . ''])
+                                ->setTo($email)
+                                ->setSubject(\Yii::$app->cms->appName . ': новый заказ #' . $v3toysOrder->id)
+                                ->send();
+                        }
+                    }
 
                 } catch (\Exception $e)
                 {
                     \Yii::error('Email submit error: ' . $e->getMessage());
-                }*/
+                }
 
                 $rr->message = 'Заказ успешно создан';
                 $rr->success = true;
