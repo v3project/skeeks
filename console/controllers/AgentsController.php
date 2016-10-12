@@ -8,6 +8,8 @@
 namespace v3toys\skeeks\console\controllers;
 
 use skeeks\cms\helpers\StringHelper;
+use skeeks\cms\models\CmsContentElement;
+use skeeks\cms\models\CmsContentElementProperty;
 use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopOrder;
 use skeeks\cms\shop\models\ShopOrderStatus;
@@ -41,6 +43,9 @@ class AgentsController extends Controller
      */
     public function actionProductsUpdate()
     {
+        ini_set("memory_limit","8192M");
+        set_time_limit(0);
+
         $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
         if (!$contentIds)
         {
@@ -48,18 +53,35 @@ class AgentsController extends Controller
             return;
         }
 
-        $elements = ShopCmsContentElement::find()->where(['content_id' => $contentIds])->all();
-        if ($elements)
-        {
-            $total = count($elements);
-            $this->stdout("Всего товаров: {$total}\n", Console::BOLD);
+        $count = ShopCmsContentElement::find()->where(['content_id' => $contentIds])->count();
+        $this->stdout("Всего товаров: {$count}\n", Console::BOLD);
 
+        if ($count)
+        {
             /**
-             * @var $element ShopCmsContentElement
-             */
-            foreach ($elements as $element)
-            {
+                 * @var $element CmsContentElement
+             *
+             **/
+
+            /*$v3ids = [];
+            foreach (ShopCmsContentElement::find()->where(['content_id' => $contentIds])->each(100) as $element) {
+                /**
+                 * @var $element CmsContentElement
+                //$v3id = $element->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName);
+                $v3id = $element->getRelatedElementProperties();
+                echo $element->id . "\n";
+                if ($element->id)
+                {
+                    $v3ids[] = $element->id;
+                }
+            }
+
+            /*print_r($v3ids);die;*/
+
+            foreach (ShopCmsContentElement::find()->where(['content_id' => $contentIds])->each(10) as $element) {
+
                 $this->stdout("\t{$element->id}: {$element->name}\n");
+
                 $v3id = $element->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName);
                 if ($v3id)
                 {
@@ -81,7 +103,7 @@ class AgentsController extends Controller
                                 $isChange = true;
 
                                 $this->stdout("\t\tЦена изменилась была {$element->shopProduct->baseProductPriceValue} стала {$priceFromApi}\n", Console::FG_GREEN);
-                                //$element->shopProduct->purchasing_price = ArrayHelper::getValue($data, 'buy_price');
+                                $element->shopProduct->purchasing_price = ArrayHelper::getValue($data, 'buy_price');
                                 $element->shopProduct->purchasing_currency = "RUB";
 
                                 $element->shopProduct->baseProductPriceValue = ArrayHelper::getValue($data, 'price');
@@ -112,7 +134,6 @@ class AgentsController extends Controller
                                     $this->stdout("\tДанные не сохранены {$error}\n", Console::FG_RED);
                                 }
                             }
-
                         }
                     } else
                     {
