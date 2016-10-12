@@ -18,6 +18,7 @@ use v3toys\skeeks\V3toysModule;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
+use yii\helpers\Json;
 
 /**
  * Агенты v3toys
@@ -27,6 +28,14 @@ use yii\helpers\Console;
  */
 class AgentsController extends Controller
 {
+    public function init()
+    {
+        parent::init();
+
+        ini_set("memory_limit","8192M");
+        set_time_limit(0);
+    }
+
     /**
      * Обновление цен и налчия товаров
      */
@@ -55,27 +64,60 @@ class AgentsController extends Controller
                 if ($v3id)
                 {
                     $response = \Yii::$app->v3toysApi->getProductsDataByIds(['products_ids' => $v3id]);
+
+                    $this->stdout("\t\tОтвет получен из api\n");
                     if ($response->isOk)
                     {
                         if ($response->data)
                         {
                             $data = $response->data[0];
+                            $priceFromApi = (float) ArrayHelper::getValue($data, 'price');
+                            $quantityFromApi = (int) ArrayHelper::getValue($data, 'quantity');
 
-                            $element->shopProduct->purchasing_price = ArrayHelper::getValue($data, 'buy_price');
-                            $element->shopProduct->purchasing_currency = "RUB";
+                            $isChange = false;
 
-                            $element->shopProduct->baseProductPriceValue = ArrayHelper::getValue($data, 'price');
-                            $element->shopProduct->baseProductPriceCurrency = "RUB";
-                            $element->shopProduct->quantity = ArrayHelper::getValue($data, 'quantity');
-
-                            if ($element->shopProduct->save())
+                            if ($priceFromApi != $element->shopProduct->baseProductPriceValue)
                             {
-                                $this->stdout("\tЦена={$element->shopProduct->baseProductPriceValue}; Количество={$element->shopProduct->quantity}\n", Console::FG_GREEN);
+                                $isChange = true;
+
+                                $this->stdout("\t\tЦена изменилась была {$element->shopProduct->baseProductPriceValue} стала {$priceFromApi}\n", Console::FG_GREEN);
+                                //$element->shopProduct->purchasing_price = ArrayHelper::getValue($data, 'buy_price');
+                                $element->shopProduct->purchasing_currency = "RUB";
+
+                                $element->shopProduct->baseProductPriceValue = ArrayHelper::getValue($data, 'price');
+                                $element->shopProduct->baseProductPriceCurrency = "RUB";
                             } else
                             {
-                                $this->stdout("\tЦена и количество не обновлено\n", Console::FG_RED);
+                                $this->stdout("\t\tЦена не менялась\n");
                             }
+
+                            if ((int) ArrayHelper::getValue($data, 'quantity') != (int) $element->shopProduct->quantity)
+                            {
+                                $isChange = true;
+                                $this->stdout("\t\tИзменилось количество {$element->shopProduct->quantity} стало {$quantityFromApi}\n", Console::FG_GREEN);
+                            } else
+                            {
+                                $this->stdout("\t\tКоличество не изменилось\n");
+                            }
+
+
+                            if ($isChange)
+                            {
+                                if ($element->shopProduct->save())
+                                {
+                                    $this->stdout("\tДанные сохранены\n", Console::FG_GREEN);
+                                } else
+                                {
+                                    $error = Json::encode($element->shopProduct->errors);
+                                    $this->stdout("\tДанные не сохранены {$error}\n", Console::FG_RED);
+                                }
+                            }
+
                         }
+                    } else
+                    {
+                        $this->stdout("\tApi response bad\n", Console::FG_RED);
+                        continue;
                     }
                 } else
                 {
