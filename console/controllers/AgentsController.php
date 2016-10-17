@@ -117,6 +117,7 @@ class AgentsController extends Controller
                             {
                                 $isChange = true;
                                 $this->stdout("\t\tИзменилось количество {$element->shopProduct->quantity} стало {$quantityFromApi}\n", Console::FG_GREEN);
+                                $element->shopProduct->quantity = (int) ArrayHelper::getValue($data, 'quantity');
                             } else
                             {
                                 $this->stdout("\t\tКоличество не изменилось\n");
@@ -134,6 +135,10 @@ class AgentsController extends Controller
                                     $this->stdout("\tДанные не сохранены {$error}\n", Console::FG_RED);
                                 }
                             }
+                        } else
+                        {
+                            \Yii::error('Нет информации о товаре: ' . $element->id, self::className());
+                            $this->stdout("\tInvalid api\n", Console::FG_RED);
                         }
                     } else
                     {
