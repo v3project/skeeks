@@ -7,11 +7,15 @@
  */
 namespace v3toys\skeeks\models;
 
+use skeeks\modules\cms\money\Money;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 /**
+ * @property int guidingRealizePriceAmount
+ * @property Money guidingRealizeMoney
+ *
  * Class V3toysOutletModel
  *
  * @package v3toys\skeeks\models
@@ -226,5 +230,20 @@ class V3toysOutletModel extends Model
         return null;
     }
 
+    /**
+     * @return int
+     */
+    public function getGuidingRealizePriceAmount()
+    {
+        return (int) \yii\helpers\ArrayHelper::getValue($this->deliveryData, 'guiding_realize_price') + (int) \Yii::$app->v3toysSettings->pickup_discaunt_value;
+    }
+
+    /**
+     * @return Money
+     */
+    public function getGuidingRealizeMoney()
+    {
+        return Money::fromString((string) $this->guidingRealizePriceAmount, "RUB");
+    }
 
 }

@@ -30,7 +30,7 @@ $widget = $this->context;
                         <? if ($outlet->metro_title) : ?>
                             <span class="metro">M</span> <strong><?= $outlet->metro_title; ?></strong>
                         <? endif; ?>
-                        <!--<span class="metro">M</span>--><strong>г. <?= $outlet->city; ?></strong> - <strong><?= \yii\helpers\ArrayHelper::getValue($outlet->deliveryData, 'guiding_realize_price'); ?> руб.</strong><br/>
+                        <!--<span class="metro">M</span>--><strong>г. <?= $outlet->city; ?></strong> - <strong><?= \Yii::$app->money->convertAndFormat($outlet->guidingRealizeMoney); ?></strong><br/>
                         <?= $outlet->address; ?>
                     </a>
                 <?= \yii\helpers\Html::endTag('li'); ?>

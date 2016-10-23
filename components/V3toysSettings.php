@@ -77,6 +77,11 @@ class V3toysSettings extends Component
     public $notify_emails;
 
 
+    public $pickup_discaunt_value = 0;
+    public $post_discaunt_value = 0;
+    public $courier_discaunt_value = 0;
+
+
 
     public function rules()
     {
@@ -87,6 +92,10 @@ class V3toysSettings extends Component
             ['affiliate_key', 'string'],
             ['v3toysOrderStatusSubmitted', 'string'],
             ['notify_emails', 'string'],
+
+            ['pickup_discaunt_value', 'integer'],
+            ['post_discaunt_value', 'integer'],
+            ['courier_discaunt_value', 'integer'],
         ]);
     }
 
@@ -99,6 +108,9 @@ class V3toysSettings extends Component
             'affiliate_key'                 => 'Код аффилиата полученный в v3project',
             'v3toysOrderStatusSubmitted'    => 'Статус заказа, когда он отправлен в Submitted',
             'notify_emails'                 => 'Email адреса уведомлений',
+            'pickup_discaunt_value'         => 'Скидка/Наценка на доставку самовывоза',
+            'post_discaunt_value'           => 'Скидка/Наценка на доставку почтой',
+            'courier_discaunt_value'        => 'Скидка/Наценка на доставку курьером',
         ]);
     }
 
@@ -126,12 +138,19 @@ class V3toysSettings extends Component
                 'items' => CmsContent::getDataForSelect(),
             ]);
             echo $form->field($this, 'notify_emails')->textarea(['rows' => 3]);
+
             /*echo $form->field($this, 'v3toysShopPersonTypeId')->widget(Chosen::className(),[
                 'items' => ArrayHelper::map(ShopPersonType::find()->all(), 'id', 'name'),
             ]);*/
             /*echo $form->field($this, 'v3toysOrderStatusSubmitted')->widget(Chosen::className(),[
                 'items' => ArrayHelper::map(ShopOrderStatus::find()->all(), 'code', 'name'),
             ]);*/
+        echo $form->fieldSetEnd();
+
+        echo $form->fieldSet('Настройки доставки');
+            echo $form->field($this, 'pickup_discaunt_value');
+            echo $form->field($this, 'post_discaunt_value');
+            echo $form->field($this, 'courier_discaunt_value');
         echo $form->fieldSetEnd();
     }
 

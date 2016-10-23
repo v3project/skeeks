@@ -64,6 +64,7 @@ class ShippingHelper extends Component
     public function getPostMinPrice()
     {
         $value = \yii\helpers\ArrayHelper::getValue($this->apiData, 'post.guiding_realize_price');
+        $value = $value + (int) \Yii::$app->v3toysSettings->post_discaunt_value;
         return Money::fromString((string) $value, 'RUB');
     }
 
@@ -73,6 +74,7 @@ class ShippingHelper extends Component
     public function getCourierMinPrice()
     {
         $value = \yii\helpers\ArrayHelper::getValue($this->apiData, 'courier.guiding_realize_price');
+        $value = $value + (int) \Yii::$app->v3toysSettings->courier_discaunt_value;
         return Money::fromString((string) $value, 'RUB');
     }
 
@@ -104,6 +106,8 @@ class ShippingHelper extends Component
                 }
             }
         }
+
+        $minPrice = $minPrice + (int) \Yii::$app->v3toysSettings->pickup_discaunt_value;
 
         return Money::fromString((string) $minPrice, 'RUB');
     }
