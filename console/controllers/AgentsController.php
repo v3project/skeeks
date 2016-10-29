@@ -43,9 +43,6 @@ class AgentsController extends Controller
      */
     public function actionProductsUpdate()
     {
-        ini_set("memory_limit","8192M");
-        set_time_limit(0);
-
         $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
         if (!$contentIds)
         {
@@ -58,26 +55,6 @@ class AgentsController extends Controller
 
         if ($count)
         {
-            /**
-                 * @var $element CmsContentElement
-             *
-             **/
-
-            /*$v3ids = [];
-            foreach (ShopCmsContentElement::find()->where(['content_id' => $contentIds])->each(100) as $element) {
-                /**
-                 * @var $element CmsContentElement
-                //$v3id = $element->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName);
-                $v3id = $element->getRelatedElementProperties();
-                echo $element->id . "\n";
-                if ($element->id)
-                {
-                    $v3ids[] = $element->id;
-                }
-            }
-
-            /*print_r($v3ids);die;*/
-
             foreach (ShopCmsContentElement::find()->where(['content_id' => $contentIds])->each(10) as $element) {
 
                 $this->stdout("\t{$element->id}: {$element->name}\n");
@@ -98,15 +75,22 @@ class AgentsController extends Controller
 
                             $isChange = false;
 
-                            if ($priceFromApi != $element->shopProduct->baseProductPriceValue)
+
+
+                            $ourPrice = $priceFromApi + ($priceFromApi / 100 * \Yii::$app->v3toysSettings->price_discount_percent);
+                            $ourPrice = round($ourPrice);
+                            $discountValue = \Yii::$app->v3toysSettings->price_discount_percent;
+
+                            $this->stdout("\t\t{$priceFromApi} + {$discountValue}% = {$ourPrice}\n");
+                            if ($ourPrice != $element->shopProduct->baseProductPriceValue)
                             {
                                 $isChange = true;
 
-                                $this->stdout("\t\tЦена изменилась была {$element->shopProduct->baseProductPriceValue} стала {$priceFromApi}\n", Console::FG_GREEN);
+                                $this->stdout("\t\tЦена изменилась была {$element->shopProduct->baseProductPriceValue} стала {$ourPrice}\n", Console::FG_GREEN);
                                 $element->shopProduct->purchasing_price = ArrayHelper::getValue($data, 'buy_price');
                                 $element->shopProduct->purchasing_currency = "RUB";
 
-                                $element->shopProduct->baseProductPriceValue = ArrayHelper::getValue($data, 'price');
+                                $element->shopProduct->baseProductPriceValue = $ourPrice;
                                 $element->shopProduct->baseProductPriceCurrency = "RUB";
                             } else
                             {

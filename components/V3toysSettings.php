@@ -77,9 +77,25 @@ class V3toysSettings extends Component
     public $notify_emails;
 
 
+    /**
+     * @var float
+     */
     public $pickup_discaunt_value = 0;
+    /**
+     * @var float
+     */
     public $post_discaunt_value = 0;
+    /**
+     * @var float
+     */
     public $courier_discaunt_value = 0;
+
+
+
+    /**
+     * @var float
+     */
+    public $price_discount_percent = 0;
 
 
 
@@ -93,9 +109,11 @@ class V3toysSettings extends Component
             ['v3toysOrderStatusSubmitted', 'string'],
             ['notify_emails', 'string'],
 
-            ['pickup_discaunt_value', 'integer'],
-            ['post_discaunt_value', 'integer'],
-            ['courier_discaunt_value', 'integer'],
+            ['pickup_discaunt_value', 'number'],
+            ['post_discaunt_value', 'number'],
+            ['courier_discaunt_value', 'number'],
+
+            ['price_discount_percent', 'number'],
         ]);
     }
 
@@ -111,6 +129,7 @@ class V3toysSettings extends Component
             'pickup_discaunt_value'         => 'Скидка/Наценка на доставку самовывоза',
             'post_discaunt_value'           => 'Скидка/Наценка на доставку почтой',
             'courier_discaunt_value'        => 'Скидка/Наценка на доставку курьером',
+            'price_discount_percent'        => 'Скидка/Наценка на товары',
         ]);
     }
 
@@ -125,6 +144,10 @@ class V3toysSettings extends Component
             'v3toysShopPersonTypeId'    => 'Необходимо настроить тип покупателя, и его свойства, для связи с данными v3toys [ <b>php yii v3toys/init/update-person-type</b> ]',
             'affiliate_key'             => 'Ключ связан с ip адресом сайта, необходимо сообщить свой IP. Проверить IP можно тут: ' . $a,
             'notify_emails'             => 'Укажите email адреса через запятую, на них будет приходить информация о новых заказах.',
+            'pickup_discaunt_value'     => 'Указывается в рублях.',
+            'post_discaunt_value'       => 'Указывается в рублях.',
+            'courier_discaunt_value'    => 'Указывается в рублях.',
+            'price_discount_percent'    => 'Указывается в процентах, эта сумма будет добавлена или вычтена из цены товара на v3toys',
         ]);
     }
 
@@ -151,6 +174,10 @@ class V3toysSettings extends Component
             echo $form->field($this, 'pickup_discaunt_value');
             echo $form->field($this, 'post_discaunt_value');
             echo $form->field($this, 'courier_discaunt_value');
+        echo $form->fieldSetEnd();
+
+        echo $form->fieldSet('Скидка/Наценка на товары');
+            echo $form->field($this, 'price_discount_percent');
         echo $form->fieldSetEnd();
     }
 
