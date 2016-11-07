@@ -82,6 +82,7 @@ class AgentsController extends Controller
                             $discountValue = \Yii::$app->v3toysSettings->price_discount_percent;
 
                             $guiding_buy_price = (float) ArrayHelper::getValue($data, 'buy_price');
+                            $mr_price = (float) ArrayHelper::getValue($data, 'mr_price');
 
                             if ($ourPrice > $guiding_buy_price)
                             {
@@ -92,6 +93,11 @@ class AgentsController extends Controller
                                 $this->stdout("\t\tНаша цена со скидкой {$ourPrice} < закупочной {$guiding_buy_price} оставим {$priceFromApi}\n");
                             }
 
+                            if ($ourPrice < $mr_price)
+                            {
+                                $ourPrice = $mr_price;
+                                $this->stdout("\t\t MR PRICE = {$mr_price}\n", Console::FG_YELLOW);
+                            }
 
                             if ($ourPrice != $element->shopProduct->baseProductPriceValue)
                             {

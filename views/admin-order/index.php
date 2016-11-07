@@ -81,6 +81,27 @@
         ]
     ]); ?>
 
+    <? if ($dataProvider->query->count()) : ?>
+        <?
+    /**
+     * @var $order \v3toys\skeeks\models\V3toysOrder $order
+     */
+        $moneyTotalNoDelivery = \Yii::$app->money->newMoney();
+        $moneyTotal = \Yii::$app->money->newMoney();
+        ?>
+        <? foreach ($dataProvider->query->all() as $order) : ?>
+            <?
+                $moneyTotal = $moneyTotal->add($order->money);
+                $moneyTotalNoDelivery = $moneyTotalNoDelivery->add($order->moneyOriginal);
+            ?>
+        <? endforeach; ?>
+
+        <hr />
+        <p>Всего куплено товаров: <b><?= \Yii::$app->money->convertAndFormat($moneyTotal); ?></b></p>
+        <p>Всего куплено товаров (без учета доставки): <b><?= \Yii::$app->money->convertAndFormat($moneyTotalNoDelivery); ?></b></p>
+
+    <? endif; ?>
+
 <? $pjax::end() ?>
 
 
