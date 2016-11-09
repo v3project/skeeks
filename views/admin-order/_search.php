@@ -13,9 +13,11 @@
 $filter = new \yii\base\DynamicModel([
     'id',
     'q',
+    'v3toys_statuses',
 ]);
 $filter->addRule('id', 'integer');
 $filter->addRule('q', 'string');
+$filter->addRule('v3toys_statuses', 'safe');
 
 $filter->load(\Yii::$app->request->get());
 
@@ -34,6 +36,12 @@ if ($filter->q)
         ['like', 'v3toys_order_id', $filter->q],
     ]);
 }
+if ($filter->v3toys_statuses)
+{
+    $dataProvider->query->andWhere([
+        'v3toys_status_id' => $filter->v3toys_statuses
+    ]);
+}
 ?>
 <? $form = \skeeks\cms\modules\admin\widgets\filters\AdminFiltersForm::begin([
         'action' => '/' . \Yii::$app->request->pathInfo,
@@ -46,6 +54,14 @@ if ($filter->q)
     <?= $form->field($searchModel, 'name'); ?>
     <?= $form->field($searchModel, 'phone'); ?>
     <?= $form->field($searchModel, 'email'); ?>
-    <?= $form->field($searchModel, 'v3toys_order_id'); ?>
+    <?= $form->field($filter, 'v3toys_statuses')->label('Статус')->widget(
+    \skeeks\widget\chosen\Chosen::className(),
+    [
+        'multiple' => true,
+        'items' => \yii\helpers\ArrayHelper::map(
+            \v3toys\skeeks\models\V3toysOrderStatus::find()->all(), 'v3toys_id', 'name'
+        )
+    ]
+    ); ?>
 
 <? $form::end(); ?>

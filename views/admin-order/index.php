@@ -88,9 +88,41 @@
      */
         $moneyTotalNoDelivery = \Yii::$app->money->newMoney();
         $moneyTotal = \Yii::$app->money->newMoney();
+
+        $purchasingPrice = 0;
+        $notFoundProducts = 0;
         ?>
         <? foreach ($dataProvider->query->all() as $order) : ?>
+
             <?
+                if ($order->products)
+                {
+
+
+                    foreach ($order->products as $productData)
+                    {
+                        $v3toysId   = \yii\helpers\ArrayHelper::getValue($productData, 'v3toys_product_id');
+                        $id         = \yii\helpers\ArrayHelper::getValue($productData, 'product_id');
+                        $quantity   = \yii\helpers\ArrayHelper::getValue($productData, 'quantity');
+                        $price   = \yii\helpers\ArrayHelper::getValue($productData, 'price');
+
+
+                        /**
+                         * @var $element \skeeks\cms\shop\models\ShopCmsContentElement
+                         */
+                        if ($element = \skeeks\cms\shop\models\ShopCmsContentElement::findOne((int) $id))
+                        {
+                            $purchasingPrice = $purchasingPrice + $quantity * (float) $element->shopProduct->purchasing_price;
+                        } else
+                        {
+                            $notFoundProducts ++;
+                        }
+                    }
+                }
+            ?>
+
+            <?
+                $moneyPurchasing = \Yii::$app->money->newMoney((string) $purchasingPrice);
                 $moneyTotal = $moneyTotal->add($order->money);
                 $moneyTotalNoDelivery = $moneyTotalNoDelivery->add($order->moneyOriginal);
             ?>
@@ -99,7 +131,13 @@
         <hr />
         <p>Всего куплено товаров: <b><?= \Yii::$app->money->convertAndFormat($moneyTotal); ?></b></p>
         <p>Всего куплено товаров (без учета доставки): <b><?= \Yii::$app->money->convertAndFormat($moneyTotalNoDelivery); ?></b></p>
-
+        <p>Всего куплено товаров (закупка): <b><?= \Yii::$app->money->convertAndFormat($moneyPurchasing); ?></b></p>
+        <p>Закупка - Реальная цена продажи: <b><?= \Yii::$app->money->convertAndFormat($moneyTotalNoDelivery->subtract($moneyPurchasing)); ?></b></p>
+        <p>Минус коммисия v3tosy.ru (50%): <b style="font-size: 20px;"><?= \Yii::$app->money->convertAndFormat($moneyTotalNoDelivery->subtract($moneyPurchasing)->multiply(0.5)); ?></b> <small>грязный доход аффилиата</small></p>
+        <hr />
+        <? if ($notFoundProducts) : ?>
+            Не найдены некоторые товары: <?= $notFoundProducts; ?> <small>(Влияет на стоимость закупки)</small>
+        <? endif; ?>
     <? endif; ?>
 
 <? $pjax::end() ?>
