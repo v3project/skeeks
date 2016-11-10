@@ -1,5 +1,9 @@
 CHANGELOG
 ==============
+1.0.8
+-----------------
+  * Yandex decode coordinates
+
 1.0.7
 -----------------
   * Учет mr price

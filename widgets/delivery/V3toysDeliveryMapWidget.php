@@ -7,6 +7,7 @@
  */
 namespace v3toys\skeeks\widgets\delivery;
 
+use skeeks\yii2\dadataSuggestApi\helpers\YandexGecodeHelper;
 use v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryMapWidgetAsset;
 use v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset;
 use yii\base\Widget;
@@ -66,6 +67,17 @@ class V3toysDeliveryMapWidget extends InputWidget
 
         $this->clientOptions['outlets'] = (array) \Yii::$app->v3toysSettings->currentShipping->isPickup ? \Yii::$app->v3toysSettings->currentShipping->outlets : [];
         $this->clientOptions['geoobject'] = \Yii::$app->dadataSuggest->address;
+        if (\Yii::$app->dadataSuggest->address->coordinates)
+        {
+            $this->clientOptions['coordinates'] = \Yii::$app->dadataSuggest->address->coordinates;
+        } else
+        {
+            $yandex = new YandexGecodeHelper([
+                'addressObject' => \Yii::$app->dadataSuggest->address
+            ]);
+
+            $this->clientOptions['coordinates'] = $yandex->coordinates;
+        }
         $js = Json::encode($this->clientOptions);
 
         $this->view->registerJs(<<<JS

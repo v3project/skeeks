@@ -12,11 +12,17 @@
         {
             var self = this;
 
+            var coord = [55.76, 37.64];
+            if (self.get('coordinates'))
+            {
+                coord = self.get('coordinates');
+            }
+
             this.MapObject = new sx.classes.ya.MapObject(this.get('mapId'), {
                 'ya' :
                 { //Опции инициализации карты
-                    'center' : [55.76, 37.64],
-                    'zoom' : 10,
+                    'center' : coord,
+                    'zoom' : 11,
                     'autoFitToViewport' : 'alvays',
                     controls: ['zoomControl', 'fullscreenControl']
                 }
@@ -67,6 +73,7 @@
 
             this.MapObject.onReady(function(YaMap)
             {
+
                 var LastPlacemark = null;
 
                 $("li", self.AddressList).each(function()
@@ -119,14 +126,14 @@
                 {
                     if ($("li", self.AddressList).length > 1)
                     {
-                        self.MapObject.YaMap.setBounds(self.MapObject.YaMap.geoObjects.getBounds());
+                        //self.MapObject.YaMap.setBounds(self.MapObject.YaMap.geoObjects.getBounds());
                     } else
                     {
                         if (LastPlacemark)
                         {
-                            self.MapObject.YaMap.setCenter(LastPlacemark.geometry.getCoordinates(), 13, {
+                            /*self.MapObject.YaMap.setCenter(LastPlacemark.geometry.getCoordinates(), 13, {
                                 checkZoomRange: true
-                            });
+                            });*/
                         }
                     }
                 }, 300);
