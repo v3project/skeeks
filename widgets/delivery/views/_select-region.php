@@ -14,8 +14,8 @@
     </a></span>
 </div>
 <? if (\Yii::$app->v3toysSettings->currentShipping->isCourier) : ?>
-    <div class="date"><strong>Ближайшая доставка:</strong>
-        <?= \Yii::$app->formatter->asDate(\Yii::$app->v3toysSettings->currentShipping->courierShippingDate); ?>
-        (<?= \Yii::$app->formatter->asRelativeTime(\Yii::$app->v3toysSettings->currentShipping->courierShippingDate); ?>)
-    </div>
+    <!--<div class="date"><strong>Ближайшая доставка:</strong>
+        <?/*= \Yii::$app->formatter->asDate(\Yii::$app->v3toysSettings->currentShipping->courierShippingDate); */?>
+        (<?/*= \Yii::$app->formatter->asRelativeTime(\Yii::$app->v3toysSettings->currentShipping->courierShippingDate); */?>)
+    </div>-->
 <? endif; ?>
