@@ -254,7 +254,8 @@ class AgentsController extends Controller
 
                 if ($response->isError)
                 {
-                    $message = "Заказ #{$order->id} не отправлен в апи: {$response->error_code} {$response->error_message}";
+                    $data = Json::encode($response->request->data);
+                    $message = "Заказ #{$order->id} не отправлен в апи: {$response->error_code} {$response->error_message} {$response->request->url}:{$response->request->method}:{$data}";
                     \Yii::error($message, V3toysModule::className());
                     $this->stdout("\t$message\n", Console::FG_RED);
                 }

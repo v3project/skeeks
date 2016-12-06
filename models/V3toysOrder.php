@@ -436,8 +436,9 @@ class V3toysOrder extends \skeeks\cms\models\Core
 
         } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP)
         {
-            $result['city'] = "Москва";
-            $result['point_id'] = 1;
+            //$result['city'] = "Москва";
+            //$result['point_id'] = 1;
+            $result['v3_outlet_id'] = 1;
 
         } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST)
         {
