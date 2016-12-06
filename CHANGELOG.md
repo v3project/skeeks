@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.0.10
+-----------------
+  * pvz
+
 1.0.9
 -----------------
   * Yandex decode coordinates
