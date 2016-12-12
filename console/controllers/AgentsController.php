@@ -138,8 +138,12 @@ class AgentsController extends Controller
                             }
                         } else
                         {
-                            \Yii::error('Нет информации о товаре: ' . $element->id, self::className());
-                            $this->stdout("\tInvalid api\n", Console::FG_RED);
+                            $data = Json::encode($response->request->data);
+                            \Yii::error('Нет информации о товаре: ' . $element->id . "; Url: {$response->request->url}; Data: {$data}; Response: {$response->response->content}; Response code: Response: {$response->response->statusCode}", self::className());
+                            $this->stdout("\tInvalid api response\n", Console::FG_RED);
+                            $this->stdout("\tUrl: {$response->request->url}\n", Console::FG_RED);
+                            $this->stdout("\tData: {$data}\n", Console::FG_RED);
+                            $this->stdout("\tResponse: {$response->response->content}\n", Console::FG_RED);
                         }
                     } else
                     {
