@@ -97,6 +97,15 @@ class V3toysSettings extends Component
      */
     public $price_discount_percent = 0;
 
+    /**
+     * С каких ip разрешен доступ к нашему апи
+     * @var array
+     */
+    public $api_allow_ids = [
+        //'31.148.138.49'
+        '*'
+    ];
+
 
 
     public function rules()
