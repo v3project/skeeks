@@ -18,6 +18,11 @@ return [
             'class' => 'v3toys\skeeks\components\V3toysSettings'
         ],
 
+        'v3toys' =>
+        [
+            'class' => 'v3toys\skeeks\components\V3toysComponent'
+        ],
+
         'i18n' => 
         [
             'translations' =>

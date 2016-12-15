@@ -241,9 +241,9 @@ class AgentsController extends Controller
     /**
      * Отправка новых заказов в v3toys
      */
-    public function actionSubmitNewOrders()
+    public function actionSubmitNewOrders($countDay = 3)
     {
-        if ($orders = V3toysOrder::find()->where(['v3toys_order_id' => null])->andWhere(['>=', 'created_at', time() - 3600*24])->all())
+        if ($orders = V3toysOrder::find()->where(['v3toys_order_id' => null])->andWhere(['>=', 'created_at', time() - 3600*24*$countDay])->all())
         {
             $totalOrders = count($orders);
             $this->stdout("Заказов к отправке в v3toys: {$totalOrders}\n", Console::BOLD);

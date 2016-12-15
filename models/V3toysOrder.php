@@ -8,6 +8,7 @@
 namespace v3toys\skeeks\models;
 
 use skeeks\cms\models\behaviors\HasJsonFieldsBehavior;
+use skeeks\cms\models\CmsContentElement;
 use skeeks\cms\models\CmsUser;
 use skeeks\cms\models\forms\SignupForm;
 use skeeks\cms\shop\models\ShopBuyer;
@@ -317,8 +318,11 @@ class V3toysOrder extends \skeeks\cms\models\Core
             {
                 if ($shopBasket->product)
                 {
+                    $v3toys_id = \Yii::$app->v3toys->getV3toysIdByCmsElement($shopBasket->product->cmsContentElement);
+
                     $products[] = [
-                        'v3toys_product_id'     => (int) $shopBasket->product->cmsContentElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
+                        'v3toys_product_id'     => $v3toys_id,
+                        'purchasing_price'      => $shopBasket->product->purchasing_price,
                         'price'                 => $shopBasket->price,
                         'quantity'              => $shopBasket->quantity,
                         'name'                  => (string) $shopBasket->product->cmsContentElement->name,
@@ -528,8 +532,17 @@ class V3toysOrder extends \skeeks\cms\models\Core
         {
             foreach ((array) $this->products as $productdata)
             {
+                if (!$v3toys_id = ArrayHelper::getValue($productdata, 'v3toys_product_id'))
+                {
+                    $productId = ArrayHelper::getValue($productdata, 'product_id');
+                    if ($element = CmsContentElement::findOne($productId))
+                    {
+                        $v3toys_id = \Yii::$app->v3toys->getV3toysIdByCmsElement($element);
+                    }
+                }
+
                 $result[] = [
-                    'product_id'    => ArrayHelper::getValue($productdata, 'v3toys_product_id'),
+                    'product_id'    => $v3toys_id,
                     'price'         => ArrayHelper::getValue($productdata, 'price'),
                     'quantity'      => ArrayHelper::getValue($productdata, 'quantity'),
                 ];
