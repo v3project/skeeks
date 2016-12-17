@@ -23,6 +23,6 @@ class V3toysComponent extends Component
      */
     public function getV3toysIdByCmsElement($cmsContentElement)
     {
-        return (int) $cmsContentElement->relatedPropertiesModel->getAttribute($this->v3toysIdPropertyName);
+        return (int) $cmsContentElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName);
     }
 }
