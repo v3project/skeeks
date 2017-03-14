@@ -35,7 +35,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "v3toys\\skeeks\\": ""
+            "v3toys\\skeeks\\": "src/"
         }
     }
 }

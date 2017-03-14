@@ -3,6 +3,14 @@ return [
 
     'components' =>
     [
+        'dbV3project' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'pgsql:host=db.v3project.ru;port=5432;dbname=v3toys_ru',
+            'username' => 'username',
+            'password' => 'password',
+            'charset' => 'utf8',
+        ],
+
         'v3toysApi' => 
         [
             'class' => 'v3toys\skeeks\V3toysApi'

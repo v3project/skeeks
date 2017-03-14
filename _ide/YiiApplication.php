@@ -11,8 +11,10 @@ use v3toys\skeeks\components\V3toysSettings;
 use v3toys\skeeks\V3toysModule;
 
 /**
+ *
  * @property V3toysComponent        $v3toys
  * @property V3toysSettings         $v3toysSettings
+ * @property \yii\db\Connection     $dbV3project
  *
  * Class Application
  * @package yii\web
