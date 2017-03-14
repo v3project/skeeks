@@ -7,6 +7,7 @@ CHANGELOG
   
 2.0.0.pre
 -----------------
+  * Скрипт обновления цен из базы v3project php yii v3toys/prices/load
   * Скрипт обновления свойств товаров из базы v3project php yii v3toys/properties/load
   * Отказ от старого v3toys api
   * Переход на свойства товаров v3project
