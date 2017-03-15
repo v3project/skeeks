@@ -73,4 +73,15 @@ class InitV2Controller extends Controller
             }
         }
     }
+
+    public function actionInfo()
+    {
+        $query = (new \yii\db\Query())
+                    ->from('apiv5.affiliate')
+                    ->indexBy('id');
+
+        $prices = $query->all(\Yii::$app->dbV3project);
+
+        print_r($prices);die;
+    }
 }
