@@ -115,7 +115,7 @@ class PropertiesController extends Controller
                     {
                         $v3toysProperty->hero_id = ArrayHelper::getValue($dataProperties, 'hero_id');
                         $v3toysProperty->series_id = ArrayHelper::getValue($dataProperties, 'series_id');
-                        $v3toysProperty->sex = ArrayHelper::getValue($dataProperties, 'sex');
+                        $v3toysProperty->sex = (int) ArrayHelper::getValue($dataProperties, 'sex');
                         $v3toysProperty->age_from = ArrayHelper::getValue($dataProperties, 'age_from');
                         $v3toysProperty->age_to = ArrayHelper::getValue($dataProperties, 'age_to');
                         $v3toysProperty->to_who = ArrayHelper::getValue($dataProperties, 'to_who');
@@ -138,7 +138,7 @@ class PropertiesController extends Controller
                         $v3toysProperty->size_of_toy = ArrayHelper::getValue($dataProperties, 'size_of_toy');
                         $v3toysProperty->producing_country = ArrayHelper::getValue($dataProperties, 'producing_country');
                         $v3toysProperty->extra = ArrayHelper::getValue($dataProperties, 'extra');
-                        $v3toysProperty->packing = ArrayHelper::getValue($dataProperties, 'packing');
+                        $v3toysProperty->packing = (int) ArrayHelper::getValue($dataProperties, 'packing');
 
                         $v3toysProperty->sku = ArrayHelper::getValue($dataAdditional, 'sku');
                         $barcode = ArrayHelper::getValue($dataAdditional, 'stock_barcodes');
@@ -162,6 +162,8 @@ class PropertiesController extends Controller
 
                     } else
                     {
+                        $v3toysProperty->cmsContentElement->active = "N";
+                        $v3toysProperty->cmsContentElement->save();
                         $this->stdout("\t\t Данные не получены со стороны v3toys\n", Console::FG_RED);
                     }
                 } else
