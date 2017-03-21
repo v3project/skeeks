@@ -173,8 +173,6 @@ class InitV2Controller extends Controller
                 }
                 
                 print_r($httpResponse->content);
-                
-                die;
             }
         }
         
