@@ -58,4 +58,32 @@ return
     ],
 
 
+
+
+    
+    'v3toys/properties/load' =>
+    [
+        'description'       => 'Обновление свойств у товаров (только у которых нет)',
+        'agent_interval'    => 600, //1 раз в 10 минут, для новых товаров обновление свойств
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
+    ],
+
+    'v3toys/properties/load 1' =>
+    [
+        'description'       => 'Обновление свойств по всем товарам',
+        'agent_interval'    => 604800, //1 раз в неделю актуализация свойств
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
+    ],
+
+    'v3toys/prices/load' =>
+    [
+        'description'       => 'Обновление цен',
+        'agent_interval'    => 10600,
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
+    ],
+
+
 ];

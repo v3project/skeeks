@@ -28,12 +28,10 @@ use yii\httpclient\Client;
  */
 class PropertiesController extends Controller
 {
-
-
     /**
      * Загрузка дополнительных свойств товаров получение из базы 3toys
      */
-    public function actionLoad()
+    public function actionLoad($isAll = 0)
     {
         ini_set("memory_limit","8192M");
         set_time_limit(0);
@@ -51,31 +49,29 @@ class PropertiesController extends Controller
         $query = V3toysProductContentElement::find()
             ->where(['content_id' => $contentIds])
             ->joinWith('v3toysProductProperty as v3p')
-            ->andWhere([
-                'sex' => null
-            ])
         ;
+
+        if ($isAll != 1)
+        {
+            $query
+                ->andWhere([
+                    'v3p.sex' => null
+                ])
+            ;
+        }
+
+        $queryEach = clone $query;
 
         $total = $query->count();
 
-        $this->stdout("Товаров без свойств: {$total}\n", Console::BOLD);
-
-        sleep(5);
-
-        $query = V3toysProductContentElement::find()
-            ->where(['content_id' => $contentIds])
-            ->joinWith('v3toysProductProperty as v3p')
-            ->andWhere([
-                'sex' => null
-            ])
-        ;
+        $this->stdout("Товаров к обновлению: {$total}\n", Console::BOLD);
 
         if ($total)
         {
             /**
              * @var $element V3toysProductContentElement
              */
-            foreach ($query->orderBy(['id' => SORT_DESC])->each(100) as $element)
+            foreach ($queryEach->orderBy(['id' => SORT_ASC])->each(100) as $element)
             {
                 $this->stdout("\t{$element->id}: {$element->name}\n");
                 //$v3id = $element->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName);

@@ -1,5 +1,7 @@
 <?php
 /**
+ * TODO: добавить режим -f = которые все жестко перезапишет
+ *
  * @author Semenov Alexander <semenov@skeeks.com>
  * @link http://skeeks.com/
  * @copyright 2010 SkeekS (СкикС)
@@ -33,6 +35,35 @@ class ProductsController extends Controller
     protected $affData = [];
 
     /**
+     * @var bool
+     * 1, будут перезаписаны все характеристики name, meta, description
+     * 0, характеристики не будут перезаписаны, будут дописаны если еще нет на сайте, например описание
+     */
+    public $rewriteInfo = false;
+
+    /**
+     * @inheritdoc
+     */
+    public function options($actionID)
+    {
+        return array_merge(
+            parent::options($actionID),
+            ['rewriteInfo'] // global for all actions
+        );
+    }
+
+    /**
+     * @inheritdoc
+     * @since 2.0.8
+     */
+    public function optionAliases()
+    {
+        return array_merge(parent::optionAliases(), [
+            'r' => 'rewriteInfo',
+        ]);
+    }
+
+    /**
      * Обновление цен и налчия товаров
      */
     public function actionLoad()
@@ -40,6 +71,15 @@ class ProductsController extends Controller
         ini_set("memory_limit","8192M");
         set_time_limit(0);
 
+        if (!$this->rewriteInfo)
+        {
+            $this->stdout("Безопасный режим\n", Console::FG_GREEN);
+        } else
+        {
+            $this->stdout("Не безопасный режим\n", Console::FG_RED);
+            $this->stdout("\tМогут быть перезаписаны все данные\n");
+            sleep(5);
+        }
 
         $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
         if (!$contentIds)
@@ -66,9 +106,9 @@ class ProductsController extends Controller
         $query = (new \yii\db\Query())
                     ->from('apiv5.affproduct')
                     ->where(["!=", 'title', ""])
-                    ->andWhere(["!=", 'description', ""])
-                    ->andWhere(["!=", 'main_image_path', ""])
-                    ->andWhere(["!=", 'second_image_paths', ""])
+                    //->andWhere(["!=", 'description', ""])
+                    //->andWhere(["!=", 'main_image_path', ""])
+                    //->andWhere(["!=", 'second_image_paths', ""])
         ;
 
         $count = $query->count("*", \Yii::$app->dbV3project);
@@ -108,73 +148,103 @@ class ProductsController extends Controller
             $this->stdout("\t\t V3productId: {$v3id}\n");
             $this->stdout("\t\t Affiliat Id: {$id}\n");
 
-            if ($element = V3toysProductContentElement::find()->joinWith('v3toysProductProperty as p')->andWhere(['p.v3toys_id' => $v3id])->one())
+            if (!$element = V3toysProductContentElement::find()->joinWith('v3toysProductProperty as p')->andWhere(['p.v3toys_id' => $v3id])->one())
             {
-                $this->stdout("\t\t exist: {$v3id}\n", Console::FG_YELLOW);
+                $this->stdout("\t\t new product: {$element->id}\n", Console::FG_GREEN);
 
-                $element->meta_keywords = (string) ArrayHelper::getValue($row, 'meta_title');
-                $element->meta_title = (string) ArrayHelper::getValue($row, 'meta_title');
-                $element->meta_description = (string) ArrayHelper::getValue($row, 'meta_description');
-                $element->name = (string) ArrayHelper::getValue($row, 'title');
-                $element->description_full = (string) ArrayHelper::getValue($row, 'description');
-                $element->save();
-                
-                $this->_imageUpdate($element, $row);
-                $this->_imagesUpdate($element, $row);
-                
-                continue;
-            }
+                $property                       = new V3toysProductProperty();
+                $property->consoleController    = $this;
+                $property->v3toys_id            = ArrayHelper::getValue($row, 'product_id');
 
 
-            $property                       = new V3toysProductProperty();
-            $property->consoleController    = $this;
-            $property->v3toys_id            = ArrayHelper::getValue($row, 'product_id');
+                $element = new V3toysProductContentElement();
+                $element->content_id    = $contentId;
 
+                $this->_loadElementInfo($element, $row);
 
-            $element = new V3toysProductContentElement();
-            $element->content_id    = $contentId;
-            $element->meta_keywords = (string) ArrayHelper::getValue($row, 'meta_title');
-            $element->meta_title = (string) ArrayHelper::getValue($row, 'meta_title');
-            $element->meta_description = (string) ArrayHelper::getValue($row, 'meta_description');
-            $element->name = (string) ArrayHelper::getValue($row, 'title');
-            $element->description_full = (string) ArrayHelper::getValue($row, 'description');
-
-            if ($element->save())
-            {
-                $this->stdout("\t\t Element added\n", Console::FG_GREEN);
-                $property->id = $element->id;
-
-                if ($property->save())
+                if ($element->save())
                 {
-                    $this->stdout("\t\t Property added\n", Console::FG_GREEN);
+                    $this->stdout("\t\t Element added\n", Console::FG_GREEN);
+                    $property->id = $element->id;
+
+                    if ($property->save())
+                    {
+                        $this->stdout("\t\t Property added\n", Console::FG_GREEN);
+                    } else
+                    {
+                        $this->stdout("\t\t Property not added\n", Console::FG_RED);
+                        if ($element->delete())
+                        {
+                            $this->stdout("\t\t Element deleted\n");
+                        }
+                    }
+
                 } else
                 {
-                    $this->stdout("\t\t Property not added\n", Console::FG_RED);
-                    if ($element->delete())
-                    {
-                        $this->stdout("\t\t Element deleted\n");
-                    }
+                    $this->stdout("\t\t Element not added\n", Console::FG_RED);
+                    print_r($element->errors);
                 }
 
             } else
             {
-                $this->stdout("\t\t Element not added\n", Console::FG_RED);
-                print_r($element->errors);
+                $this->stdout("\t\t exist site id: {$element->id}\n", Console::FG_YELLOW);
+                $this->_loadElementInfo($element, $row);
+                $element->save();
             }
 
 
-
-
-
-            
             $this->_imageUpdate($element, $row);
             $this->_imagesUpdate($element, $row);
-            
-            die;
         }
     }
-    
-    
+
+    /**
+     * @param $element
+     * @param $row
+     * @return $this
+     */
+    protected function _loadElementInfo($element, $row)
+    {
+        //Можно перезаписать все без разбора
+        if ($this->rewriteInfo)
+        {
+            $element->meta_keywords = (string) ArrayHelper::getValue($row, 'meta_keywords');
+            $element->meta_title = (string) ArrayHelper::getValue($row, 'meta_title');
+            $element->meta_description = (string) ArrayHelper::getValue($row, 'meta_description');
+            $element->name = (string) ArrayHelper::getValue($row, 'title');
+            $element->description_full = (string) ArrayHelper::getValue($row, 'description');
+        } else
+        {
+            if (!$element->meta_keywords)
+            {
+                $element->meta_keywords = (string) ArrayHelper::getValue($row, 'meta_keywords');
+            }
+
+            if (!$element->meta_title)
+            {
+                $element->meta_title = (string) ArrayHelper::getValue($row, 'meta_title');
+            }
+
+            if (!$element->meta_description)
+            {
+                $element->meta_description = (string) ArrayHelper::getValue($row, 'meta_description');
+            }
+
+
+            if (!$element->name)
+            {
+                $element->name = (string) ArrayHelper::getValue($row, 'title');
+            }
+
+            if (!$element->description_full)
+            {
+                $element->description_full = (string) ArrayHelper::getValue($row, 'description');
+            }
+        }
+
+        return $this;
+    }
+
     protected function _imagesUpdate($element, $row)
     {
         $imagePatternPath = ArrayHelper::getValue($this->affData, 'affproduct_image_url_pattern');
@@ -182,7 +252,7 @@ class ProductsController extends Controller
         //Работа с главным изображением
         $second_image_paths = ArrayHelper::getValue($row, 'second_image_paths');
 
-        if ($second_image_paths && !$element->images)
+        if ($second_image_paths && !$element->images && $imagePatternPath)
         {
             $second_image_paths = Json::decode($second_image_paths);
             $this->stdout("\t\t Загрузка картинок\n", Console::FG_GREEN);
@@ -222,7 +292,7 @@ class ProductsController extends Controller
         //Работа с главным изображением
         $mainImage = ArrayHelper::getValue($row, 'main_image_path');
 
-        if ($mainImage)
+        if ($mainImage && $imagePatternPath && !$element->image)
         {
             $realImagePath = str_replace('{image_path}', $mainImage, $imagePatternPath);
 

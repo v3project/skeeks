@@ -89,13 +89,14 @@ class InitV2Controller extends Controller
 
     /**
      * Добавление товаров в базу v3project разовое
+     * Товар будет создан в базе v3project если его еще тм нет, со статусом ПРОВЕРЕН!
      */
     public function actionOnceToV3project()
     {
         $this->stdout("Start import product from content to v3\n");
 
-        //$url = 'http://back.v3project.ru/index.php?r=contents/api/v1/products/sendproducts';
-        $url = 'http://back.v3project.ru.vps108.s2.h.skeeks.com/index.php?r=contents/api/v1/products/addproduct';
+        $url = 'http://back.v3project.ru/index.php?r=contents/api/v1/products/addproduct';
+        //$url = 'http://back.v3project.ru.vps108.s2.h.skeeks.com/index.php?r=contents/api/v1/products/addproduct';
 
         $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
         if (!$contentIds)
@@ -111,9 +112,13 @@ class InitV2Controller extends Controller
             /**
              * @var V3toysProductContentElement $shopContentElement
              */
-            foreach (V3toysProductContentElement::find()->where(['content_id' => $contentIds])->each(100) as $shopContentElement)
+            foreach (V3toysProductContentElement::find()
+                         ->where(['content_id' => $contentIds])
+                         //->andWhere('id > 13007')
+                         ->orderBy(['id' => SORT_ASC])
+                         ->each(100) as $shopContentElement)
             {
-                $this->stdout("{$shopContentElement->name}\n");
+                $this->stdout("{$shopContentElement->id}: {$shopContentElement->name}\n");
                 
                 $client = new Client([
                     'requestConfig' => [
@@ -167,12 +172,21 @@ class InitV2Controller extends Controller
                 if ($httpResponse->isOk)
                 {
                     $this->stdout("Ok\n");
+                    if ($error = ArrayHelper::getValue((array) $httpResponse->data, 'error'))
+                    {
+                        $this->stdout("Error: {$error}\n", Console::FG_RED);
+                    } else
+                    {
+                        $this->stdout("Success\n", Console::FG_GREEN);
+                        print_r($httpResponse->data);
+                    }
                 } else 
                 {
                     $this->stdout("Error\n", Console::FG_RED);
+                    print_r($httpResponse->content);
                 }
-                
-                print_r($httpResponse->content);
+
+                //die;
             }
         }
         
