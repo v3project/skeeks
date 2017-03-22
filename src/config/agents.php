@@ -79,8 +79,16 @@ return
 
     'v3toys/prices/load' =>
     [
-        'description'       => 'Обновление цен',
+        'description'       => 'Обновление цен и наличия',
         'agent_interval'    => 10600,
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
+    ],
+
+    'v3toys/products/load' =>
+    [
+        'description'       => 'Получение и обновление данных по товарам аффилиата',
+        'agent_interval'    => 3600,
         'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
         'is_period'         => 'N'
     ],
