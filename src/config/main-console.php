@@ -3,6 +3,10 @@ return [
 
     'components' =>
     [
+        'dbV3project' => [
+            'class' => 'v3toys\skeeks\V3DbConnection',
+        ],
+
         'v3toysApi' =>
         [
             'class' => 'v3toys\skeeks\V3toysApi'
