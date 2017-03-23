@@ -42,13 +42,14 @@ $this->registerJs(<<<JS
             
             $('.sx-add').on('click', function()
             {
+                var jBtn = $(this); 
                 var action = $(this).data('action');
                 var id = $(this).data('id');
                 var id = $(this).data('id');
-                console.log(id);
+                /*console.log(id);
                 console.log(action);
                 console.log(backend);
-                console.log('--------');
+                console.log('--------');*/
                 
                 var ajax = sx.ajax.preparePostQuery(self.get('backend'), {
                     'id': id, 
@@ -57,12 +58,15 @@ $this->registerJs(<<<JS
                 
                 ajax.bind('success', function(e, result)
                 {
-                    window.location.reload();
+                    //window.location.reload();
+                    jBtn.hide();
+                    
                 });
                 
                 ajax.bind('error', function(e, result)
                 {
-                    window.location.reload();
+                    //window.location.reload();
+                    jBtn.hide();
                 });
                 
                 ajax.execute();
