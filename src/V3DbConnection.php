@@ -26,7 +26,7 @@ class V3DbConnection extends Connection
 
         if (!$this->password)
         {
-            $this->username = 'aff_' . \Yii::$app->v3toysSettings->affiliate_key;
+            $this->password = 'aff_' . \Yii::$app->v3toysSettings->affiliate_key;
         }
 
         parent::init();

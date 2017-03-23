@@ -12,6 +12,8 @@ use skeeks\cms\helpers\UrlHelper;
 use skeeks\cms\models\Comment;
 use skeeks\cms\modules\admin\actions\AdminAction;
 use skeeks\cms\modules\admin\controllers\AdminController;
+use skeeks\cms\modules\admin\controllers\AdminModelEditorController;
+use v3toys\skeeks\models\v5api\PgProductModel;
 use Yii;
 use skeeks\cms\models\User;
 use skeeks\cms\models\searchs\User as UserSearch;
@@ -20,16 +22,19 @@ use skeeks\cms\models\searchs\User as UserSearch;
  * Class AdminPgProductsController
  * @package v3toys\skeeks\controllers
  */
-class AdminPgProductsController extends AdminController
+class AdminPgProductsController extends AdminModelEditorController
 {
     public function init()
     {
         $this->name                   = \Yii::t('v3toys/skeeks', 'Все товары');
+        $this->modelClassName         = PgProductModel::class;
+        $this->modelPkAttribute       = 'id';
+        $this->modelShowAttribute     = "id";
         parent::init();
     }
 
-    public function actionIndex()
+    /*public function actionIndex()
     {
         return $this->render($this->action->id);
-    }
+    }*/
 }
