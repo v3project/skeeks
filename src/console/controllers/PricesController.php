@@ -54,6 +54,11 @@ class PricesController extends Controller
             $step   = 1000;
 
             $pages = round($count/$step);
+            if ($pages == 0)
+            {
+                $pages = 1;
+            }
+
             $this->stdout("Всего страниц: {$pages}\n");
             sleep(1);
 
@@ -61,7 +66,6 @@ class PricesController extends Controller
             {
                 if ($i % $step == 0)
                 {
-                    $page = $page + 1;
 
                     $this->stdout("\tСтраница: {$page}\n");
 
@@ -80,6 +84,9 @@ class PricesController extends Controller
                     {
                         $this->stdout('not found');
                     }
+
+                    $page = $page + 1;
+
                     //print_r(count($elements->all()));
                     //print_r($elements->createCommand()->rawSql);
                     //print_r($page);
@@ -118,9 +125,10 @@ class PricesController extends Controller
 
             foreach ($elements as $element)
             {
-                $this->stdout("\t\t{$element->id}: {$element->name}\n", Console::BOLD);
 
                 $v3id = $element->v3toysProductProperty->v3toys_id;
+                $this->stdout("\t\t{$v3id}: {$element->name}\n", Console::BOLD);
+
                 if ($v3id)
                 {
                     if (!$dataPRice = ArrayHelper::getValue($prices, $v3id))

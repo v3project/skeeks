@@ -10,6 +10,7 @@ namespace v3toys\skeeks\console\controllers;
 use skeeks\cms\relatedProperties\propertyTypes\PropertyTypeText;
 use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopPersonTypeProperty;
+use v3toys\parsing\models\V3toysProductContentElement;
 use v3toys\skeeks\models\V3toysOrder;
 use v3toys\skeeks\models\V3toysOrderStatus;
 use v3toys\skeeks\models\V3toysProductProperty;
@@ -18,6 +19,7 @@ use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 use yii\helpers\Json;
+use yii\httpclient\Client;
 
 /**
  * Class InitV2Controller
@@ -72,5 +74,126 @@ class InitV2Controller extends Controller
                 }
             }
         }
+    }
+
+    public function actionInfo()
+    {
+        $query = (new \yii\db\Query())
+                    ->from('apiv5.affiliate')
+                    ->indexBy('id');
+
+        $prices = $query->all(\Yii::$app->dbV3project);
+
+        print_r($prices);die;
+    }
+
+    /**
+     * Добавление товаров в базу v3project разовое
+     * Товар будет создан в базе v3project если его еще тм нет, со статусом ПРОВЕРЕН!
+     */
+    public function actionOnceToV3project()
+    {
+        $this->stdout("Start import product from content to v3\n");
+
+        $url = 'http://back.v3project.ru/index.php?r=contents/api/v1/products/addproduct';
+        //$url = 'http://back.v3project.ru.vps108.s2.h.skeeks.com/index.php?r=contents/api/v1/products/addproduct';
+
+        $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
+        if (!$contentIds)
+        {
+            $this->stdout("Не настроен v3toys комонент: {$total}\n", Console::FG_RED);
+            return;
+        }
+
+        $count = ShopCmsContentElement::find()->where(['content_id' => $contentIds])->count();
+        $this->stdout("Products: $count\n");
+        if ($count)
+        {
+            /**
+             * @var V3toysProductContentElement $shopContentElement
+             */
+            foreach (V3toysProductContentElement::find()
+                         ->where(['content_id' => $contentIds])
+                         //->andWhere('id > 13007')
+                         ->orderBy(['id' => SORT_ASC])
+                         ->each(100) as $shopContentElement)
+            {
+                $this->stdout("{$shopContentElement->id}: {$shopContentElement->name}\n");
+                
+                $client = new Client([
+                    'requestConfig' => [
+                        'format' => Client::FORMAT_JSON
+                    ]
+                ]);
+                
+                $requestData = [
+                    'product_id'          => $shopContentElement->v3toysProductProperty->v3toys_id,
+                    'title'               => $shopContentElement->name,
+                    'alt_title'           => "",
+
+                    'meta_title'          => $shopContentElement->meta_title,
+                    'meta_description'    => $shopContentElement->meta_description,
+                    'meta_keywords'       => $shopContentElement->meta_keywords,
+                    
+                    'description'         => $shopContentElement->description_full,
+                ];
+                
+                if ($shopContentElement->image)
+                {
+                    $requestData['main_image_path'] = $shopContentElement->image->absoluteSrc;
+                }
+        
+                if ($shopContentElement->images)
+                {
+                    foreach ($shopContentElement->images as $image)
+                    {
+                        $requestData['second_image_paths'][] = $image->absoluteSrc;
+                    }
+                }
+        
+                $request = [
+                    'aff_key'   => \Yii::$app->v3toysSettings->affiliate_key,
+                    'data'      => $requestData
+                ];
+                
+                //print_r($request);
+                        
+                $httpResponse = $client->createRequest()
+                    ->setMethod("POST")
+                    ->setUrl($url)
+                    ->addHeaders(['Content-type' => 'application/json'])
+                    ->addHeaders(['user-agent' => 'JSON-RPC PHP Client'])
+                    ->setData($request)
+                    ->setOptions([
+                        'timeout' => 30
+                    ])->send();
+                ;
+        
+                if ($httpResponse->isOk)
+                {
+                    $this->stdout("Ok\n");
+                    if ($error = ArrayHelper::getValue((array) $httpResponse->data, 'error'))
+                    {
+                        $this->stdout("Error: {$error}\n", Console::FG_RED);
+                    } else
+                    {
+                        $this->stdout("Success\n", Console::FG_GREEN);
+                        print_r($httpResponse->data);
+                    }
+                } else 
+                {
+                    $this->stdout("Error\n", Console::FG_RED);
+                    print_r($httpResponse->content);
+                }
+
+                //die;
+            }
+        }
+        
+        
+     
+        
+
+        $this->stdout("End import product from content \n\n");
     }
 }
