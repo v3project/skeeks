@@ -9,6 +9,7 @@ namespace v3toys\skeeks\controllers;
 
 use v3toys\skeeks\models\V3toysMessage;
 use v3toys\skeeks\models\V3toysOrder;
+use v3toys\skeeks\models\V3toysProductContentElement;
 use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -195,12 +196,20 @@ class ApiV04Controller extends Controller
         $product_id = ArrayHelper::getValue($params, 'product_id');
         if (!$product_id)
         {
-            throw new Exception('Не передан обязательный параметр product_id');
+            throw new Exception('Не передан обязательный параметр product_id.');
         }
 
-        //TODO: Реализовать
+        $element = V3toysProductContentElement::find()
+            ->joinWith('v3toysProductProperty as p')
+            ->where(['p.v3toys_id' => $product_id])
+            ->one();
 
-        return [];
+        if (!$element)
+        {
+            throw new Exception('Товар не найден или удален.');
+        }
+
+        return $this->_convertForApi($element);
     }
 
     /**
@@ -218,11 +227,46 @@ class ApiV04Controller extends Controller
             throw new Exception('Не передан обязательный параметр products_ids');
         }
 
-        //TODO: Реализовать
+        $elements = V3toysProductContentElement::find()
+            ->joinWith('v3toysProductProperty as p')
+            ->where(['p.v3toys_id' => (array) $products_ids])
+            ->all();
 
-        return [];
+        if (!$elements)
+        {
+            throw new Exception('Товары не найдены или удалены.');
+        }
+
+        $result = [];
+
+        foreach ($elements as $element)
+        {
+            $result[] = $this->_convertForApi($element);
+        }
+        return $result;
     }
 
+    
+    protected function _convertForApi(V3toysProductContentElement $element)
+    {
+        $images = [];
+
+        if ($element->image)
+        {
+            $images[] = $element->image->absoluteSrc;
+        }
+
+        $data = [
+            'product_id'    => (int) $element->v3toysProductProperty->v3toys_id,
+            'title'         => $element->name,
+            'url'           => $element->getUrl(true),
+            'price'         => (float) $element->shopProduct->baseProductPrice->money->getValue(),
+            'images'        => $images,
+        ];
+
+        return $data;
+    }
+    
     /**
      * 2.2.1 Метод getMessageIdsByPeriod - получение списка номеров заявок за период времени
      *
