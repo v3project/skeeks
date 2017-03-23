@@ -10,7 +10,7 @@ namespace v3toys\skeeks\console\controllers;
 use skeeks\cms\relatedProperties\propertyTypes\PropertyTypeText;
 use skeeks\cms\shop\models\ShopCmsContentElement;
 use skeeks\cms\shop\models\ShopPersonTypeProperty;
-use v3toys\parsing\models\V3toysProductContentElement;
+use v3toys\skeeks\models\V3toysProductContentElement;
 use v3toys\skeeks\models\V3toysOrder;
 use v3toys\skeeks\models\V3toysOrderStatus;
 use v3toys\skeeks\models\V3toysProductProperty;
