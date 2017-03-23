@@ -1,6 +1,8 @@
 <?php
 return [
 
+    'bootstrap' => ['v3toys'],
+
     'components' =>
     [
         'dbV3project' => [

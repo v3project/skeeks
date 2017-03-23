@@ -167,6 +167,8 @@ class ProductsController extends Controller
                     $this->stdout("\t\t Element added\n", Console::FG_GREEN);
                     $property->id = $element->id;
 
+
+
                     if ($property->save())
                     {
                         $this->stdout("\t\t Property added\n", Console::FG_GREEN);
@@ -178,6 +180,27 @@ class ProductsController extends Controller
                             $this->stdout("\t\t Element deleted\n");
                         }
                     }
+
+                    if ($element->shopProduct)
+                    {
+                        $element->shopProduct->quantity = 0;
+                        $element->shopProduct->save();
+                    } else
+                    {
+                        $shopProduct = new ShopProduct([
+                            'id' => $element->id,
+                            'quantity' => 0
+                        ]);
+
+                        if ($shopProduct->save())
+                        {
+                            $this->stdout("\t\t\tShopProduct created\n");
+                        } else
+                        {
+                            $this->stdout("\t\t\tShopProduct not created\n", Console::FG_RED);
+                        }
+                    }
+
 
                 } else
                 {
