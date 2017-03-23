@@ -14,7 +14,9 @@ $filter = new \yii\base\DynamicModel([
     'id',
     'q',
     'own',
+    'available',
 ]);
+$filter->addRule('available', 'integer');
 $filter->addRule('id', 'integer');
 $filter->addRule('q', 'string');
 $filter->addRule('own', 'string');
@@ -28,6 +30,12 @@ if ($filter->id)
 if ($filter->q)
 {
     $dataProvider->query->andWhere(['like', 'keywords', $filter->q]);
+    //$dataProvider->query->andWhere("keywords::text LIKE '%{$filter->q}%'");
+}
+if ($filter->available)
+{
+    //$dataProvider->query->andWhere(['like', 'keywords::TEXT', $filter->q]);
+    $dataProvider->query->andWhere("guiding_available_quantity > 0");
 }
 if ($filter->own)
 {
@@ -63,6 +71,7 @@ if ($filter->own)
 
     <?= $form->field($filter, 'id')->label('ID (v3)')->setVisible(); ?>
     <?= $form->field($filter, 'q')->label('Поиск')->setVisible(); ?>
+    <?= $form->field($filter, 'available')->label('Только в наличии')->checkbox(['label' => 'Только в наличии'])->setVisible(); ?>
     <?= $form->field($filter, 'own')->listBox([
         null => ' - ',
         'all' => 'Все мои',

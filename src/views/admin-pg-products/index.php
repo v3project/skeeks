@@ -181,6 +181,16 @@ JS
                                 'id' => $id
                             ]
                         ]);
+
+
+
+                        $result = \yii\helpers\Html::a('Добавить', '#', [
+                            'class' => 'btn btn-primary sx-add',
+                            'data' => [
+                                'action' => 'text',
+                                'id' => $id
+                            ]
+                        ]);
                     }
 
 
