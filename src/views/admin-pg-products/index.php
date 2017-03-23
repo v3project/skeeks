@@ -21,7 +21,7 @@ $dataProvider = new \yii\data\ActiveDataProvider([
 
 <?
 $js = \yii\helpers\Json::encode([
-    'backend' => \yii\helpers\Url::to(['/v3toys/admin-pg-products/add'])
+    'backend' => \skeeks\cms\helpers\UrlHelper::construct(['/v3toys/admin-pg-products/add'])->enableAdmin()->toString()
 ]);
 
 $this->registerJs(<<<JS
@@ -38,11 +38,34 @@ $this->registerJs(<<<JS
         {
             var backend = this.get('backend');
 
+            var self = this;
+            
             $('.sx-add').on('click', function()
             {
                 var action = $(this).data('action');
+                var id = $(this).data('id');
+                var id = $(this).data('id');
+                console.log(id);
                 console.log(action);
                 console.log(backend);
+                console.log('--------');
+                
+                var ajax = sx.ajax.preparePostQuery(self.get('backend'), {
+                    'id': id, 
+                    'action': action, 
+                });
+                
+                ajax.bind('success', function(e, result)
+                {
+                    window.location.reload();
+                });
+                
+                ajax.bind('error', function(e, result)
+                {
+                    window.location.reload();
+                });
+                
+                ajax.execute();
                 
                 return false;
             });
@@ -138,21 +161,24 @@ JS
                         $result = \yii\helpers\Html::a('Только характеристики', '#', [
                             'class' => 'btn btn-default btn-xs sx-add',
                             'data' => [
-                                'action' => 'prop'
+                                'action' => 'prop',
+                                'id' => $id
                             ]
                         ]);
 
                         $result .= \yii\helpers\Html::a('Только текст', '#', [
                             'class' => 'btn btn-default btn-xs sx-add',
                             'data' => [
-                                'action' => 'text'
+                                'action' => 'text',
+                                'id' => $id
                             ]
                         ]);
 
                         $result .= \yii\helpers\Html::a('Добавить все', '#', [
                             'class' => 'btn btn-primary btn-xs sx-add',
                             'data' => [
-                                'action' => 'all'
+                                'action' => 'all',
+                                'id' => $id
                             ]
                         ]);
                     }
