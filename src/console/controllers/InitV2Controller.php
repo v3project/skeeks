@@ -90,9 +90,14 @@ class InitV2Controller extends Controller
     /**
      * Добавление товаров в базу v3project разовое
      * Товар будет создан в базе v3project если его еще тм нет, со статусом ПРОВЕРЕН!
+     * 
+     * @param int $needText нужно писать текст или нет
      */
-    public function actionOnceToV3project()
+    public function actionOnceToV3project($needText = 0)
     {
+        ini_set("memory_limit","8192M");
+        set_time_limit(0);
+
         $this->stdout("Start import product from content to v3\n");
 
         $url = 'http://back.v3project.ru/index.php?r=contents/api/v1/products/addproduct';
@@ -116,7 +121,7 @@ class InitV2Controller extends Controller
                          ->where(['content_id' => $contentIds])
                          //->andWhere('id > 13007')
                          ->orderBy(['id' => SORT_ASC])
-                         ->each(100) as $shopContentElement)
+                         ->each(10) as $shopContentElement)
             {
                 $this->stdout("{$shopContentElement->id}: {$shopContentElement->name}\n");
                 
@@ -156,6 +161,11 @@ class InitV2Controller extends Controller
                     'data'      => $requestData
                 ];
                 
+                if ($needText == 1)
+                {
+                    $request['mode'] = 'need_text';
+                }                
+                
                 //print_r($request);
                         
                 $httpResponse = $client->createRequest()
@@ -186,7 +196,6 @@ class InitV2Controller extends Controller
                     print_r($httpResponse->content);
                 }
 
-                //die;
             }
         }
         
