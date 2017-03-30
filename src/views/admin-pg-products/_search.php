@@ -9,6 +9,9 @@
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\searchs\Game */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $query \yii\db\Query */
+
+$query = $dataProvider->query;
 
 $filter = new \yii\base\DynamicModel([
     'id',
@@ -25,17 +28,33 @@ $filter->load(\Yii::$app->request->get());
 
 if ($filter->id)
 {
-    $dataProvider->query->andWhere(['id' => $filter->id]);
+    $query->andWhere(['product.id' => $filter->id]);
 }
 if ($filter->q)
 {
     $dataProvider->query->andWhere(['like', 'keywords', $filter->q]);
+    /*$subQuery = (new \yii\db\Query())->from('apiv5.product_extended');
+    $query->leftJoin(['e' => $subQuery], 'e.id = product.id');
+    $query->andWhere("e.stock_titles::TEXT like '%{$filter->q}%'");*/
+
     //$dataProvider->query->andWhere("keywords::text LIKE '%{$filter->q}%'");
+    
+    
+    /*$query->andWhere([
+        'or',
+        ['like', 'product.keywords', $filter->q],
+        ['like', 'e.stock_titles', $filter->q]
+    ]);*/
+    
+   /* [
+        'like', 'e.stock_titles::TEXT', $filter->q
+    ]*/
+
 }
 if ($filter->available)
 {
     //$dataProvider->query->andWhere(['like', 'keywords::TEXT', $filter->q]);
-    $dataProvider->query->andWhere("guiding_available_quantity > 0");
+    $query->andWhere("product.guiding_available_quantity > 0");
 }
 if ($filter->own)
 {
@@ -62,7 +81,7 @@ if ($filter->own)
         $ownIds = array_keys($affProds);
     }
 
-    $dataProvider->query->andWhere(['id' => $ownIds]);
+    $query->andWhere(['product.id' => $ownIds]);
 }
 ?>
 <? $form = \skeeks\cms\modules\admin\widgets\filters\AdminFiltersForm::begin([
