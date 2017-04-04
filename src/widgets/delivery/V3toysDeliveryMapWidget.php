@@ -65,8 +65,6 @@ class V3toysDeliveryMapWidget extends InputWidget
 
         V3toysDeliveryMapWidgetAsset::register($this->view);
 
-        $this->clientOptions['outlets'] = (array) \Yii::$app->v3toysSettings->currentShipping->isPickup ? \Yii::$app->v3toysSettings->currentShipping->outlets : [];
-        $this->clientOptions['geoobject'] = \Yii::$app->dadataSuggest->address;
         if (\Yii::$app->dadataSuggest->address->coordinates)
         {
             $this->clientOptions['coordinates'] = \Yii::$app->dadataSuggest->address->coordinates;
@@ -76,8 +74,24 @@ class V3toysDeliveryMapWidget extends InputWidget
                 'addressObject' => \Yii::$app->dadataSuggest->address
             ]);
 
-            $this->clientOptions['coordinates'] = $yandex->coordinates;
+
+            if ($yandex->coordinates)
+            {
+                $data = \Yii::$app->dadataSuggest->address->data;
+                $coord = $yandex->coordinates;
+                $data['geo_lat'] = $coord[0];
+                $data['geo_lon'] = $coord[1];
+                \Yii::$app->dadataSuggest->address->data = $data;
+
+                //print_r(\Yii::$app->dadataSuggest->address->data);die;
+
+                $this->clientOptions['coordinates'] = $coord;
+            }
         }
+
+        $this->clientOptions['outlets'] = (array) \Yii::$app->v3toysSettings->currentShipping->isPickup ? \Yii::$app->v3toysSettings->currentShipping->outlets : [];
+        $this->clientOptions['geoobject'] = \Yii::$app->dadataSuggest->address;
+
         $js = Json::encode($this->clientOptions);
 
         $this->view->registerJs(<<<JS

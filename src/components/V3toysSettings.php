@@ -8,6 +8,7 @@
 namespace v3toys\skeeks\components;
 use skeeks\cms\base\Component;
 
+use skeeks\yii2\dadataSuggestApi\helpers\YandexGecodeHelper;
 use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\models\CmsContent;
 use skeeks\cms\shop\models\ShopCmsContentElement;
