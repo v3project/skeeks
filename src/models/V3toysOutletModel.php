@@ -8,13 +8,16 @@
 namespace v3toys\skeeks\models;
 
 use skeeks\modules\cms\money\Money;
+use skeeks\yii2\dadataSuggestApi\helpers\SuggestAddressModel;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 
 /**
  * @property int guidingRealizePriceAmount
  * @property Money guidingRealizeMoney
+ * @property SuggestAddressModel dadataModel
  *
  * Class V3toysOutletModel
  *
@@ -77,7 +80,7 @@ class V3toysOutletModel extends Model
      */
     public function getCity()
     {
-        return 'city';
+        return $this->dadataModel ? $this->dadataModel->regionString : "";
     }
     /**
      * @return mixed
@@ -85,7 +88,7 @@ class V3toysOutletModel extends Model
      */
     public function getAddress()
     {
-        return 'address';
+        return $this->dadataModel ? $this->dadataModel->unrestrictedValue : "";
     }
     /**
      * @return mixed
@@ -96,6 +99,29 @@ class V3toysOutletModel extends Model
         return 'title';
     }
 
+    /**
+     * @var null|SuggestAddressModel
+     */
+    protected $_dadata = null;
+
+    /**
+     * @return null|SuggestAddressModel
+     */
+    public function getDadataModel()
+    {
+        if ($this->_dadata === null)
+        {
+            if ($this->geobject_jsoned)
+            {
+                $data = Json::decode($this->geobject_jsoned);
+                ArrayHelper::remove($data, 'updated_at');
+                ArrayHelper::remove($data, 'distance_from');
+                $this->_dadata = new SuggestAddressModel($data);
+            }
+
+        }
+        return $this->_dadata;
+    }
 
 
     /**

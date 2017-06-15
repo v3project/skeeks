@@ -89,7 +89,7 @@ class V3toysDeliveryMapWidget extends InputWidget
             }
         }
 
-        $this->clientOptions['outlets'] = (array) \Yii::$app->v3toysSettings->currentShipping->isPickup ? \Yii::$app->v3toysSettings->currentShipping->outlets : [];
+        //$this->clientOptions['outlets'] = (array) \Yii::$app->v3toysSettings->currentShipping->isPickup ? \Yii::$app->v3toysSettings->currentShipping->outlets : [];
         $this->clientOptions['geoobject'] = \Yii::$app->dadataSuggest->address;
 
         $js = Json::encode($this->clientOptions);
