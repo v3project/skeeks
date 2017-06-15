@@ -22,25 +22,81 @@ use yii\helpers\ArrayHelper;
  */
 class V3toysOutletModel extends Model
 {
-    public $v3p_outlet_id;
-    public $v3p_provider_id;
+    public $id;
     public $created_at;
     public $updated_at;
+    public $disabled_at;
+    public $provider_id;
     public $guiding_realize_price;
     public $lat;
     public $lon;
-    public $city;
-    public $address;
-    public $title;
     public $phone;
     public $metro_title;
     public $work_schedule;
     public $trip_description;
-    public $description;
     public $same_group_key;
     public $same_group_ind;
 
+
+    public $is_only_prepayed;
+    public $geobject_jsoned;
+
     public $deliveryData = [];
+
+
+
+    /**
+     * @return mixed
+     * @deprecated
+     */
+    public function getV3p_provider_id()
+    {
+        return $this->provider_id;
+    }
+
+    /**
+     * @return mixed
+     * @deprecated
+     */
+    public function getV3p_outlet_id()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     * @deprecated
+     */
+    public function getDescription()
+    {
+        return 'description';
+    }
+    /**
+     * @return mixed
+     * @deprecated
+     */
+    public function getCity()
+    {
+        return 'city';
+    }
+    /**
+     * @return mixed
+     * @deprecated
+     */
+    public function getAddress()
+    {
+        return 'address';
+    }
+    /**
+     * @return mixed
+     * @deprecated
+     */
+    public function getTitle()
+    {
+        return 'title';
+    }
+
+
 
     /**
      * @inheritdoc
@@ -48,8 +104,8 @@ class V3toysOutletModel extends Model
     public function rules()
     {
         return [
-            [['v3p_outlet_id'], 'integer'],
-            [['v3p_provider_id'], 'integer'],
+            [['id'], 'integer'],
+            [['provider_id'], 'integer'],
             [['created_at'], 'string'],
             [['updated_at'], 'string'],
             [['guiding_realize_price'], 'number'],
@@ -101,30 +157,20 @@ class V3toysOutletModel extends Model
     {
         $result = [];
 
-        /*$query = (new \yii\db\Query())
+        $query = (new \yii\db\Query())
                     ->from('apiv5.outlet')
                     ;
 
         $outlets = $query->all(\Yii::$app->dbV3project);
-        print_r($outlets);die;
-        */
-        $response = \Yii::$app->v3projectApi->orderFindOutlets([
-            'params' => [
-                'format' => 'full'
-            ]
-        ]);
 
-        if ($response->isOk)
+
+        if ($outlets)
         {
-            $data = $response->data;
             $result = [];
 
-            if ($data)
+            foreach ($outlets as $row)
             {
-                foreach ($data as $row)
-                {
-                    $result[ArrayHelper::getValue($row, 'v3p_outlet_id')] = $row;
-                }
+                $result[ArrayHelper::getValue($row, 'id')] = $row;
             }
         }
 
