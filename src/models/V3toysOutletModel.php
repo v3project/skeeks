@@ -101,6 +101,13 @@ class V3toysOutletModel extends Model
     {
         $result = [];
 
+        /*$query = (new \yii\db\Query())
+                    ->from('apiv5.outlet')
+                    ;
+
+        $outlets = $query->all(\Yii::$app->dbV3project);
+        print_r($outlets);die;
+        */
         $response = \Yii::$app->v3projectApi->orderFindOutlets([
             'params' => [
                 'format' => 'full'
