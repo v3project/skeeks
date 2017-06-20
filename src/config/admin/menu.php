@@ -54,7 +54,7 @@ return
 
             [
                 "label"     => "Настройки",
-                "img"       => ['\skeeks\cms\modules\admin\assets\AdminAsset', 'images/icons/settings-big.png'],
+                "img"       => ['\skeeks\cms\assets\CmsAsset', 'images/icons/settings-big.png'],
 
                 'items' =>
                 [
@@ -71,8 +71,8 @@ return
                     [
                         "label"     => "Настройки проекта",
                         "url"       => ["cms/admin-settings", "component" => 'v3toys\skeeks\components\V3toysSettings'],
-                        "img"       => ['\skeeks\cms\modules\admin\assets\AdminAsset', 'images/icons/settings-big.png'],
-                        "activeCallback"       => function(\skeeks\cms\modules\admin\helpers\AdminMenuItem $adminMenuItem)
+                        "img"       => ['\skeeks\cms\assets\CmsAsset', 'images/icons/settings-big.png'],
+                        "activeCallback"       => function($adminMenuItem)
                         {
                             return (bool) (\Yii::$app->request->getUrl() == $adminMenuItem->getUrl());
                         },
