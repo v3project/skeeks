@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+2.1.0.1
+-----------------
+  * Composer update
+  
 2.1.0
 -----------------
   * SkeekS CMS Update

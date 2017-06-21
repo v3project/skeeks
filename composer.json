@@ -17,11 +17,11 @@
     ], 
     "minimum-stability": "dev",
     "require": {
-        "skeeks/cms": "*",
-        "skeeks/cms-ya-map": "*",
-        "v3toys/yii2-api": "*",
-        "v3toys/yii2-v3project-api": "*",
-        "skeeks/cms-dadata-suggest": "*"
+        "skeeks/cms": "^4",
+        "skeeks/cms-ya-map": "^1",
+        "v3toys/yii2-api": "^1",
+        "v3toys/yii2-v3project-api": "^1",
+        "skeeks/cms-dadata-suggest": "^1"
     },
     "repositories": [
         {
