@@ -57,6 +57,13 @@ return [
         'v3toys' => 
         [
             'class'                 => 'v3toys\skeeks\V3toysModule',
-        ]
+        ],
+        
+        'shop' =>
+        [
+            'controllerMap' => [
+                'admin-cms-content-element' => 'v3toys\skeeks\controllers\AdminV3ShopCmsContentElementController',
+            ]
+        ],
     ]
 ];
