@@ -106,7 +106,11 @@ class V3toysComponent extends Component
             $requestedUrl = Url::to(ArrayHelper::merge(["/" . \Yii::$app->requestedRoute], (array) \Yii::$app->request->queryParams));
             $autoPath = ArrayHelper::getValue(parse_url($requestedUrl), 'path');
             \Yii::$app->canurl->path = $autoPath;
+        } else if (\Yii::$app->cms->currentTree)
+        {
+            \Yii::$app->canurl->path = \Yii::$app->cms->currentTree->url;
         }
+
         \Yii::$app->canurl->SETcore_params([]);
         \Yii::$app->canurl->SETimportant_params([]);
     }
