@@ -50,6 +50,10 @@ return [
                 '~child-order/<_a>'                      => 'v3toys/order/<_a>',
             ]
         ],
+
+        'canurl' => [
+            'class' => 'v3project\helpers\CanUrl',
+        ],
     ],
     
     'modules' =>

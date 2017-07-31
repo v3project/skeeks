@@ -7,10 +7,16 @@
  */
 namespace v3toys\skeeks\components;
 
+use skeeks\cms\backend\BackendComponent;
 use v3toys\skeeks\models\V3toysProductContentElement;
 use yii\base\BootstrapInterface;
 use yii\base\Component;
+use yii\base\Event;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\Application;
+use yii\web\Controller;
+use yii\web\View;
 
 /**
  * Class V3toysComponent
@@ -68,6 +74,51 @@ class V3toysComponent extends Component
                     }
                 }
             });
+
+
+            Event::on(Controller::class, Controller::EVENT_BEFORE_ACTION, function($e) {
+                $this->initDefaultCanUrl();
+            });
+
+
+            $application->on(Application::EVENT_AFTER_REQUEST, function($e)
+            {
+                if ($this->isTrigerEventCanUrl())
+                {
+                    \Yii::$app->canurl->event_after_request($e);
+                }
+            });
+
+            $application->view->on(View::EVENT_END_PAGE, function($e)
+            {
+                if ($this->isTrigerEventCanUrl())
+                {
+                    \Yii::$app->canurl->event_end_page($e);
+                }
+            });
         }
+    }
+
+    public function initDefaultCanUrl()
+    {
+        if (\Yii::$app->requestedRoute)
+        {
+            $requestedUrl = Url::to(ArrayHelper::merge(["/" . \Yii::$app->requestedRoute], (array) \Yii::$app->request->queryParams));
+            $autoPath = ArrayHelper::getValue(parse_url($requestedUrl), 'path');
+            \Yii::$app->canurl->path = $autoPath;
+        }
+        \Yii::$app->canurl->SETcore_params([]);
+        \Yii::$app->canurl->SETimportant_params([]);
+    }
+
+
+    public function isTrigerEventCanUrl()
+    {
+        if (BackendComponent::getCurrent())
+        {
+            return false;
+        }
+
+        return true;
     }
 }
