@@ -93,5 +93,13 @@ return
         'is_period'         => 'N'
     ],
 
+    'v3toys/products/load affproduct_v2' =>
+    [
+        'description'       => 'Получение и обновление данных по товарам аффилиата v2',
+        'agent_interval'    => 3600,
+        'next_exec_at'      => \Yii::$app->formatter->asTimestamp(time()) + 60,
+        'is_period'         => 'N'
+    ],
+
 
 ];

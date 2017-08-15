@@ -66,7 +66,7 @@ class ProductsController extends Controller
     /**
      * Обновление цен и налчия товаров
      */
-    public function actionLoad()
+    public function actionLoad($table = 'affproduct')
     {
         ini_set("memory_limit","8192M");
         set_time_limit(0);
@@ -104,7 +104,7 @@ class ProductsController extends Controller
         }
         
         $query = (new \yii\db\Query())
-                    ->from('apiv5.affproduct')
+                    ->from('apiv5.' . $table)
                     ->where(["!=", 'title', ""])
                     //->andWhere(["!=", 'description', ""])
                     //->andWhere(["!=", 'main_image_path', ""])
