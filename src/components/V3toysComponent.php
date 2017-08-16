@@ -69,7 +69,7 @@ class V3toysComponent extends Component
                         if ($element = $query->one())
                         {
                             \Yii::$app->response->redirect($element->url);
-                            \Yii::$app->end();
+                            //\Yii::$app->end();
                         }
                     }
                 }
@@ -126,6 +126,11 @@ class V3toysComponent extends Component
         if (\Yii::$app->controller->action->uniqueId == 'v3toys/cart/finish')
         {
             \Yii::$app->canurl->ADDimportant_pnames(['key']);
+        }
+
+        if (\Yii::$app->controller->action->uniqueId == 'cmsSearch/result/index')
+        {
+            \Yii::$app->canurl->ADDimportant_pnames(['q']);
         }
         
     }
