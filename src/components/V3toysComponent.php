@@ -116,7 +116,7 @@ class V3toysComponent extends Component
 
         if (\Yii::$app->controller->action->uniqueId == 'cms/tree/view')
         {
-            \Yii::$app->canurl->ADDimportant_params(['per-page' => \Yii::$app->request->get('per-page')]);
+            \Yii::$app->canurl->ADDminor_params(['per-page' => null]);
             \Yii::$app->canurl->ADDminor_params(['page' => null]);
             \Yii::$app->canurl->ADDimportant_pnames(['ProductFilters']);
             \Yii::$app->canurl->ADDimportant_pnames(['SearchProductsModel']);
