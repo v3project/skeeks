@@ -114,7 +114,7 @@ class V3toysComponent extends Component
         \Yii::$app->canurl->SETcore_params([]);
         \Yii::$app->canurl->SETimportant_params([]);
 
-        if (\Yii::$app->controller->action->uniqueId == 'cms/tree/view')
+        if (in_array(\Yii::$app->controller->action->uniqueId, ['cms/tree/view', 'savedFilters/saved-filters/view']))
         {
             \Yii::$app->canurl->ADDminor_params(['per-page' => null]);
             \Yii::$app->canurl->ADDminor_params(['page' => null]);
