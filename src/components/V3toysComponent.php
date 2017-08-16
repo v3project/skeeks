@@ -113,6 +113,21 @@ class V3toysComponent extends Component
 
         \Yii::$app->canurl->SETcore_params([]);
         \Yii::$app->canurl->SETimportant_params([]);
+
+        if (\Yii::$app->controller->action->uniqueId == 'cms/tree/view')
+        {
+            \Yii::$app->canurl->ADDimportant_params(['per-page' => \Yii::$app->request->get('per-page')]);
+            \Yii::$app->canurl->ADDminor_params(['page' => null]);
+            \Yii::$app->canurl->ADDimportant_pnames(['ProductFilters']);
+            \Yii::$app->canurl->ADDimportant_pnames(['SearchProductsModel']);
+            \Yii::$app->canurl->ADDimportant_pnames(['SearchRelatedPropertiesModel']);
+        }
+
+        if (\Yii::$app->controller->action->uniqueId == 'v3toys/cart/finish')
+        {
+            \Yii::$app->canurl->ADDimportant_pnames(['key']);
+        }
+        
     }
 
 
