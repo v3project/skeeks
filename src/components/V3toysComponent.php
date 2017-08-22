@@ -148,6 +148,11 @@ class V3toysComponent extends Component
             return false;
         }
 
+        if (\Yii::$app->controller && \Yii::$app->controller->uniqueId == 'debug/default')
+        {
+            return false;
+        }
+
         return true;
     }
 }
