@@ -117,6 +117,9 @@ class V3toysComponent extends Component
         } else if (\Yii::$app->cms->currentTree)
         {
             \Yii::$app->canurl->path = \Yii::$app->cms->currentTree->url;
+        } else 
+        {
+            //print_r(\Yii::$app->request);
         }
 
         \Yii::$app->canurl->SETcore_params([]);
@@ -140,7 +143,6 @@ class V3toysComponent extends Component
         {
             \Yii::$app->canurl->ADDimportant_pnames(['q']);
         }
-        
     }
 
 
@@ -157,6 +159,11 @@ class V3toysComponent extends Component
         }
 
         if (\Yii::$app->controller && \Yii::$app->controller->uniqueId == 'debug/default')
+        {
+            return false;
+        }
+        
+        if (!\Yii::$app->requestedRoute)
         {
             return false;
         }
