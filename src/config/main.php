@@ -69,5 +69,19 @@ return [
                 'admin-cms-content-element' => 'v3toys\skeeks\controllers\AdminV3ShopCmsContentElementController',
             ]
         ],
+
+        'seo' =>
+        [
+            'controllerMap' => [
+                'sitemap' => 'v3toys\skeeks\controllers\V3ProjectSitemapController',
+            ]
+        ],
+
+        'cms' =>
+        [
+            'controllerMap' => [
+                'cms' => 'v3toys\skeeks\controllers\V3ProjectCmsController',
+            ]
+        ],
     ]
 ];

@@ -77,16 +77,24 @@ class V3toysComponent extends Component
 
 
             Event::on(Controller::class, Controller::EVENT_BEFORE_ACTION, function($e) {
+                if (!BackendComponent::getCurrent())
+                {
+                    \Yii::$app->cms->descriptor->homepage = 'система управления сайтом';
+                }
+
                 $this->initDefaultCanUrl();
             });
 
 
             $application->on(Application::EVENT_AFTER_REQUEST, function($e)
             {
+
                 if ($this->isTrigerEventCanUrl())
                 {
                     \Yii::$app->canurl->event_after_request($e);
                 }
+
+
             });
 
             $application->view->on(View::EVENT_END_PAGE, function($e)
