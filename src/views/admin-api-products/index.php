@@ -11,6 +11,7 @@ $response = \Yii::$app->v3toysApi->getProductsDataByIds(['in_stock' => 1]);
 <p>3.1.3 Метод getProductsDataByIds - получение данных о товаре по коду</p>
 
 <? if ($response->isError) : ?>
+    <p>Нет доступа к БД V3Project в рамках V3ProjectAPIv5</p>
     <? echo $response->error_code; ?>
     <? echo $response->error_message; ?>
 <? else : ?>

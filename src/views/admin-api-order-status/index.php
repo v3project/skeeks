@@ -11,6 +11,7 @@ $response = \Yii::$app->v3toysApi->getStatus();
 <p>3.1.5 Метод getStatus - возвращает все возможные статусы заказов в V3Project</p>
 
 <? if ($response->isError) : ?>
+    <p>Нет доступа к БД V3Project в рамках V3ProjectAPIv5</p>
     <? echo $response->error_code; ?>
     <? echo $response->error_message; ?>
 <? else : ?>

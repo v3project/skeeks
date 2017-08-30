@@ -13,6 +13,7 @@ $response = \Yii::$app->v3toysApi->send('getOrdersIdsByPeriod', [
 <p>3.1.6 Метод getOrdersIdsByPeriod - получение списка номеров заказов за период времени, оформленных по телефону</p>
 
 <? if ($response->isError) : ?>
+    <p>Нет доступа к БД V3Project в рамках V3ProjectAPIv5</p>
     <? echo $response->error_code; ?>
     <? echo $response->error_message; ?>
 <? else : ?>
