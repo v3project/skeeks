@@ -110,7 +110,13 @@ class PricesController extends Controller
             $v3toysIds = [];
             foreach ($elements as $element)
             {
-                $v3toysIds[] = $element->v3toysProductProperty->v3toys_id;
+                if ($element->v3toysProductProperty) {
+                    $v3toysIds[] = $element->v3toysProductProperty->v3toys_id;
+                }
+            }
+
+            if (!$v3toysIds) {
+                $this->stdout("\t\tНе надйено v3project id товаров для обновления\n");
             }
 
             $query = (new \yii\db\Query())
