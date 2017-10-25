@@ -3,6 +3,7 @@ CHANGELOG
 
 2.1.2.8.pre
 -----------------
+ * Fixed console submit orders
  * Fixed console comman v3toys/prices/load
  
 2.1.2.7

@@ -185,59 +185,59 @@ class V3toysOrder extends \skeeks\cms\models\Core
     public function rules()
     {
         return ArrayHelper::merge(
-        [
-            [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min'], 'integer'],
-            [['name', 'phone', 'email', 'shipping_method'], 'required'],
-            [['comment', 'key'], 'string'],
-            [['discount', 'shipping_cost'], 'number'],
-            [['name', 'email', 'courier_city', 'courier_address', 'pickup_city', 'pickup_point_id', 'post_index', 'post_region', 'post_area', 'post_city', 'post_address', 'post_recipient'], 'string', 'max' => 255],
-            [['dadata_address'], 'safe'],
-            [['phone'], 'string', 'max' => 50],
-            [['shipping_method'], 'string', 'max' => 20],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['created_by' => 'id']],
-            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['updated_by' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['user_id' => 'id']],
-        ],
+            parent::rules(),
+            [
+                [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min'], 'integer'],
+                [['name', 'phone', 'email', 'shipping_method'], 'required'],
+                [['comment', 'key'], 'string'],
+                [['discount', 'shipping_cost'], 'number'],
+                [['name', 'email', 'courier_city', 'courier_address', 'pickup_city', 'pickup_point_id', 'post_index', 'post_region', 'post_area', 'post_city', 'post_address', 'post_recipient'], 'string', 'max' => 255],
+                [['dadata_address'], 'safe'],
+                [['phone'], 'string', 'max' => 50],
+                [['shipping_method'], 'string', 'max' => 20],
+                [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => (isset(\Yii::$app->user) ? \Yii::$app->user->identityClass : CmsUser::class), 'targetAttribute' => ['user_id' => 'id']],
+            ],
 
-        [
-            [['shipping_cost'], 'default', 'value' => function($model)
-            {
-                return $this->moneyDelivery->getValue();
-            }],
-            [['key'], 'default', 'value' => \Yii::$app->security->generateRandomString()],
-            [['products'], 'safe'],
-            [['products'], 'required'],
-            [['email'], 'email'],
-            [['phone'], PhoneValidator::className()],
-            [['shipping_method'], 'in', 'range' => array_keys(static::getShippingMethods())],
+            [
+                [['shipping_cost'], 'default', 'value' => function($model)
+                {
+                    return $this->moneyDelivery->getValue();
+                }],
+                [['key'], 'default', 'value' => \Yii::$app->security->generateRandomString()],
+                [['products'], 'safe'],
+                [['products'], 'required'],
+                [['email'], 'email'],
+                [['phone'], PhoneValidator::className()],
+                [['shipping_method'], 'in', 'range' => array_keys(static::getShippingMethods())],
 
-            [['is_call_me_15_min'], 'boolean'],
+                [['is_call_me_15_min'], 'boolean'],
 
-            /*[['email'], 'unique',
-                'targetClass'       => \Yii::$app->user->identityClass,
-                'targetAttribute'   => 'email',
-                'message'           => 'Отлично, вы уже зарегистрированны у нас. Авторизуйтесь на сайте.',
-                'filter'            => function ($query) {
-                    if ($this->user)
-                    {
-                        $query->andWhere(['!=', 'email', $this->user->email]);
+                /*[['email'], 'unique',
+                    'targetClass'       => \Yii::$app->user->identityClass,
+                    'targetAttribute'   => 'email',
+                    'message'           => 'Отлично, вы уже зарегистрированны у нас. Авторизуйтесь на сайте.',
+                    'filter'            => function ($query) {
+                        if ($this->user)
+                        {
+                            $query->andWhere(['!=', 'email', $this->user->email]);
+                        }
+
                     }
+                ],*/
 
-                }
-            ],*/
+                [['courier_address'], 'required', 'when' => function ($model) {
+                    return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
+                }],
 
-            [['courier_address'], 'required', 'when' => function ($model) {
-                return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
-            }],
+                [['pickup_point_id'], 'required', 'when' => function ($model) {
+                    return $model->shipping_method == static::SHIPPING_METHOD_PICKUP;
+                }],
 
-            [['pickup_point_id'], 'required', 'when' => function ($model) {
-                return $model->shipping_method == static::SHIPPING_METHOD_PICKUP;
-            }],
-
-            [['post_index', 'post_address', 'post_recipient'], 'required', 'when' => function ($model) {
-                return $model->shipping_method == static::SHIPPING_METHOD_POST;
-            }]
-        ]);
+                [['post_index', 'post_address', 'post_recipient'], 'required', 'when' => function ($model) {
+                    return $model->shipping_method == static::SHIPPING_METHOD_POST;
+                }]
+            ]
+        );
     }
 
     /**
