@@ -1,7 +1,7 @@
 CHANGELOG
 ==============
 
-2.1.2.8.pre
+2.1.2.8
 -----------------
  * Fixed console submit orders
  * Fixed console comman v3toys/prices/load
