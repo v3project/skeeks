@@ -22,7 +22,7 @@
         "v3toys/yii2-api": "~1.0.1",
         "v3toys/yii2-v3project-api": "~1.0.1",
         "v3project/yii2-helpers": "~1.0.8",
-        "skeeks/cms-dadata-suggest": "~1.1.1"
+        "skeeks/cms-dadata-suggest": "~1.1.2"
     },
     "autoload": {
         "psr-4": {
