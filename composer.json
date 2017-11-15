@@ -28,5 +28,17 @@
         "psr-4": {
             "v3toys\\skeeks\\": "src/"
         }
+    },
+    "extra": {
+        "config-plugin": {
+            "web": [
+                "src/config/common.php",
+                "src/config/web.php"
+            ],
+            "console": [
+                "src/config/common.php",
+                "src/config/console.php"
+            ]
+        }
     }
 }
