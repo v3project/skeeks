@@ -54,39 +54,58 @@ class V3toysMessage extends Core
     {
         return array_merge(parent::behaviors(), [
             HasJsonFieldsBehavior::className() =>
-            [
-                'class'     => HasJsonFieldsBehavior::className(),
-                'fields'    => ['products']
-            ],
+                [
+                    'class' => HasJsonFieldsBehavior::className(),
+                    'fields' => ['products']
+                ],
         ]);
     }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return ArrayHelper::merge(parent::rules(),
-        [
-            [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id'], 'integer'],
-            //[['full_name'], 'required'],
-            [['comment', 'status_name'], 'string'],
-            [['full_name', 'email'], 'string', 'max' => 255],
-            [['phone'], 'string', 'max' => 50],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['user_id' => 'id']],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['created_by' => 'id']],
-            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => \Yii::$app->user->identityClass, 'targetAttribute' => ['updated_by' => 'id']],
+            [
+                [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id'], 'integer'],
+                //[['full_name'], 'required'],
+                [['comment', 'status_name'], 'string'],
+                [['full_name', 'email'], 'string', 'max' => 255],
+                [['phone'], 'string', 'max' => 50],
+                [
+                    ['user_id'],
+                    'exist',
+                    'skipOnError' => true,
+                    'targetClass' => \Yii::$app->user->identityClass,
+                    'targetAttribute' => ['user_id' => 'id']
+                ],
+                [
+                    ['created_by'],
+                    'exist',
+                    'skipOnError' => true,
+                    'targetClass' => \Yii::$app->user->identityClass,
+                    'targetAttribute' => ['created_by' => 'id']
+                ],
+                [
+                    ['updated_by'],
+                    'exist',
+                    'skipOnError' => true,
+                    'targetClass' => \Yii::$app->user->identityClass,
+                    'targetAttribute' => ['updated_by' => 'id']
+                ],
 
-            [['email'], 'email'],
-            [['full_name'], 'default', 'value' => 'Покупатель'],
+                [['email'], 'email'],
+                [['full_name'], 'default', 'value' => 'Покупатель'],
 
-            [['products'], 'safe'],
-            [['products'], 'required'],
+                [['products'], 'safe'],
+                [['products'], 'required'],
 
-            [['phone'], 'required'],
+                [['phone'], 'required'],
 
-            [['phone'], PhoneValidator::className()],
+                [['phone'], PhoneValidator::className()],
 
-        ]);
+            ]);
     }
 
     /**
@@ -131,22 +150,21 @@ class V3toysMessage extends Core
          * @var $shopElement ShopCmsContentElement
          */
         $shopElement = ShopCmsContentElement::findOne($cmsElementId);
-        if (!$shopElement)
-        {
+        if (!$shopElement) {
             throw new Exception('Этот продукт не найден');
         }
 
         $products = [];
 
         $products[] = [
-            'v3toys_product_id'     => (int) $shopElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
-            'price'                 => $shopElement->shopProduct->baseProductPriceValue,
-            'quantity'              => $quantity,
-            'name'                  => (string) $shopElement->name,
-            'product_id'            => (int) $shopElement->id,
+            'v3toys_product_id' => (int)$shopElement->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName),
+            'price' => $shopElement->shopProduct->baseProductPriceValue,
+            'quantity' => $quantity,
+            'name' => (string)$shopElement->name,
+            'product_id' => (int)$shopElement->id,
         ];
 
-        $this->products = ArrayHelper::merge((array) $this->products, $products);
+        $this->products = ArrayHelper::merge((array)$this->products, $products);
 
 
         return $this;
@@ -162,8 +180,7 @@ class V3toysMessage extends Core
     {
         $money = \Yii::$app->money->newMoney();
 
-        foreach ($this->baskets as $basket)
-        {
+        foreach ($this->baskets as $basket) {
             $money = $money->add($basket->moneyTotal);
         }
 
@@ -185,17 +202,14 @@ class V3toysMessage extends Core
      */
     public function getBaskets()
     {
-        if ($this->_baskets !== null)
-        {
+        if ($this->_baskets !== null) {
             return $this->_baskets;
         }
 
         $result = [];
 
-        if ($this->products)
-        {
-            foreach ($this->products as $productData)
-            {
+        if ($this->products) {
+            foreach ($this->products as $productData) {
                 $obj = new V3toysOrderBasket();
                 $obj->setAttributes($productData, false);
                 $result[] = $obj;
@@ -224,7 +238,7 @@ class V3toysMessage extends Core
         $phone = str_replace('+', '', $phone);
         $phone = trim($phone);
 
-        return (string) $phone;
+        return (string)$phone;
     }
 
     /**
@@ -234,14 +248,12 @@ class V3toysMessage extends Core
     {
         $result = [];
 
-        if ($this->products)
-        {
-            foreach ((array) $this->products as $productdata)
-            {
+        if ($this->products) {
+            foreach ((array)$this->products as $productdata) {
                 $result[] = [
-                    'product_id'    => ArrayHelper::getValue($productdata, 'v3toys_product_id'),
-                    'price'         => ArrayHelper::getValue($productdata, 'price'),
-                    'quantity'      => ArrayHelper::getValue($productdata, 'quantity'),
+                    'product_id' => ArrayHelper::getValue($productdata, 'v3toys_product_id'),
+                    'price' => ArrayHelper::getValue($productdata, 'price'),
+                    'quantity' => ArrayHelper::getValue($productdata, 'quantity'),
                 ];
             }
         }
@@ -255,14 +267,14 @@ class V3toysMessage extends Core
     public function getApiRequestData()
     {
         return [
-            'message_id'            => $this->id,
-            'fake'                  => 0,
-            'full_name'             => $this->full_name,
-            'comment'               => $this->comment,
-            'phone'                 => $this->phoneForApi,
-            'email'                 => $this->email,
-            'created_at'            => date("Y-m-d H:i:s", $this->created_at),
-            'products'              => $this->productsForApi,
+            'message_id' => $this->id,
+            'fake' => 0,
+            'full_name' => $this->full_name,
+            'comment' => $this->comment,
+            'phone' => $this->phoneForApi,
+            'email' => $this->email,
+            'created_at' => date("Y-m-d H:i:s", $this->created_at),
+            'products' => $this->productsForApi,
         ];
     }
 }

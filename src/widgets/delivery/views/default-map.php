@@ -21,20 +21,21 @@ $widget = $this->context;
     </div>
     <ul class="scroll-list" id="search-address-list">
         <? if (\Yii::$app->v3toysSettings->currentShipping->isPickup && \Yii::$app->v3toysSettings->currentShipping->outlets) : ?>
-            <? foreach(\Yii::$app->v3toysSettings->currentShipping->outlets as $outlet) : ?>
+            <? foreach (\Yii::$app->v3toysSettings->currentShipping->outlets as $outlet) : ?>
                 <?= \yii\helpers\Html::beginTag('li', [
                     'data' => \yii\helpers\ArrayHelper::merge($outlet->toArray(['id', 'coords']), [
                         'title' => $outlet->dadataModel ? $outlet->dadataModel->unrestrictedValue : ''
                     ]),
                     'id' => "sx-outlet-" . $outlet->id
                 ]); ?>
-                    <a href="#" class="address-item">
-                        <? if ($outlet->metro_title) : ?>
-                            <span class="metro">M</span> <strong><?= $outlet->metro_title; ?></strong>
-                        <? endif; ?>
-                        <!--<span class="metro">M</span>--><strong><?= $outlet->dadataModel ? $outlet->dadataModel->regionString : ""; ?></strong> - <strong><?= \Yii::$app->money->convertAndFormat($outlet->guidingRealizeMoney); ?></strong><br/>
-                        <?= $outlet->address; ?>
-                    </a>
+                <a href="#" class="address-item">
+                    <? if ($outlet->metro_title) : ?>
+                        <span class="metro">M</span> <strong><?= $outlet->metro_title; ?></strong>
+                    <? endif; ?>
+                    <!--<span class="metro">M</span>--><strong><?= $outlet->dadataModel ? $outlet->dadataModel->regionString : ""; ?></strong>
+                    - <strong><?= \Yii::$app->money->convertAndFormat($outlet->guidingRealizeMoney); ?></strong><br/>
+                    <?= $outlet->address; ?>
+                </a>
                 <?= \yii\helpers\Html::endTag('li'); ?>
             <? endforeach; ?>
         <? endif; ?>

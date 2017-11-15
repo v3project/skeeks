@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks;
 
 use v3toys\yii2\api\Api;
@@ -25,8 +26,7 @@ class V3toysApi extends Api
         parent::init();
 
         //affiliate key из настроек
-        if (\Yii::$app->v3toysSettings->affiliate_key)
-        {
+        if (\Yii::$app->v3toysSettings->affiliate_key) {
             $this->affiliate_key = \Yii::$app->v3toysSettings->affiliate_key;
         }
     }

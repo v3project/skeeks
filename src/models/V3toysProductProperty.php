@@ -74,7 +74,37 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
             [['v3toys_id', 'hero_id', 'series_id', 'sex', 'packing'], 'integer'],
             [['age_from', 'age_to'], 'number'],
             [['extra'], 'string'],
-            [['to_who', 'model', 'color', 'scale', 'number_of_parts', 'complect', 'players_number', 'allowable_weight', 'availability_batteries', 'batteries_type', 'game_time', 'charge_time', 'range', 'composition', 'number_pages', 'volume', 'size_of_box', 'size_of_toy', 'producing_country', 'sku', 'stock_barcode', 'v3toys_brand_name', 'v3toys_title', 'v3toys_description', 'v3toys_video'], 'string', 'max' => 255],
+            [
+                [
+                    'to_who',
+                    'model',
+                    'color',
+                    'scale',
+                    'number_of_parts',
+                    'complect',
+                    'players_number',
+                    'allowable_weight',
+                    'availability_batteries',
+                    'batteries_type',
+                    'game_time',
+                    'charge_time',
+                    'range',
+                    'composition',
+                    'number_pages',
+                    'volume',
+                    'size_of_box',
+                    'size_of_toy',
+                    'producing_country',
+                    'sku',
+                    'stock_barcode',
+                    'v3toys_brand_name',
+                    'v3toys_title',
+                    'v3toys_description',
+                    'v3toys_video'
+                ],
+                'string',
+                'max' => 255
+            ],
         ];
     }
 
@@ -152,10 +182,8 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
 
         $return = [];
 
-        foreach ($result as $code => $value)
-        {
-            if ($value)
-            {
+        foreach ($result as $code => $value) {
+            if ($value) {
                 $return[$this->getAttributeLabel($code)] = $value;
             }
         }
@@ -163,8 +191,7 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
         $return['Возраст'] = $this->ageString;
         $return['Пол'] = $this->sexString;
 
-        if ($this->extraArray)
-        {
+        if ($this->extraArray) {
             $return = ArrayHelper::merge($return, $this->extraArray);
         }
 
@@ -176,8 +203,7 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
      */
     public function getExtraArray()
     {
-        if ($this->extra)
-        {
+        if ($this->extra) {
             return unserialize($this->extra);
         }
 
@@ -189,27 +215,28 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
      */
     public function getAgeString()
     {
-        $ageFrom = (float) $this->age_from;
-        $ageTo  = (float) $this->age_to;
+        $ageFrom = (float)$this->age_from;
+        $ageTo = (float)$this->age_to;
 
-        if ($this->age_from > 0 && $this->age_to > 0)
-        {
+        if ($this->age_from > 0 && $this->age_to > 0) {
             return "от {$ageFrom} " . \Yii::t(
-                'app',
-                '{n, plural, =0{-} =1{от года} one{от # года} few{от # лет} many{от # лет} other{от # лет}}',
-                ['n' => $ageTo]);
-        } else if ($this->age_from > 0)
-        {
-            return \Yii::t(
-                'app',
-                '{n, plural, =0{-} =1{от года} one{от # года} few{от # лет} many{от # лет} other{от # лет}}',
-                ['n' => $ageFrom]);
-        } else if ($this->age_to > 0)
-        {
-            return \Yii::t(
-                'app',
-                '{n, plural, =0{-} =1{от года} one{от # года} few{от # лет} many{от # лет} other{от # лет}}',
-                ['n' => $ageTo]);
+                    'app',
+                    '{n, plural, =0{-} =1{от года} one{от # года} few{от # лет} many{от # лет} other{от # лет}}',
+                    ['n' => $ageTo]);
+        } else {
+            if ($this->age_from > 0) {
+                return \Yii::t(
+                    'app',
+                    '{n, plural, =0{-} =1{от года} one{от # года} few{от # лет} many{от # лет} other{от # лет}}',
+                    ['n' => $ageFrom]);
+            } else {
+                if ($this->age_to > 0) {
+                    return \Yii::t(
+                        'app',
+                        '{n, plural, =0{-} =1{от года} one{от # года} few{от # лет} many{от # лет} other{от # лет}}',
+                        ['n' => $ageTo]);
+                }
+            }
         }
     }
 
@@ -219,24 +246,16 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
      */
     public function getSexString()
     {
-        if ($this->sex == 20)
-        {
+        if ($this->sex == 20) {
             return 'жен.';
-        } else if ($this->sex == 30)
-        {
-            return 'жен. и муж.';
+        } else {
+            if ($this->sex == 30) {
+                return 'жен. и муж.';
+            }
         }
 
         return 'муж.';
     }
-
-
-
-
-
-
-
-
 
 
     /**
@@ -246,8 +265,7 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
 
     public function stdout($message, $second = null)
     {
-        if ($this->consoleController)
-        {
+        if ($this->consoleController) {
             $this->consoleController->stdout($message, $second);
         }
     }

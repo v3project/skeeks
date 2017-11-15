@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.09.2016
  */
+
 namespace v3toys\skeeks\widgets\delivery;
 
 use v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset;
@@ -19,34 +20,32 @@ use yii\helpers\Json;
  */
 class V3toysDeliveryFastWidget extends Widget
 {
-    public $options     = [];
+    public $options = [];
 
-    public $clientOptions     = [];
+    public $clientOptions = [];
 
-    public $viewFile    = 'default-fast';
+    public $viewFile = 'default-fast';
 
 
     public function init()
     {
         parent::init();
 
-        $this->options['id']        = $this->id;
-        $this->clientOptions['id']  = $this->id;
+        $this->options['id'] = $this->id;
+        $this->clientOptions['id'] = $this->id;
     }
 
     public function run()
     {
         //Если данные по доставке закешированы просто рисуем их иначе делаем ajax запрос, чтобы заполнился кеш
-        if (\Yii::$app->v3toysSettings->isCurrentShippingCache)
-        {
+        if (\Yii::$app->v3toysSettings->isCurrentShippingCache) {
             return $this->render($this->viewFile);
-        } else
-        {
+        } else {
             $js = \yii\helpers\Json::encode([
                 'backend' => \yii\helpers\Url::to('/v3toys/cart/get-current-shipping')
             ]);
 
-$this->view->registerJs(<<<JS
+            $this->view->registerJs(<<<JS
     (function(sx, $, _)
     {
         sx.classes.GetShipping = sx.classes.Component.extend({
@@ -66,7 +65,7 @@ $this->view->registerJs(<<<JS
 
     })(sx, sx.$, sx._);
 JS
-);
+            );
         }
     }
 }

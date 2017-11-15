@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
+
 use skeeks\cms\base\Controller;
 use skeeks\cms\helpers\RequestResponse;
 use v3toys\skeeks\kiwi\CityStatic;
@@ -34,7 +36,7 @@ class CityController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'save'  => ['post'],
+                    'save' => ['post'],
                 ],
             ],
         ]);
@@ -49,16 +51,13 @@ class CityController extends Controller
         $title = \Yii::$app->request->post('title');
         $cities = CityStatic::$_city_static;
 
-        if (!$title || !$cities)
-        {
+        if (!$title || !$cities) {
             $rr->success = false;
             $rr->message = 'Нет title или городов';
         }
 
-        foreach ($cities as $city)
-        {
-            if ($city['title'] == $title)
-            {
+        foreach ($cities as $city) {
+            if ($city['title'] == $title) {
                 //save $city
                 $saveCity['value'] = ArrayHelper::getValue($city, 'title');
                 $saveCity['unrestricted_value'] = ArrayHelper::getValue($city, 'unrestricted_value');

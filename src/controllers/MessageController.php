@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
+
 use skeeks\cms\base\Controller;
 use skeeks\cms\helpers\RequestResponse;
 use v3toys\skeeks\models\V3toysMessage;
@@ -35,9 +37,9 @@ class MessageController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'submit'  => ['post'],
-                    'form-submit'  => ['post'],
-                    'form-validate'  => ['post'],
+                    'submit' => ['post'],
+                    'form-submit' => ['post'],
+                    'form-validate' => ['post'],
                 ],
             ],
         ]);
@@ -53,45 +55,36 @@ class MessageController extends Controller
         $v3toysMessage = new V3toysMessage();
         $v3toysMessage->loadDefaultValues();
 
-        try
-        {
-            if ($elementId = \Yii::$app->request->post('element_id'))
-            {
+        try {
+            if ($elementId = \Yii::$app->request->post('element_id')) {
                 $v3toysMessage->addProduct($elementId);
             }
 
-            if ($value = \Yii::$app->request->post('full_name'))
-            {
+            if ($value = \Yii::$app->request->post('full_name')) {
                 $v3toysMessage->full_name = $value;
             }
 
-            if ($email = \Yii::$app->request->post('email'))
-            {
+            if ($email = \Yii::$app->request->post('email')) {
                 $v3toysMessage->email = $email;
             }
 
-            if ($phone = \Yii::$app->request->post('phone'))
-            {
+            if ($phone = \Yii::$app->request->post('phone')) {
                 $v3toysMessage->phone = $phone;
             }
 
-            if ($comment = \Yii::$app->request->post('comment'))
-            {
+            if ($comment = \Yii::$app->request->post('comment')) {
                 $v3toysMessage->comment = $comment;
             }
 
-            if ($v3toysMessage->save())
-            {
+            if ($v3toysMessage->save()) {
                 $rr->success = true;
                 $rr->message = "Ожидайте звонка";
-            } else
-            {
+            } else {
                 throw new Exception('Не удалось сохранить: ' . Json::encode($v3toysMessage->firstErrors));
             }
 
 
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $rr->success = false;
             $rr->message = $e->getMessage();
         }
@@ -110,23 +103,18 @@ class MessageController extends Controller
         $v3toysMessage = new V3toysMessage();
         $v3toysMessage->loadDefaultValues();
 
-        try
-        {
-            if ($rr->isRequestAjaxPost())
-            {
-                if ($elementId = \Yii::$app->request->post('element_id'))
-                {
+        try {
+            if ($rr->isRequestAjaxPost()) {
+                if ($elementId = \Yii::$app->request->post('element_id')) {
                     $v3toysMessage->addProduct($elementId);
                 }
 
-                if ($v3toysMessage->load(\Yii::$app->request->post()) && $v3toysMessage->save())
-                {
+                if ($v3toysMessage->load(\Yii::$app->request->post()) && $v3toysMessage->save()) {
                     $rr->success = true;
                     $rr->message = "Ожидайте звонка";
                 }
             }
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $rr->success = false;
             $rr->message = $e->getMessage();
         }
@@ -134,6 +122,7 @@ class MessageController extends Controller
 
         return $rr;
     }
+
     /**
      * @return RequestResponse
      */
@@ -142,8 +131,7 @@ class MessageController extends Controller
         $v3toysMessage = new V3toysMessage();
         $v3toysMessage->loadDefaultValues();
 
-        if ($elementId = \Yii::$app->request->post('element_id'))
-        {
+        if ($elementId = \Yii::$app->request->post('element_id')) {
             $v3toysMessage->addProduct($elementId);
         }
 

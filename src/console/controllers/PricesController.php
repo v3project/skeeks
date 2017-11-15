@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\console\controllers;
 
 use skeeks\cms\relatedProperties\propertyTypes\PropertyTypeText;
@@ -34,12 +35,11 @@ class PricesController extends Controller
      */
     public function actionLoad()
     {
-        ini_set("memory_limit","8192M");
+        ini_set("memory_limit", "8192M");
         set_time_limit(0);
 
-        $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
-        if (!$contentIds)
-        {
+        $contentIds = (array)\Yii::$app->v3toysSettings->content_ids;
+        if (!$contentIds) {
             $this->stdout("Не настроен v3toys комонент: {$total}\n", Console::FG_RED);
             return;
         }
@@ -47,25 +47,21 @@ class PricesController extends Controller
         $count = V3toysProductContentElement::find()->where(['content_id' => $contentIds])->count();
         $this->stdout("Всего товаров: {$count}\n", Console::BOLD);
 
-        if ($count)
-        {
-            $i      = 0;
-            $page   = 0;
-            $step   = 1000;
+        if ($count) {
+            $i = 0;
+            $page = 0;
+            $step = 1000;
 
-            $pages = round($count/$step);
-            if ($pages == 0)
-            {
+            $pages = round($count / $step);
+            if ($pages == 0) {
                 $pages = 1;
             }
 
             $this->stdout("Всего страниц: {$pages}\n");
             sleep(1);
 
-            for($i >= 0; $i <= $count; $i ++)
-            {
-                if ($i % $step == 0)
-                {
+            for ($i >= 0; $i <= $count; $i++) {
+                if ($i % $step == 0) {
 
                     $this->stdout("\tСтраница: {$page}\n");
 
@@ -76,12 +72,10 @@ class PricesController extends Controller
                         ->limit($step)
                         ->offset($step * $page);
 
-                    if ($elementsUpdate = $elements->all())
-                    {
+                    if ($elementsUpdate = $elements->all()) {
                         $this->stdout('found: ' . count($elementsUpdate));
                         $this->_updateElements($elementsUpdate);
-                    } else
-                    {
+                    } else {
                         $this->stdout('not found');
                     }
 
@@ -102,14 +96,12 @@ class PricesController extends Controller
      */
     protected function _updateElements($elements)
     {
-        if ($elements)
-        {
+        if ($elements) {
             $count = count($elements);
             $this->stdout("\t\tНайдено товаров: {$count}\n");
 
             $v3toysIds = [];
-            foreach ($elements as $element)
-            {
+            foreach ($elements as $element) {
                 if ($element->v3toysProductProperty) {
                     $v3toysIds[] = $element->v3toysProductProperty->v3toys_id;
                 }
@@ -120,48 +112,41 @@ class PricesController extends Controller
             }
 
             $query = (new \yii\db\Query())
-                        ->from('apiv5.product')
-                        ->indexBy('id')
-                        ->andWhere(['id' => $v3toysIds]);
+                ->from('apiv5.product')
+                ->indexBy('id')
+                ->andWhere(['id' => $v3toysIds]);
 
             $prices = $query->all(\Yii::$app->dbV3project);
 
             $count = count($prices);
             $this->stdout("\t\tНайдено цен: {$count}\n");
 
-            foreach ($elements as $element)
-            {
+            foreach ($elements as $element) {
 
                 $v3id = $element->v3toysProductProperty->v3toys_id;
                 $this->stdout("\t\t{$v3id}: {$element->name}\n", Console::BOLD);
 
-                if ($v3id)
-                {
-                    if (!$dataPRice = ArrayHelper::getValue($prices, $v3id))
-                    {
+                if ($v3id) {
+                    if (!$dataPRice = ArrayHelper::getValue($prices, $v3id)) {
                         $this->stdout("\t\tНет данных по цене\n", Console::FG_RED);
                         continue;
                     }
 
 
-
                     $data = $dataPRice;
-                    $priceFromApi = (float) ArrayHelper::getValue($data, 'guiding_realize_price');
-                    $quantityFromApi = (int) ArrayHelper::getValue($data, 'guiding_available_quantity');
+                    $priceFromApi = (float)ArrayHelper::getValue($data, 'guiding_realize_price');
+                    $quantityFromApi = (int)ArrayHelper::getValue($data, 'guiding_available_quantity');
 
                     $isChange = false;
 
-                    if (!$element->shopProduct)
-                    {
+                    if (!$element->shopProduct) {
                         $shopProduct = new ShopProduct([
                             'id' => $element->id
                         ]);
 
-                        if ($shopProduct->save())
-                        {
+                        if ($shopProduct->save()) {
                             $this->stdout("\t\t\tShopProduct created\n");
-                        } else
-                        {
+                        } else {
                             $this->stdout("\t\t\tShopProduct not created\n", Console::FG_RED);
                         }
 
@@ -173,67 +158,60 @@ class PricesController extends Controller
                     $ourPrice = round($ourPrice);
                     $discountValue = \Yii::$app->v3toysSettings->price_discount_percent;
 
-                    $guiding_buy_price = (float) ArrayHelper::getValue($data, 'guiding_buy_price');
-                    $mr_price = (float) ArrayHelper::getValue($data, 'mr_price');
+                    $guiding_buy_price = (float)ArrayHelper::getValue($data, 'guiding_buy_price');
+                    $mr_price = (float)ArrayHelper::getValue($data, 'mr_price');
 
-                    if ($ourPrice > $guiding_buy_price)
-                    {
+                    if ($ourPrice > $guiding_buy_price) {
                         $this->stdout("\t\t{$priceFromApi} + {$discountValue}% = {$ourPrice}\n");
-                    } else
-                    {
+                    } else {
                         $ourPrice = $priceFromApi;
                         $this->stdout("\t\tНаша цена со скидкой {$ourPrice} < закупочной {$guiding_buy_price} оставим {$priceFromApi}\n");
                     }
 
-                    if ($ourPrice < $mr_price)
-                    {
+                    if ($ourPrice < $mr_price) {
                         $ourPrice = $mr_price;
                         $this->stdout("\t\t MR PRICE = {$mr_price}\n", Console::FG_YELLOW);
                     }
 
 
-                    if ($ourPrice != $element->shopProduct->baseProductPriceValue)
-                    {
+                    if ($ourPrice != $element->shopProduct->baseProductPriceValue) {
                         $isChange = true;
 
-                        $this->stdout("\t\tЦена изменилась была {$element->shopProduct->baseProductPriceValue} стала {$ourPrice}\n", Console::FG_GREEN);
-                        $element->shopProduct->purchasing_price = round(ArrayHelper::getValue($data, 'guiding_buy_price'));
+                        $this->stdout("\t\tЦена изменилась была {$element->shopProduct->baseProductPriceValue} стала {$ourPrice}\n",
+                            Console::FG_GREEN);
+                        $element->shopProduct->purchasing_price = round(ArrayHelper::getValue($data,
+                            'guiding_buy_price'));
                         $element->shopProduct->purchasing_currency = "RUB";
 
                         $element->shopProduct->baseProductPriceValue = $ourPrice;
                         $element->shopProduct->baseProductPriceCurrency = "RUB";
-                    } else
-                    {
+                    } else {
                         $this->stdout("\t\tЦена не менялась\n");
                     }
 
-                    if ((int) ArrayHelper::getValue($data, 'guiding_available_quantity') != (int) $element->shopProduct->quantity)
-                    {
+                    if ((int)ArrayHelper::getValue($data,
+                            'guiding_available_quantity') != (int)$element->shopProduct->quantity) {
                         $isChange = true;
-                        $this->stdout("\t\tИзменилось количество {$element->shopProduct->quantity} стало {$quantityFromApi}\n", Console::FG_GREEN);
-                        $element->shopProduct->quantity = (int) ArrayHelper::getValue($data, 'guiding_available_quantity');
-                    } else
-                    {
+                        $this->stdout("\t\tИзменилось количество {$element->shopProduct->quantity} стало {$quantityFromApi}\n",
+                            Console::FG_GREEN);
+                        $element->shopProduct->quantity = (int)ArrayHelper::getValue($data,
+                            'guiding_available_quantity');
+                    } else {
                         $this->stdout("\t\tКоличество не изменилось\n");
                     }
 
 
-                    if ($isChange)
-                    {
-                        if ($element->shopProduct->save())
-                        {
+                    if ($isChange) {
+                        if ($element->shopProduct->save()) {
                             $this->stdout("\tДанные сохранены\n", Console::FG_GREEN);
-                        } else
-                        {
+                        } else {
                             $error = Json::encode($element->shopProduct->errors);
                             $this->stdout("\tДанные не сохранены {$error}\n", Console::FG_RED);
                         }
                     }
 
 
-
-                } else
-                {
+                } else {
                     $this->stdout("\t\tНет v3id\n", Console::FG_RED);
                 }
             }

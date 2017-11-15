@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.09.2016
  */
+
 namespace v3toys\skeeks\widgets\delivery\assets;
+
 use skeeks\cms\base\AssetBundle;
 
 class V3toysDeliveryWidgetAsset extends AssetBundle

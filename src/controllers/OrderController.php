@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
 
 use skeeks\cms\base\Controller;
@@ -44,22 +45,19 @@ class OrderController extends Controller
                 'class' => CmsAccessControl::className(),
                 'only' => ['view'],
                 'rules' => [
-                      // deny all POST request
-                      //
+                    // deny all POST request
+                    //
                     [
                         'allow' => true,
-                        'matchCallback' => function($rule, $action)
-                        {
+                        'matchCallback' => function ($rule, $action) {
                             $id = \Yii::$app->request->get('id');
                             $shopOrder = V3toysOrder::findOne($id);
 
-                            if (\Yii::$app->user->isGuest)
-                            {
+                            if (\Yii::$app->user->isGuest) {
                                 return false;
                             }
 
-                            if ($shopOrder->user_id == \Yii::$app->user->identity->id)
-                            {
+                            if ($shopOrder->user_id == \Yii::$app->user->identity->id) {
                                 return true;
                             }
 
@@ -74,8 +72,8 @@ class OrderController extends Controller
                 'only' => ['list'],
                 'rules' => [
                     [
-                      'allow' => true,
-                      'roles' => ['@'],
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ]
             ]
@@ -88,7 +86,7 @@ class OrderController extends Controller
      */
     public function actionList()
     {
-        $this->view->title = \Yii::t('skeeks/shop/app', 'My orders').' | ' . \Yii::t('skeeks/shop/app', 'Shop');
+        $this->view->title = \Yii::t('skeeks/shop/app', 'My orders') . ' | ' . \Yii::t('skeeks/shop/app', 'Shop');
 
         return $this->render($this->action->id);
     }
@@ -98,10 +96,10 @@ class OrderController extends Controller
      */
     public function actionView()
     {
-        $this->view->title =  \Yii::t('skeeks/shop/app', 'Order') . ' | ' . \Yii::t('skeeks/shop/app', 'Shop');
+        $this->view->title = \Yii::t('skeeks/shop/app', 'Order') . ' | ' . \Yii::t('skeeks/shop/app', 'Shop');
 
         return $this->render($this->action->id, [
-            'model'     => V3toysOrder::findOne(\Yii::$app->request->get('id'))
+            'model' => V3toysOrder::findOne(\Yii::$app->request->get('id'))
         ]);
     }
 }

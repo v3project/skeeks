@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
 
 use skeeks\cms\base\Controller;

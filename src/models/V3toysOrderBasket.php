@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 25.07.2016
  */
+
 namespace v3toys\skeeks\models;
+
 use skeeks\cms\models\CmsStorageFile;
 use skeeks\cms\shop\models\ShopProduct;
 use skeeks\modules\cms\money\Money;
@@ -61,14 +63,11 @@ class V3toysOrderBasket extends Model
      */
     public function getUrl()
     {
-        if ($this->product)
-        {
+        if ($this->product) {
             //Это предложение у него есть родительский элемент
-            if ($parent = $this->product->cmsContentElement->parentContentElement)
-            {
+            if ($parent = $this->product->cmsContentElement->parentContentElement) {
                 return $parent->url;
-            } else
-            {
+            } else {
                 return $this->product->cmsContentElement->url;
             }
         }
@@ -81,14 +80,11 @@ class V3toysOrderBasket extends Model
      */
     public function getAbsoluteUrl()
     {
-        if ($this->product)
-        {
+        if ($this->product) {
             //Это предложение у него есть родительский элемент
-            if ($parent = $this->product->cmsContentElement->parentContentElement)
-            {
+            if ($parent = $this->product->cmsContentElement->parentContentElement) {
                 return $parent->absoluteUrl;
-            } else
-            {
+            } else {
                 return $this->product->cmsContentElement->absoluteUrl;
             }
         }
@@ -101,8 +97,7 @@ class V3toysOrderBasket extends Model
      */
     public function getImage()
     {
-        if ($this->product)
-        {
+        if ($this->product) {
             //Это предложение у него есть родительский элемент
             if ($parent = $this->product->cmsContentElement->parentContentElement) {
                 return $parent->image;

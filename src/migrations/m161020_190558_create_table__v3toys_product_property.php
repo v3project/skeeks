@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.07.2016
  */
+
 use yii\db\Schema;
 use yii\db\Migration;
 
@@ -13,8 +14,7 @@ class m161020_190558_create_table__v3toys_product_property extends Migration
     public function safeUp()
     {
         $tableExist = $this->db->getTableSchema("{{%v3toys_product_property}}", true);
-        if ($tableExist)
-        {
+        if ($tableExist) {
             return true;
         }
 
@@ -24,40 +24,40 @@ class m161020_190558_create_table__v3toys_product_property extends Migration
         }
 
         $this->createTable("{{%v3toys_product_property}}", [
-            'id'                    => $this->primaryKey(),
-            'v3toys_id'             => $this->integer(),
-            'hero_id'               => $this->integer(),
-            'series_id'             => $this->integer(),
-            'sex'                   => $this->integer(),
-            'age_from'              => $this->decimal(18, 2)->notNull()->defaultValue(0),
-            'age_to'                => $this->decimal(18, 2)->notNull()->defaultValue(0),
-            'to_who'                => $this->string(255),
-            'model'                 => $this->string(255),
-            'color'                 => $this->string(255),
-            'scale'                 => $this->string(255), //
-            'number_of_parts'       => $this->string(255), //70 шт.
-            'complect'              => $this->string(255),
-            'players_number'        => $this->string(255),
-            'allowable_weight'        => $this->string(255),
-            'availability_batteries'        => $this->string(255),
-            'batteries_type'        => $this->string(255),
-            'game_time'        => $this->string(255),
-            'charge_time'        => $this->string(255),
-            'range'        => $this->string(255),
-            'composition'        => $this->string(255),
-            'number_pages'        => $this->string(255),
-            'volume'        => $this->string(255),
-            'size_of_box'        => $this->string(255),
-            'size_of_toy'        => $this->string(255),
-            'producing_country'        => $this->string(255),
-            'packing'        => $this->integer(),
-            'extra'        => $this->text(),
-            'sku'        => $this->string(255),
-            'stock_barcode'        => $this->string(255),
-            'v3toys_brand_name'        => $this->string(255),
-            'v3toys_title'        => $this->string(255),
-            'v3toys_description'        => $this->string(255),
-            'v3toys_video'        => $this->string(255),
+            'id' => $this->primaryKey(),
+            'v3toys_id' => $this->integer(),
+            'hero_id' => $this->integer(),
+            'series_id' => $this->integer(),
+            'sex' => $this->integer(),
+            'age_from' => $this->decimal(18, 2)->notNull()->defaultValue(0),
+            'age_to' => $this->decimal(18, 2)->notNull()->defaultValue(0),
+            'to_who' => $this->string(255),
+            'model' => $this->string(255),
+            'color' => $this->string(255),
+            'scale' => $this->string(255), //
+            'number_of_parts' => $this->string(255), //70 шт.
+            'complect' => $this->string(255),
+            'players_number' => $this->string(255),
+            'allowable_weight' => $this->string(255),
+            'availability_batteries' => $this->string(255),
+            'batteries_type' => $this->string(255),
+            'game_time' => $this->string(255),
+            'charge_time' => $this->string(255),
+            'range' => $this->string(255),
+            'composition' => $this->string(255),
+            'number_pages' => $this->string(255),
+            'volume' => $this->string(255),
+            'size_of_box' => $this->string(255),
+            'size_of_toy' => $this->string(255),
+            'producing_country' => $this->string(255),
+            'packing' => $this->integer(),
+            'extra' => $this->text(),
+            'sku' => $this->string(255),
+            'stock_barcode' => $this->string(255),
+            'v3toys_brand_name' => $this->string(255),
+            'v3toys_title' => $this->string(255),
+            'v3toys_description' => $this->string(255),
+            'v3toys_video' => $this->string(255),
         ], $tableOptions);
 
         $this->createIndex('sex', '{{%v3toys_product_property}}', 'sex');

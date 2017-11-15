@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.07.2016
  */
+
 use yii\db\Schema;
 use yii\db\Migration;
 
@@ -13,8 +14,7 @@ class m160808_100558_create_table__v3toys_message extends Migration
     public function safeUp()
     {
         $tableExist = $this->db->getTableSchema("{{%v3toys_message}}", true);
-        if ($tableExist)
-        {
+        if ($tableExist) {
             return true;
         }
 
@@ -24,22 +24,22 @@ class m160808_100558_create_table__v3toys_message extends Migration
         }
 
         $this->createTable("{{%v3toys_message}}", [
-            'id'                    => $this->primaryKey(),
+            'id' => $this->primaryKey(),
 
-            'created_by'            => $this->integer(),
-            'updated_by'            => $this->integer(),
+            'created_by' => $this->integer(),
+            'updated_by' => $this->integer(),
 
-            'created_at'            => $this->integer(),
-            'updated_at'            => $this->integer(),
+            'created_at' => $this->integer(),
+            'updated_at' => $this->integer(),
 
-            'user_id'               => $this->integer(),
+            'user_id' => $this->integer(),
 
-            'full_name'             => $this->string(255)->notNull()->comment('Имя клиента'),
-            'phone'                 => $this->string(50)->comment('Телефон'),
-            'email'                 => $this->string(255)->comment('Email'),
-            'comment'               => $this->text()->comment('Комментарий'),
+            'full_name' => $this->string(255)->notNull()->comment('Имя клиента'),
+            'phone' => $this->string(50)->comment('Телефон'),
+            'email' => $this->string(255)->comment('Email'),
+            'comment' => $this->text()->comment('Комментарий'),
 
-            'products'              => $this->text()->comment('Товары'),
+            'products' => $this->text()->comment('Товары'),
 
         ], $tableOptions);
 

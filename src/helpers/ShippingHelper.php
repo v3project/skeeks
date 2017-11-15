@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 24.09.2016
  */
+
 namespace v3toys\skeeks\helpers;
+
 use skeeks\modules\cms\money\Money;
 use v3toys\skeeks\models\V3toysOutletModel;
 use v3toys\v3project\api\Api;
@@ -39,7 +41,7 @@ class ShippingHelper extends Component
      */
     public function getIsPickup()
     {
-        return (bool) \yii\helpers\ArrayHelper::getValue($this->apiData, 'pickup');
+        return (bool)\yii\helpers\ArrayHelper::getValue($this->apiData, 'pickup');
     }
 
     /**
@@ -47,7 +49,7 @@ class ShippingHelper extends Component
      */
     public function getIsCourier()
     {
-        return (bool) \yii\helpers\ArrayHelper::getValue($this->apiData, 'courier');
+        return (bool)\yii\helpers\ArrayHelper::getValue($this->apiData, 'courier');
     }
 
     /**
@@ -55,7 +57,7 @@ class ShippingHelper extends Component
      */
     public function getIsPost()
     {
-        return (bool) \yii\helpers\ArrayHelper::getValue($this->apiData, 'post');
+        return (bool)\yii\helpers\ArrayHelper::getValue($this->apiData, 'post');
     }
 
     /**
@@ -64,8 +66,8 @@ class ShippingHelper extends Component
     public function getPostMinPrice()
     {
         $value = \yii\helpers\ArrayHelper::getValue($this->apiData, 'post.guiding_realize_price');
-        $value = $value + (int) \Yii::$app->v3toysSettings->post_discaunt_value;
-        return Money::fromString((string) $value, 'RUB');
+        $value = $value + (int)\Yii::$app->v3toysSettings->post_discaunt_value;
+        return Money::fromString((string)$value, 'RUB');
     }
 
     /**
@@ -74,8 +76,8 @@ class ShippingHelper extends Component
     public function getCourierMinPrice()
     {
         $value = \yii\helpers\ArrayHelper::getValue($this->apiData, 'courier.guiding_realize_price');
-        $value = $value + (int) \Yii::$app->v3toysSettings->courier_discaunt_value;
-        return Money::fromString((string) $value, 'RUB');
+        $value = $value + (int)\Yii::$app->v3toysSettings->courier_discaunt_value;
+        return Money::fromString((string)$value, 'RUB');
     }
 
     /**
@@ -86,30 +88,25 @@ class ShippingHelper extends Component
     {
         $minPrice = 0;
 
-        if ($outlets = ArrayHelper::getValue($this->apiData, 'pickup.outlets'))
-        {
+        if ($outlets = ArrayHelper::getValue($this->apiData, 'pickup.outlets')) {
 
-            foreach ($outlets as $outletData)
-            {
-                if ($outletPrice = ArrayHelper::getValue($outletData, 'guiding_realize_price'))
-                {
-                    if ($minPrice == 0 && $outletPrice != 0)
-                    {
+            foreach ($outlets as $outletData) {
+                if ($outletPrice = ArrayHelper::getValue($outletData, 'guiding_realize_price')) {
+                    if ($minPrice == 0 && $outletPrice != 0) {
                         $minPrice = $outletPrice;
                         continue;
                     }
 
-                    if ($outletPrice < $minPrice)
-                    {
+                    if ($outletPrice < $minPrice) {
                         $minPrice = $outletPrice;
                     }
                 }
             }
         }
 
-        $minPrice = $minPrice + (int) \Yii::$app->v3toysSettings->pickup_discaunt_value;
+        $minPrice = $minPrice + (int)\Yii::$app->v3toysSettings->pickup_discaunt_value;
 
-        return Money::fromString((string) $minPrice, 'RUB');
+        return Money::fromString((string)$minPrice, 'RUB');
     }
 
 

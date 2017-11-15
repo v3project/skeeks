@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
 
 use skeeks\cms\components\marketplace\models\PackageModel;
@@ -24,7 +25,7 @@ class AdminApiOrdersController extends AdminController
 {
     public function init()
     {
-        $this->name                   = \Yii::t('v3toys/skeeks', 'Заказы');
+        $this->name = \Yii::t('v3toys/skeeks', 'Заказы');
         parent::init();
     }
 

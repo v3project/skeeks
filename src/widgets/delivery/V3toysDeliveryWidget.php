@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.09.2016
  */
+
 namespace v3toys\skeeks\widgets\delivery;
 
 use v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset;
@@ -19,32 +20,32 @@ use yii\helpers\Json;
  */
 class V3toysDeliveryWidget extends Widget
 {
-    public $options     = [];
+    public $options = [];
 
-    public $clientOptions     = [];
+    public $clientOptions = [];
 
-    public $viewFile    = 'default';
+    public $viewFile = 'default';
 
-    public $label       = 'Условия доставки';
+    public $label = 'Условия доставки';
 
     /**
      * @var string контент для почты
      */
-    public $contentPost       = '';
+    public $contentPost = '';
     /**
      * @var string контент самовывоза
      */
-    public $contentPickup     = '';
+    public $contentPickup = '';
     /**
      * @var string контент для курьера
      */
-    public $contentCourier    = '';
+    public $contentCourier = '';
 
     /**
      * @var string Выбор региона
      */
-    public $contentSelectRegion    = '';
-    public $contentRadioElement    = '';
+    public $contentSelectRegion = '';
+    public $contentRadioElement = '';
 
 
     public function init()
@@ -64,7 +65,7 @@ class V3toysDeliveryWidget extends Widget
         $this->view->registerJs(<<<JS
 new sx.classes.V3toysDelivery({$js});
 JS
-);
+        );
 
         return $this->render($this->viewFile);
     }

@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 19.07.2016
  */
+
 namespace v3toys\skeeks\models;
 
 use skeeks\cms\models\behaviors\HasJsonFieldsBehavior;
@@ -100,9 +101,9 @@ class V3toysOrder extends \skeeks\cms\models\Core
         return '{{%v3toys_order}}';
     }
 
-    const SHIPPING_METHOD_COURIER   = 'COURIER';
-    const SHIPPING_METHOD_PICKUP    = 'PICKUP';
-    const SHIPPING_METHOD_POST      = 'POST';
+    const SHIPPING_METHOD_COURIER = 'COURIER';
+    const SHIPPING_METHOD_PICKUP = 'PICKUP';
+    const SHIPPING_METHOD_POST = 'POST';
 
     /**
      * Доступные методы доставки
@@ -113,8 +114,8 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         return [
             static::SHIPPING_METHOD_COURIER => 'Доставка курьером',
-            static::SHIPPING_METHOD_PICKUP  => 'Самовывоз',
-            static::SHIPPING_METHOD_POST    => 'Доставка Почтой России',
+            static::SHIPPING_METHOD_PICKUP => 'Самовывоз',
+            static::SHIPPING_METHOD_POST => 'Доставка Почтой России',
         ];
     }
 
@@ -132,7 +133,8 @@ class V3toysOrder extends \skeeks\cms\models\Core
      * @param $e
      */
     public function _beforeCreateOrder($e)
-    {}
+    {
+    }
 
     /**
      * После создания заказа, пробуем создать все что нужно в cms но это уже не обязательно, поэтому если что то, где то не сработает не столь важно
@@ -141,13 +143,10 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function _afterCreateOrder($e)
     {
-        try
-        {
+        try {
             //Если пользователя не было, пробуем создать
-            if (!$this->user_id)
-            {
-                if (!$user = CmsUser::findOne(['email' => $this->email]))
-                {
+            if (!$this->user_id) {
+                if (!$user = CmsUser::findOne(['email' => $this->email])) {
                     $user = $this->_createCmsUser();
                 }
 
@@ -157,8 +156,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
                 $this->refresh();
             }
 
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             \Yii::error($e->getMessage(), V3toysModule::className());
         }
 
@@ -172,10 +170,10 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         return array_merge(parent::behaviors(), [
             HasJsonFieldsBehavior::className() =>
-            [
-                'class'     => HasJsonFieldsBehavior::className(),
-                'fields'    => ['products', 'dadata_address']
-            ],
+                [
+                    'class' => HasJsonFieldsBehavior::className(),
+                    'fields' => ['products', 'dadata_address']
+                ],
         ]);
     }
 
@@ -187,22 +185,60 @@ class V3toysOrder extends \skeeks\cms\models\Core
         return ArrayHelper::merge(
             parent::rules(),
             [
-                [['created_by', 'updated_by', 'created_at', 'updated_at', 'user_id', 'v3toys_order_id', 'v3toys_status_id', 'is_call_me_15_min'], 'integer'],
+                [
+                    [
+                        'created_by',
+                        'updated_by',
+                        'created_at',
+                        'updated_at',
+                        'user_id',
+                        'v3toys_order_id',
+                        'v3toys_status_id',
+                        'is_call_me_15_min'
+                    ],
+                    'integer'
+                ],
                 [['name', 'phone', 'email', 'shipping_method'], 'required'],
                 [['comment', 'key'], 'string'],
                 [['discount', 'shipping_cost'], 'number'],
-                [['name', 'email', 'courier_city', 'courier_address', 'pickup_city', 'pickup_point_id', 'post_index', 'post_region', 'post_area', 'post_city', 'post_address', 'post_recipient'], 'string', 'max' => 255],
+                [
+                    [
+                        'name',
+                        'email',
+                        'courier_city',
+                        'courier_address',
+                        'pickup_city',
+                        'pickup_point_id',
+                        'post_index',
+                        'post_region',
+                        'post_area',
+                        'post_city',
+                        'post_address',
+                        'post_recipient'
+                    ],
+                    'string',
+                    'max' => 255
+                ],
                 [['dadata_address'], 'safe'],
                 [['phone'], 'string', 'max' => 50],
                 [['shipping_method'], 'string', 'max' => 20],
-                [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => (isset(\Yii::$app->user) ? \Yii::$app->user->identityClass : CmsUser::class), 'targetAttribute' => ['user_id' => 'id']],
+                [
+                    ['user_id'],
+                    'exist',
+                    'skipOnError' => true,
+                    'targetClass' => (isset(\Yii::$app->user) ? \Yii::$app->user->identityClass : CmsUser::class),
+                    'targetAttribute' => ['user_id' => 'id']
+                ],
             ],
 
             [
-                [['shipping_cost'], 'default', 'value' => function($model)
-                {
-                    return $this->moneyDelivery->getValue();
-                }],
+                [
+                    ['shipping_cost'],
+                    'default',
+                    'value' => function ($model) {
+                        return $this->moneyDelivery->getValue();
+                    }
+                ],
                 [['key'], 'default', 'value' => \Yii::$app->security->generateRandomString()],
                 [['products'], 'safe'],
                 [['products'], 'required'],
@@ -225,17 +261,29 @@ class V3toysOrder extends \skeeks\cms\models\Core
                     }
                 ],*/
 
-                [['courier_address'], 'required', 'when' => function ($model) {
-                    return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
-                }],
+                [
+                    ['courier_address'],
+                    'required',
+                    'when' => function ($model) {
+                        return $model->shipping_method == static::SHIPPING_METHOD_COURIER;
+                    }
+                ],
 
-                [['pickup_point_id'], 'required', 'when' => function ($model) {
-                    return $model->shipping_method == static::SHIPPING_METHOD_PICKUP;
-                }],
+                [
+                    ['pickup_point_id'],
+                    'required',
+                    'when' => function ($model) {
+                        return $model->shipping_method == static::SHIPPING_METHOD_PICKUP;
+                    }
+                ],
 
-                [['post_index', 'post_address', 'post_recipient'], 'required', 'when' => function ($model) {
-                    return $model->shipping_method == static::SHIPPING_METHOD_POST;
-                }]
+                [
+                    ['post_index', 'post_address', 'post_recipient'],
+                    'required',
+                    'when' => function ($model) {
+                        return $model->shipping_method == static::SHIPPING_METHOD_POST;
+                    }
+                ]
             ]
         );
     }
@@ -290,43 +338,36 @@ class V3toysOrder extends \skeeks\cms\models\Core
         $object = new static(['user_id' => \Yii::$app->user->id]);
 
         $object->setAttributes(
-            (array) \Yii::$app->session->get("sx-v3toys-order")
+            (array)\Yii::$app->session->get("sx-v3toys-order")
         );
 
-        if ($object->user)
-        {
-            if (!$object->email)
-            {
-                $object->email    = $object->user->email;
+        if ($object->user) {
+            if (!$object->email) {
+                $object->email = $object->user->email;
             }
-            if (!$object->name)
-            {
-                $object->name    = $object->user->name;
+            if (!$object->name) {
+                $object->name = $object->user->name;
             }
-            if (!$object->phone)
-            {
-                $object->phone    = $object->user->phone;
+            if (!$object->phone) {
+                $object->phone = $object->user->phone;
             }
         }
 
 
         $products = [];
 
-        if (\Yii::$app->shop->shopFuser->shopBaskets)
-        {
-            foreach (\Yii::$app->shop->shopFuser->shopBaskets as $shopBasket)
-            {
-                if ($shopBasket->product)
-                {
+        if (\Yii::$app->shop->shopFuser->shopBaskets) {
+            foreach (\Yii::$app->shop->shopFuser->shopBaskets as $shopBasket) {
+                if ($shopBasket->product) {
                     $v3toys_id = \Yii::$app->v3toys->getV3toysIdByCmsElement($shopBasket->product->cmsContentElement);
 
                     $products[] = [
-                        'v3toys_product_id'     => $v3toys_id,
-                        'purchasing_price'      => $shopBasket->product->purchasing_price,
-                        'price'                 => $shopBasket->price,
-                        'quantity'              => $shopBasket->quantity,
-                        'name'                  => (string) $shopBasket->product->cmsContentElement->name,
-                        'product_id'            => (int) $shopBasket->product->cmsContentElement->id,
+                        'v3toys_product_id' => $v3toys_id,
+                        'purchasing_price' => $shopBasket->product->purchasing_price,
+                        'price' => $shopBasket->price,
+                        'quantity' => $shopBasket->quantity,
+                        'name' => (string)$shopBasket->product->cmsContentElement->name,
+                        'product_id' => (int)$shopBasket->product->cmsContentElement->id,
                     ];
                 }
 
@@ -334,29 +375,27 @@ class V3toysOrder extends \skeeks\cms\models\Core
         }
 
         //Наполнение заказа текущими продуктами из корзины
-        $object->products   = $products;
-        if (\Yii::$app->dadataSuggest->address)
-        {
-            $object->dadata_address  = \Yii::$app->dadataSuggest->address->toArray();
+        $object->products = $products;
+        if (\Yii::$app->dadataSuggest->address) {
+            $object->dadata_address = \Yii::$app->dadataSuggest->address->toArray();
         }
-        $object->discount   = \Yii::$app->shop->shopFuser->moneyDiscount->getValue();
+        $object->discount = \Yii::$app->shop->shopFuser->moneyDiscount->getValue();
 
-        if ($object->dadataAddress)
-        {
+        if ($object->dadataAddress) {
             //print_r(\Yii::$app->dadataSuggest->address->toArray());die;
             //$object->post_region = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'region');
-            if (ArrayHelper::getValue($object->dadataAddress->data, 'city'))
-            {
+            if (ArrayHelper::getValue($object->dadataAddress->data, 'city')) {
                 //$object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'city');
-            } else if (ArrayHelper::getValue($object->dadataAddress->data, 'settlement'))
-            {
-                //$object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'settlement');
+            } else {
+                if (ArrayHelper::getValue($object->dadataAddress->data, 'settlement')) {
+                    //$object->post_city = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'settlement');
+                }
             }
             //$object->post_area = ArrayHelper::getValue(\Yii::$app->dadataSuggest->address->data, 'area');
             $object->post_index = ArrayHelper::getValue($object->dadataAddress->data, 'postal_code');
 
-            $object->post_address       = $object->dadataAddress->shortAddressString;
-            $object->courier_address    = $object->dadataAddress->shortAddressString;
+            $object->post_address = $object->dadataAddress->shortAddressString;
+            $object->courier_address = $object->dadataAddress->shortAddressString;
         }
 
 
@@ -370,14 +409,12 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function getDadataAddress()
     {
-        if ($this->_suggestAddress !== null && $this->_suggestAddress instanceof SuggestAddressModel)
-        {
+        if ($this->_suggestAddress !== null && $this->_suggestAddress instanceof SuggestAddressModel) {
             return $this->_suggestAddress;
         }
 
-        if ($this->dadata_address)
-        {
-            $this->_suggestAddress = new SuggestAddressModel((array) $this->dadata_address);
+        if ($this->dadata_address) {
+            $this->_suggestAddress = new SuggestAddressModel((array)$this->dadata_address);
         }
 
         return $this->_suggestAddress;
@@ -390,16 +427,15 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     protected function _createCmsUser()
     {
-        $newUser                = new SignupForm();
-        $newUser->scenario      = SignupForm::SCENARION_ONLYEMAIL;
-        $newUser->email         = $this->email;
+        $newUser = new SignupForm();
+        $newUser->scenario = SignupForm::SCENARION_ONLYEMAIL;
+        $newUser->email = $this->email;
 
-        if (!$user = $newUser->signup())
-        {
+        if (!$user = $newUser->signup()) {
             throw new Exception(\Yii::t('skeeks/shop/app', 'Do not create a user profile.'));
         }
 
-        $user->name          = $this->name;
+        $user->name = $this->name;
         $user->save();
 
         return $user;
@@ -422,7 +458,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
         $phone = str_replace('+', '', $phone);
         $phone = trim($phone);
 
-        return (string) $phone;
+        return (string)$phone;
     }
 
     /**
@@ -433,23 +469,23 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         $result = [];
 
-        if ($this->shipping_method == static::SHIPPING_METHOD_COURIER)
-        {
-            $result['city']     = "Москва до МКАД";
-            $result['address']  = $this->dadataAddress->unrestrictedValue;
+        if ($this->shipping_method == static::SHIPPING_METHOD_COURIER) {
+            $result['city'] = "Москва до МКАД";
+            $result['address'] = $this->dadataAddress->unrestrictedValue;
 
-        } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP)
-        {
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP) {
             //$result['city'] = "Москва";
             //$result['point_id'] = 1;
             $result['v3p_outlet_id'] = $this->pickup_point_id;
 
-        } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST)
-        {
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST) {
             $result['index'] = $this->post_index;
-            $result['region'] = ArrayHelper::getValue($this->dadataAddress->data, 'region') ? ArrayHelper::getValue($this->dadataAddress->data, 'region') : "Не определено";
-            $result['area'] = ArrayHelper::getValue($this->dadataAddress->data, 'area') ? ArrayHelper::getValue($this->dadataAddress->data, 'area') : "Не определено";
-            $result['city'] = ArrayHelper::getValue($this->dadataAddress->data, 'city') ? ArrayHelper::getValue($this->dadataAddress->data, 'city') : "Не определено";;
+            $result['region'] = ArrayHelper::getValue($this->dadataAddress->data,
+                'region') ? ArrayHelper::getValue($this->dadataAddress->data, 'region') : "Не определено";
+            $result['area'] = ArrayHelper::getValue($this->dadataAddress->data,
+                'area') ? ArrayHelper::getValue($this->dadataAddress->data, 'area') : "Не определено";
+            $result['city'] = ArrayHelper::getValue($this->dadataAddress->data,
+                'city') ? ArrayHelper::getValue($this->dadataAddress->data, 'city') : "Не определено";;
             $result['address'] = $this->dadataAddress->unrestrictedValue;;
             $result['recipient'] = $this->post_recipient;
         }
@@ -460,16 +496,13 @@ class V3toysOrder extends \skeeks\cms\models\Core
     public function getOldShippindDataForApi()
     {
         $result = [];
-        if ($this->shipping_method == static::SHIPPING_METHOD_COURIER)
-        {
+        if ($this->shipping_method == static::SHIPPING_METHOD_COURIER) {
             $result['city'] = $this->courier_city;
             $result['address'] = $this->courier_address;
-        } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP)
-        {
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP) {
             $result['city'] = $this->pickup_city;
             $result['point_id'] = $this->pickup_point_id;
-        } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST)
-        {
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST) {
             $result['index'] = $this->post_index;
             $result['region'] = $this->post_region;
             $result['area'] = $this->post_area;
@@ -485,11 +518,9 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function getPaymentName()
     {
-        if ($this->shipping_method == static::SHIPPING_METHOD_POST)
-        {
+        if ($this->shipping_method == static::SHIPPING_METHOD_POST) {
             return 'Наложенный платеж';
-        } else
-        {
+        } else {
             return 'Наличные при получении заказа';
         }
     }
@@ -499,20 +530,15 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function getDeliveryFullName()
     {
-        if ($this->dadataAddress)
-        {
-            if ($this->shipping_method == static::SHIPPING_METHOD_PICKUP)
-            {
-                if ($model = V3toysOutletModel::getById($this->pickup_point_id))
-                {
+        if ($this->dadataAddress) {
+            if ($this->shipping_method == static::SHIPPING_METHOD_PICKUP) {
+                if ($model = V3toysOutletModel::getById($this->pickup_point_id)) {
                     return $this->deliveryName . " (" . $model->city . ", " . $model->address . ")";
                 }
-            } else
-            {
+            } else {
                 return $this->deliveryName . " (" . $this->dadataAddress->unrestrictedValue . ")";
             }
-        } else
-        {
+        } else {
             //Старое апи
             $data = $this->getOldShippindDataForApi();
             ArrayHelper::remove($data, 'point_id');
@@ -528,46 +554,43 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         $result = [];
 
-        if ($this->products)
-        {
-            foreach ((array) $this->products as $productdata)
-            {
-                if (!$v3toys_id = ArrayHelper::getValue($productdata, 'v3toys_product_id'))
-                {
+        if ($this->products) {
+            foreach ((array)$this->products as $productdata) {
+                if (!$v3toys_id = ArrayHelper::getValue($productdata, 'v3toys_product_id')) {
                     $productId = ArrayHelper::getValue($productdata, 'product_id');
-                    if ($element = CmsContentElement::findOne($productId))
-                    {
+                    if ($element = CmsContentElement::findOne($productId)) {
                         $v3toys_id = \Yii::$app->v3toys->getV3toysIdByCmsElement($element);
                     }
                 }
 
                 $result[] = [
-                    'product_id'    => $v3toys_id,
-                    'price'         => ArrayHelper::getValue($productdata, 'price'),
-                    'quantity'      => ArrayHelper::getValue($productdata, 'quantity'),
+                    'product_id' => $v3toys_id,
+                    'price' => ArrayHelper::getValue($productdata, 'price'),
+                    'quantity' => ArrayHelper::getValue($productdata, 'quantity'),
                 ];
             }
         }
 
         return $result;
     }
+
     /**
      * @return array
      */
     public function getApiRequestData()
     {
         return [
-            'order_id'              => $this->id,
-            'fake'                  => 0,
-            'full_name'             => $this->name,
-            'comment'               => $this->deliveryFullName . "\n" . ($this->comment ? "От клиента: " . $this->comment : ""),
-            'phone'                 => $this->phoneForApi,
-            'email'                 => $this->email,
-            'created_at'            => date("Y-m-d H:i:s", $this->created_at),
-            'products'              => $this->productsForApi,
-            'shipping_method'       => $this->shipping_method,
-            'shipping_cost'         => $this->moneyDelivery->getValue(),
-            'shipping_data'         => $this->shippindDataForApi,
+            'order_id' => $this->id,
+            'fake' => 0,
+            'full_name' => $this->name,
+            'comment' => $this->deliveryFullName . "\n" . ($this->comment ? "От клиента: " . $this->comment : ""),
+            'phone' => $this->phoneForApi,
+            'email' => $this->email,
+            'created_at' => date("Y-m-d H:i:s", $this->created_at),
+            'products' => $this->productsForApi,
+            'shipping_method' => $this->shipping_method,
+            'shipping_cost' => $this->moneyDelivery->getValue(),
+            'shipping_data' => $this->shippindDataForApi,
         ];
     }
 
@@ -579,17 +602,14 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function getBaskets()
     {
-        if ($this->_baskets !== null)
-        {
+        if ($this->_baskets !== null) {
             return $this->_baskets;
         }
 
         $result = [];
 
-        if ($this->products)
-        {
-            foreach ($this->products as $productData)
-            {
+        if ($this->products) {
+            foreach ($this->products as $productData) {
                 $obj = new V3toysOrderBasket();
                 $obj->setAttributes($productData, false);
                 $result[] = $obj;
@@ -606,7 +626,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function getDeliveryName()
     {
-        return (string) ArrayHelper::getValue(static::getShippingMethods(), $this->shipping_method);
+        return (string)ArrayHelper::getValue(static::getShippingMethods(), $this->shipping_method);
     }
 
 
@@ -620,8 +640,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         $money = $this->moneyOriginal;
 
-        if ($this->moneyDelivery)
-        {
+        if ($this->moneyDelivery) {
             $money = $money->add($this->moneyDelivery);
         }
 
@@ -629,54 +648,46 @@ class V3toysOrder extends \skeeks\cms\models\Core
     }
 
     private $_moneyDeliveryFromApi = null;
+
     /**
      * @return Money
      */
     public function getMoneyDeliveryFromApi()
     {
-        if ($this->_moneyDeliveryFromApi !== null)
-        {
+        if ($this->_moneyDeliveryFromApi !== null) {
             return $this->_moneyDeliveryFromApi;
         }
 
         //Данные по доставке из апи
         $shipping = \Yii::$app->v3toysSettings->getShipping($this->dadata_address);
 
-        if ($this->shipping_method == static::SHIPPING_METHOD_COURIER)
-        {
-            if ($shipping->isCourier)
-            {
+        if ($this->shipping_method == static::SHIPPING_METHOD_COURIER) {
+            if ($shipping->isCourier) {
                 $this->_moneyDeliveryFromApi = $shipping->courierMinPrice;
             }
 
-        } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP)
-        {
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_PICKUP) {
 
-            if ($shipping->isPickup)
-            {
-                if ($shipping->outlets && isset($shipping->outlets[$this->pickup_point_id]))
-                {
+            if ($shipping->isPickup) {
+                if ($shipping->outlets && isset($shipping->outlets[$this->pickup_point_id])) {
                     /**
                      * @var $outlet V3toysOutletModel
                      */
                     $outlet = $shipping->outlets[$this->pickup_point_id];
-                    $value = (int) ArrayHelper::getValue($outlet->deliveryData, 'guiding_realize_price');
-                    $value = $value + (int) \Yii::$app->v3toysSettings->pickup_discaunt_value;
-                    $this->_moneyDeliveryFromApi = Money::fromString((string) $value, "RUB");
+                    $value = (int)ArrayHelper::getValue($outlet->deliveryData, 'guiding_realize_price');
+                    $value = $value + (int)\Yii::$app->v3toysSettings->pickup_discaunt_value;
+                    $this->_moneyDeliveryFromApi = Money::fromString((string)$value, "RUB");
                 }
             }
 
-        } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST)
-        {
-            if ($shipping->isPost)
-            {
+        } elseif ($this->shipping_method == static::SHIPPING_METHOD_POST) {
+            if ($shipping->isPost) {
                 $this->_moneyDeliveryFromApi = $shipping->postMinPrice;
             }
         }
 
-        if ($this->_moneyDeliveryFromApi === null)
-        {
-            $this->_moneyDeliveryFromApi = Money::fromString((string) 0, "RUB");
+        if ($this->_moneyDeliveryFromApi === null) {
+            $this->_moneyDeliveryFromApi = Money::fromString((string)0, "RUB");
         }
         return $this->_moneyDeliveryFromApi;
     }
@@ -686,12 +697,11 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function getMoneyDelivery()
     {
-        if ($this->isNewRecord)
-        {
+        if ($this->isNewRecord) {
             return $this->moneyDeliveryFromApi;
         }
 
-        return Money::fromString((string) $this->shipping_cost, "RUB");;
+        return Money::fromString((string)$this->shipping_cost, "RUB");;
     }
 
     /**
@@ -712,15 +722,12 @@ class V3toysOrder extends \skeeks\cms\models\Core
     {
         $money = \Yii::$app->money->newMoney();
 
-        foreach ($this->baskets as $basket)
-        {
+        foreach ($this->baskets as $basket) {
             $money = $money->add($basket->moneyTotal);
         }
 
         return $money;
     }
-
-
 
 
     /**

@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
+
 use skeeks\cms\base\Controller;
 use skeeks\cms\helpers\RequestResponse;
 use v3toys\skeeks\models\V3toysOrder;
@@ -33,7 +35,7 @@ class CartController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'validate'  => ['post'],
+                    'validate' => ['post'],
                 ],
             ],
         ]);
@@ -52,13 +54,11 @@ class CartController extends Controller
     public function actionFinish()
     {
 
-        if (!$key = \Yii::$app->request->get('key'))
-        {
+        if (!$key = \Yii::$app->request->get('key')) {
             throw new NotFoundHttpException('Заказ не найден');
         }
 
-        if (!$v3toysOrder = V3toysOrder::findOne(['key' => $key]))
-        {
+        if (!$v3toysOrder = V3toysOrder::findOne(['key' => $key])) {
             throw new NotFoundHttpException("Заказ #{$key} не найден");
         }
 
@@ -73,42 +73,36 @@ class CartController extends Controller
      */
     public function actionCheckout()
     {
-        $this->view->title = \Yii::t('skeeks/shop/app', 'Checkout').' | '.\Yii::t('skeeks/shop/app', 'Shop');
+        $this->view->title = \Yii::t('skeeks/shop/app', 'Checkout') . ' | ' . \Yii::t('skeeks/shop/app', 'Shop');
 
         $v3toysOrder = V3toysOrder::createCurrent();
         $v3toysOrder->loadDefaultValues();
 
         $rr = new RequestResponse();
 
-        if ($rr->isRequestAjaxPost())
-        {
-            if ($v3toysOrder->load(\Yii::$app->request->post()) && $v3toysOrder->save())
-            {
-                foreach (\Yii::$app->shop->shopFuser->shopBaskets as $shopBasket)
-                {
+        if ($rr->isRequestAjaxPost()) {
+            if ($v3toysOrder->load(\Yii::$app->request->post()) && $v3toysOrder->save()) {
+                foreach (\Yii::$app->shop->shopFuser->shopBaskets as $shopBasket) {
                     $shopBasket->delete();
                 }
 
-                try
-                {
+                try {
                     \Yii::$app->mailer->view->theme->pathMap['@app/mail'][] = '@v3toys/skeeks/mail';
 
                     \Yii::$app->mailer->compose('create-order', [
-                        'model'  => $v3toysOrder
+                        'model' => $v3toysOrder
                     ])
                         ->setFrom([\Yii::$app->cms->adminEmail => \Yii::$app->cms->appName . ''])
                         ->setTo($v3toysOrder->email)
                         ->setSubject(\Yii::$app->cms->appName . ': новый заказ #' . $v3toysOrder->id)
                         ->send();
 
-                    if (\Yii::$app->v3toysSettings->notifyEmails)
-                    {
-                        foreach (\Yii::$app->v3toysSettings->notifyEmails as $email)
-                        {
+                    if (\Yii::$app->v3toysSettings->notifyEmails) {
+                        foreach (\Yii::$app->v3toysSettings->notifyEmails as $email) {
                             \Yii::$app->mailer->view->theme->pathMap['@app/mail'][] = '@v3toys/skeeks/mail';
 
                             \Yii::$app->mailer->compose('create-order', [
-                                'model'  => $v3toysOrder
+                                'model' => $v3toysOrder
                             ])
                                 ->setFrom([\Yii::$app->cms->adminEmail => \Yii::$app->cms->appName . ''])
                                 ->setTo($email)
@@ -117,8 +111,7 @@ class CartController extends Controller
                         }
                     }
 
-                } catch (\Exception $e)
-                {
+                } catch (\Exception $e) {
                     \Yii::error('Email submit error: ' . $e->getMessage());
                 }
 
@@ -126,8 +119,7 @@ class CartController extends Controller
                 $rr->success = true;
                 $rr->redirect = Url::to(['/v3toys/cart/finish', 'key' => $v3toysOrder->key]);
 
-            } else
-            {
+            } else {
                 $rr->message = 'Проверьте правильность заполнения полей';
                 $rr->success = false;
             }
@@ -156,9 +148,9 @@ class CartController extends Controller
      */
     public function actionSaveSession()
     {
-        $rr             = new RequestResponse();
+        $rr = new RequestResponse();
 
-        $v3toysOrder    = V3toysOrder::createCurrent();
+        $v3toysOrder = V3toysOrder::createCurrent();
         $v3toysOrder->setAttributes(\Yii::$app->request->post('V3toysOrder'), false);
 
         $v3toysOrder->saveToSession();
@@ -177,10 +169,14 @@ class CartController extends Controller
         $rr->success = true;
 
         $rr->data = [
-            'money' => ArrayHelper::merge($v3toysOrder->money->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->money)]),
-            'moneyOriginal' => ArrayHelper::merge($v3toysOrder->moneyOriginal->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyOriginal)]),
-            'moneyDelivery' => ArrayHelper::merge($v3toysOrder->moneyDelivery->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDelivery)]),
-            'moneyDiscount' => ArrayHelper::merge($v3toysOrder->moneyDiscount->jsonSerialize(), ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDiscount)]),
+            'money' => ArrayHelper::merge($v3toysOrder->money->jsonSerialize(),
+                ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->money)]),
+            'moneyOriginal' => ArrayHelper::merge($v3toysOrder->moneyOriginal->jsonSerialize(),
+                ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyOriginal)]),
+            'moneyDelivery' => ArrayHelper::merge($v3toysOrder->moneyDelivery->jsonSerialize(),
+                ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDelivery)]),
+            'moneyDiscount' => ArrayHelper::merge($v3toysOrder->moneyDiscount->jsonSerialize(),
+                ['convertAndFormat' => \Yii::$app->money->convertAndFormat($v3toysOrder->moneyDiscount)]),
         ];
 
         return $rr;

@@ -17,12 +17,12 @@ $response = \Yii::$app->v3toysApi->getStatus();
 <? else : ?>
     <?= \skeeks\cms\modules\admin\widgets\GridView::widget([
         'dataProvider' => new \yii\data\ArrayDataProvider([
-            'models' => (array) $response->data
+            'models' => (array)$response->data
         ]),
         'columns' =>
-        [
-            'id',
-            'title'
-        ]
+            [
+                'id',
+                'title'
+            ]
     ]); ?>
 <? endif; ?>

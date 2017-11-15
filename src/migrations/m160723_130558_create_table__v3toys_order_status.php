@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.07.2016
  */
+
 use yii\db\Schema;
 use yii\db\Migration;
 
@@ -13,8 +14,7 @@ class m160723_130558_create_table__v3toys_order_status extends Migration
     public function safeUp()
     {
         $tableExist = $this->db->getTableSchema("{{%v3toys_order_status}}", true);
-        if ($tableExist)
-        {
+        if ($tableExist) {
             return true;
         }
 
@@ -24,16 +24,16 @@ class m160723_130558_create_table__v3toys_order_status extends Migration
         }
 
         $this->createTable("{{%v3toys_order_status}}", [
-            
-            'id'                    => $this->primaryKey(),
 
-            'v3toys_id'             => $this->integer()->notNull(),
-            'name'                  => $this->string(255)->notNull(),
+            'id' => $this->primaryKey(),
 
-            'description'           => $this->text(),
-            'priority'              => $this->integer()->notNull()->defaultValue(100),
+            'v3toys_id' => $this->integer()->notNull(),
+            'name' => $this->string(255)->notNull(),
 
-            'color'                 => $this->string(32),
+            'description' => $this->text(),
+            'priority' => $this->integer()->notNull()->defaultValue(100),
+
+            'color' => $this->string(32),
 
         ], $tableOptions);
 
