@@ -65,125 +65,18 @@ class V3ExportShopYandexMarketHandler extends ExportShopYandexMarketHandler
 
     protected function _initOffer($xoffers, ShopCmsContentElement $element)
     {
-
-        if (!$element->shopProduct)
-        {
-            throw new Exception("Нет данных для магазина");
-        }
-
-        if ($this->filter_property && $this->filter_property_value)
-        {
-            $propertyName = $this->getRelatedPropertyName($this->filter_property);
-
-            if (!$attributeValue = $element->relatedPropertiesModel->getAttribute($propertyName))
-            {
-                throw new Exception("Не найдено свойство для фильтрации");
-            }
-
-            if ($attributeValue != $this->filter_property_value)
-            {
-                throw new Exception("Не найдено свойство для фильтрации");
-            }
-        }
-
-
-        $xoffer = $xoffers->appendChild(new \DOMElement('offer'));
-        $xoffer->appendChild(new \DOMAttr('id', $element->id));
-
-
-        if ($element->shopProduct->quantity)
-        {
-            $xoffer->appendChild(new \DOMAttr('available', 'true'));
-        } else
-        {
-            throw new Exception("Нет в наличии");
-            //$xoffer->appendChild(new \DOMAttr('available', 'false'));
-        }
-
-        $xoffer->appendChild(new \DOMElement('url', htmlspecialchars($element->url)));
-        $xoffer->appendChild(new \DOMElement('name', htmlspecialchars($element->name)));
-
-        if ($element->image)
-        {
-            $xoffer->appendChild(new \DOMElement('picture', htmlspecialchars($this->base_url . $element->image->src)));
-        }
-
-        if ($element->tree_id)
-        {
-            $xoffer->appendChild(new \DOMElement('categoryId', $element->tree_id));
-        }
-
-        if ($element->shopProduct->baseProductPrice)
-        {
-            $money = $element->shopProduct->baseProductPrice->money;
-            $xoffer->appendChild(new \DOMElement('price', $money->getValue()));
-            $xoffer->appendChild(new \DOMElement('currencyId', $money->getCurrency()->getCurrencyCode()));
-        }
-
-
-        if ($this->vendor)
-        {
-            if ($propertyName = $this->getRelatedPropertyName($this->vendor))
-            {
-                if ($element->relatedPropertiesModel)
-                {
-                    if ($value = $element->relatedPropertiesModel->getAttribute($propertyName))
-                    {
-                        $smartName = $element->relatedPropertiesModel->getSmartAttribute($propertyName);
-                        $xoffer->appendChild(new \DOMElement('vendor', $smartName));
-                    }
-                }
-            }
-        }
-
         $v3Property = V3toysProductProperty::findOne($element->id);
-        if ($v3Property->v3toys_brand_name)
-        {
+
+        $xoffer = parent::_initOffer($xoffers, $element);
+
+        if (!$this->vendor) {
             $xoffer->appendChild(new \DOMElement('vendor', $v3Property->v3toys_brand_name));
         }
-        if ($v3Property->sku)
-        {
+
+        if (!$this->vendor_code) {
             $xoffer->appendChild(new \DOMElement('vendorCode', $v3Property->sku));
         }
 
-        if ($this->default_delivery)
-        {
-            if ($this->default_delivery == 'Y')
-            {
-                $xoffer->appendChild(new \DOMElement('delivery', 'true'));
-            } else if ($this->default_delivery == 'N')
-            {
-                $xoffer->appendChild(new \DOMElement('delivery', 'false'));
-            }
-        }
-
-        if ($this->default_store)
-        {
-            if ($this->default_store == 'Y')
-            {
-                $xoffer->appendChild(new \DOMElement('store', 'true'));
-            } else if ($this->default_store == 'N')
-            {
-                $xoffer->appendChild(new \DOMElement('store', 'false'));
-            }
-        }
-
-        if ($this->default_pickup)
-        {
-            if ($this->default_pickup == 'Y')
-            {
-                $xoffer->appendChild(new \DOMElement('pickup', 'true'));
-            } else if ($this->default_pickup == 'N')
-            {
-                $xoffer->appendChild(new \DOMElement('pickup', 'false'));
-            }
-        }
-
-        if ($this->default_sales_notes)
-        {
-            $xoffer->appendChild(new \DOMElement('sales_notes', $this->default_sales_notes));
-        }
-
-        return $this;
+        return $xoffer;
     }
 }
