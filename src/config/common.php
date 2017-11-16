@@ -9,6 +9,14 @@ return [
 
     'components' => [
 
+        'cmsExport' => [
+            'handlers'     => [
+                \v3toys\skeeks\components\V3ExportShopYandexMarketHandler::class => [
+                    'class' => \v3toys\skeeks\components\V3ExportShopYandexMarketHandler::class
+                ]
+            ]
+        ],
+
         'cmsAgent' => [
             'commands' => [
 
