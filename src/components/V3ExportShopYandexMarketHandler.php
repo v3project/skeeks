@@ -65,6 +65,7 @@ class V3ExportShopYandexMarketHandler extends ExportShopYandexMarketHandler
 
     protected function _initOffer($xoffers, ShopCmsContentElement $element)
     {
+
         $v3Property = V3toysProductProperty::findOne($element->id);
 
         $xoffer = parent::_initOffer($xoffers, $element);
