@@ -3,7 +3,7 @@ CHANGELOG
 
 2.1.8.pre
 -----------------
- * Renamed api url
+ * Renamed api url to /~v3p-api/v04
  * Code style
  
 2.1.7
