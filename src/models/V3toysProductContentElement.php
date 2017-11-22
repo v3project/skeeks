@@ -8,7 +8,6 @@
 
 namespace v3toys\skeeks\models;
 
-use skeeks\cms\models\CmsContentElement;
 use skeeks\cms\shop\models\ShopCmsContentElement;
 
 /**

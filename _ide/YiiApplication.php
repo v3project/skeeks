@@ -11,7 +11,6 @@ namespace yii\web;
 use v3project\helpers\CanUrl;
 use v3toys\skeeks\components\V3toysComponent;
 use v3toys\skeeks\components\V3toysSettings;
-use v3toys\skeeks\V3toysModule;
 
 /**
  *

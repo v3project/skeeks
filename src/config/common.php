@@ -10,7 +10,7 @@ return [
     'components' => [
 
         'cmsExport' => [
-            'handlers'     => [
+            'handlers' => [
                 \v3toys\skeeks\components\V3ExportShopYandexMarketHandler::class => [
                     'class' => \v3toys\skeeks\components\V3ExportShopYandexMarketHandler::class
                 ]

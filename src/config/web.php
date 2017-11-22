@@ -9,40 +9,35 @@ return [
                 'class' => 'v3toys\skeeks\V3DbConnection',
             ],
 
-            'v3toysApi' =>
-                [
-                    'class' => 'v3toys\skeeks\V3toysApi'
-                ],
+            'v3toysApi' => [
+                'class' => 'v3toys\skeeks\V3toysApi'
+            ],
 
-            'v3projectApi' =>
-                [
-                    'class' => 'v3toys\skeeks\V3projectApi'
-                ],
+            'v3projectApi' => [
+                'class' => 'v3toys\skeeks\V3projectApi'
+            ],
 
-            'v3toysSettings' =>
-                [
-                    'class' => 'v3toys\skeeks\components\V3toysSettings'
-                ],
+            'v3toysSettings' => [
+                'class' => 'v3toys\skeeks\components\V3toysSettings'
+            ],
 
-            'v3toys' =>
-                [
-                    'class' => 'v3toys\skeeks\components\V3toysComponent'
-                ],
+            'v3toys' => [
+                'class' => 'v3toys\skeeks\components\V3toysComponent'
+            ],
 
-            'i18n' =>
-                [
-                    'translations' =>
-                        [
-                            'v3toys/skeeks' =>
-                                [
-                                    'class' => 'yii\i18n\PhpMessageSource',
-                                    'basePath' => '@v3toys/skeeks/messages',
-                                    'fileMap' => [
-                                        'v3toys/skeeks' => 'main.php',
-                                    ],
-                                ]
-                        ]
-                ],
+            'i18n' => [
+                'translations' =>
+                    [
+                        'v3toys/skeeks' =>
+                            [
+                                'class' => 'yii\i18n\PhpMessageSource',
+                                'basePath' => '@v3toys/skeeks/messages',
+                                'fileMap' => [
+                                    'v3toys/skeeks' => 'main.php',
+                                ],
+                            ]
+                    ]
+            ],
 
             'urlManager' => [
                 'rules' => [
@@ -56,32 +51,27 @@ return [
             ],
         ],
 
-    'modules' =>
-        [
-            'v3toys' =>
-                [
-                    'class' => 'v3toys\skeeks\V3toysModule',
-                ],
+    'modules' => [
+        'v3toys' => [
+            'class' => 'v3toys\skeeks\V3toysModule',
+        ],
 
-            'shop' =>
-                [
-                    'controllerMap' => [
-                        'admin-cms-content-element' => 'v3toys\skeeks\controllers\AdminV3ShopCmsContentElementController',
-                    ]
-                ],
+        'shop' => [
+            'controllerMap' => [
+                'admin-cms-content-element' => 'v3toys\skeeks\controllers\AdminV3ShopCmsContentElementController',
+            ]
+        ],
 
-            'seo' =>
-                [
-                    'controllerMap' => [
-                        'sitemap' => 'v3toys\skeeks\controllers\V3ProjectSitemapController',
-                    ]
-                ],
+        'seo' => [
+            'controllerMap' => [
+                'sitemap' => 'v3toys\skeeks\controllers\V3ProjectSitemapController',
+            ]
+        ],
 
-            'cms' =>
-                [
-                    'controllerMap' => [
-                        'cms' => 'v3toys\skeeks\controllers\V3ProjectCmsController',
-                    ]
-                ],
-        ]
+        'cms' => [
+            'controllerMap' => [
+                'cms' => 'v3toys\skeeks\controllers\V3ProjectCmsController',
+            ]
+        ],
+    ]
 ];

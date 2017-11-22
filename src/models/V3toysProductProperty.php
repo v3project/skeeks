@@ -2,13 +2,10 @@
 
 namespace v3toys\skeeks\models;
 
-use skeeks\cms\helpers\FileHelper;
 use skeeks\cms\models\CmsContentElement;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Console;
-use yii\httpclient\Client;
 
 /**
  * This is the model class for table "{{%v3toys_product_property}}".

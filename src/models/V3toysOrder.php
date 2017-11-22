@@ -12,20 +12,13 @@ use skeeks\cms\models\behaviors\HasJsonFieldsBehavior;
 use skeeks\cms\models\CmsContentElement;
 use skeeks\cms\models\CmsUser;
 use skeeks\cms\models\forms\SignupForm;
-use skeeks\cms\shop\models\ShopBuyer;
-use skeeks\cms\shop\models\ShopFuser;
-use skeeks\cms\shop\models\ShopOrder;
-use skeeks\cms\shop\models\ShopPaySystem;
 use skeeks\cms\validators\PhoneValidator;
 use skeeks\modules\cms\money\Money;
 use skeeks\yii2\dadataSuggestApi\helpers\SuggestAddressModel;
 use v3toys\skeeks\V3toysModule;
-use yii\base\Exception;
-use yii\base\Model;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
-use yii\helpers\Url;
 use Yii;
+use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%v3toys_order}}".
