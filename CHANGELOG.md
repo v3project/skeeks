@@ -3,6 +3,7 @@ CHANGELOG
 
 2.1.8.pre
 -----------------
+ * Renamed api url
  * Code style
  
 2.1.7
