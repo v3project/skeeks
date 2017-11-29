@@ -60,9 +60,9 @@ class m161020_190558_create_table__v3toys_product_property extends Migration
             'v3toys_video' => $this->string(255),
         ], $tableOptions);
 
-        $this->createIndex('sex', '{{%v3toys_product_property}}', 'sex');
-        $this->createIndex('age_from', '{{%v3toys_product_property}}', 'age_from');
-        $this->createIndex('age_to', '{{%v3toys_product_property}}', 'age_to');
+        $this->createIndex('v3toys_product_property__sex', '{{%v3toys_product_property}}', 'sex');
+        $this->createIndex('v3toys_product_property__age_from', '{{%v3toys_product_property}}', 'age_from');
+        $this->createIndex('v3toys_product_property__age_to', '{{%v3toys_product_property}}', 'age_to');
 
         $this->addForeignKey(
             'v3_p_p__content_element', "{{%v3toys_product_property}}",

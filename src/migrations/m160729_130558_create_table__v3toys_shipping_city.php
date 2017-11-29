@@ -35,9 +35,9 @@ class m160729_130558_create_table__v3toys_shipping_city extends Migration
             'shipping_type' => $this->string(20)->notNull()->defaultValue('COURIER'),
         ], $tableOptions);
 
-        $this->createIndex('name', '{{%v3toys_shipping_city}}', 'name');
-        $this->createIndex('shipping_type', '{{%v3toys_shipping_city}}', 'shipping_type');
-        $this->createIndex('price', '{{%v3toys_shipping_city}}', 'price');
+        $this->createIndex('v3toys_shipping_city__name', '{{%v3toys_shipping_city}}', 'name');
+        $this->createIndex('v3toys_shipping_city__shipping_type', '{{%v3toys_shipping_city}}', 'shipping_type');
+        $this->createIndex('v3toys_shipping_city__price', '{{%v3toys_shipping_city}}', 'price');
 
         $this->execute("ALTER TABLE {{%v3toys_shipping_city}} COMMENT = 'Города доставки';");
     }

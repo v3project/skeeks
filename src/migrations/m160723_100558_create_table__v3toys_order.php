@@ -66,20 +66,18 @@ class m160723_100558_create_table__v3toys_order extends Migration
 
         ], $tableOptions);
 
-        $this->createIndex('updated_by', '{{%v3toys_order}}', 'updated_by');
-        $this->createIndex('created_by', '{{%v3toys_order}}', 'created_by');
-        $this->createIndex('created_at', '{{%v3toys_order}}', 'created_at');
-        $this->createIndex('updated_at', '{{%v3toys_order}}', 'updated_at');
+        $this->createIndex('v3toys_order__v3toys_order__updated_by', '{{%v3toys_order}}', 'updated_by');
+        $this->createIndex('v3toys_order__created_by', '{{%v3toys_order}}', 'created_by');
+        $this->createIndex('v3toys_order__created_at', '{{%v3toys_order}}', 'created_at');
+        $this->createIndex('v3toys_order__updated_at', '{{%v3toys_order}}', 'updated_at');
 
-        $this->createIndex('name', '{{%v3toys_order}}', 'name');
-        $this->createIndex('phone', '{{%v3toys_order}}', 'phone');
-        $this->createIndex('email', '{{%v3toys_order}}', 'email');
-        $this->createIndex('is_call_me_15_min', '{{%v3toys_order}}', 'is_call_me_15_min');
-        $this->createIndex('shipping_method', '{{%v3toys_order}}', 'shipping_method');
-        $this->createIndex('shop_order_id', '{{%v3toys_order}}', 'shop_order_id');
-        $this->createIndex('v3toys_order_id', '{{%v3toys_order}}', 'v3toys_order_id');
-
-        $this->execute("ALTER TABLE {{%v3toys_order}} COMMENT = 'Заказы v3toys';");
+        $this->createIndex('v3toys_order__name', '{{%v3toys_order}}', 'name');
+        $this->createIndex('v3toys_order__phone', '{{%v3toys_order}}', 'phone');
+        $this->createIndex('v3toys_order__email', '{{%v3toys_order}}', 'email');
+        $this->createIndex('v3toys_order__is_call_me_15_min', '{{%v3toys_order}}', 'is_call_me_15_min');
+        $this->createIndex('v3toys_order__shipping_method', '{{%v3toys_order}}', 'shipping_method');
+        $this->createIndex('v3toys_order__shop_order_id', '{{%v3toys_order}}', 'shop_order_id');
+        $this->createIndex('v3toys_order__v3toys_order_id', '{{%v3toys_order}}', 'v3toys_order_id');
 
         $this->addForeignKey(
             'v3toys_order__created_by', "{{%v3toys_order}}",

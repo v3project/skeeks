@@ -37,10 +37,8 @@ class m160723_130558_create_table__v3toys_order_status extends Migration
 
         ], $tableOptions);
 
-        $this->createIndex('name', '{{%v3toys_order_status}}', 'name');
-        $this->createIndex('v3toys_id', '{{%v3toys_order_status}}', 'v3toys_id');
-
-        $this->execute("ALTER TABLE {{%v3toys_order_status}} COMMENT = 'Статусы заказов из v3toys';");
+        $this->createIndex('v3toys_order_status__name', '{{%v3toys_order_status}}', 'name');
+        $this->createIndex('v3toys_order_status__v3toys_id', '{{%v3toys_order_status}}', 'v3toys_id');
     }
 
     public function safeDown()

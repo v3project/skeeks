@@ -17,7 +17,5 @@ class m161027_190558_alter_table__v3toys_product_property extends Migration
     }
 
     public function safeDown()
-    {
-
-    }
+    {}
 }

@@ -43,14 +43,14 @@ class m160808_100558_create_table__v3toys_message extends Migration
 
         ], $tableOptions);
 
-        $this->createIndex('updated_by', '{{%v3toys_message}}', 'updated_by');
-        $this->createIndex('created_by', '{{%v3toys_message}}', 'created_by');
-        $this->createIndex('created_at', '{{%v3toys_message}}', 'created_at');
-        $this->createIndex('updated_at', '{{%v3toys_message}}', 'updated_at');
+        $this->createIndex('v3toys_message__updated_by', '{{%v3toys_message}}', 'updated_by');
+        $this->createIndex('v3toys_message__created_by', '{{%v3toys_message}}', 'created_by');
+        $this->createIndex('v3toys_message__created_at', '{{%v3toys_message}}', 'created_at');
+        $this->createIndex('v3toys_message__updated_at', '{{%v3toys_message}}', 'updated_at');
 
-        $this->createIndex('full_name', '{{%v3toys_message}}', 'full_name');
-        $this->createIndex('phone', '{{%v3toys_message}}', 'phone');
-        $this->createIndex('email', '{{%v3toys_message}}', 'email');
+        $this->createIndex('v3toys_message__full_name', '{{%v3toys_message}}', 'full_name');
+        $this->createIndex('v3toys_message__phone', '{{%v3toys_message}}', 'phone');
+        $this->createIndex('v3toys_message__email', '{{%v3toys_message}}', 'email');
 
         $this->execute("ALTER TABLE {{%v3toys_message}} COMMENT = 'Быстрые заказы v3toys';");
 
