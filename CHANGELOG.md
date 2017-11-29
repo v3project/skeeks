@@ -3,12 +3,13 @@ CHANGELOG
 
 2.1.8.pre
 -----------------
+ * Renamed v3toys module in urls
+ * Pgsql
  * Renamed api url to /~v3p-api/v04
  * Code style
  
 2.1.7
 -----------------
- * Pgsql
  * Выгрузка на маркет свойств v3toys
  
 2.1.3

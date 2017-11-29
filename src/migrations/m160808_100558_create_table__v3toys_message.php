@@ -52,8 +52,6 @@ class m160808_100558_create_table__v3toys_message extends Migration
         $this->createIndex('v3toys_message__phone', '{{%v3toys_message}}', 'phone');
         $this->createIndex('v3toys_message__email', '{{%v3toys_message}}', 'email');
 
-        $this->execute("ALTER TABLE {{%v3toys_message}} COMMENT = 'Быстрые заказы v3toys';");
-
         $this->addForeignKey(
             'v3toys_message__created_by', "{{%v3toys_message}}",
             'created_by', '{{%cms_user}}', 'id', 'SET NULL', 'SET NULL'

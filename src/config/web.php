@@ -44,6 +44,7 @@ return [
                     '~child-<_a:(checkout|finish)>' => 'v3toys/cart/<_a>',
                     '~child-order/<_a>' => 'v3toys/order/<_a>',
                     '~v3p-api/v04' => 'v3toys/api-v04/request',
+                    '~v3t/<_c>/<_a>' => 'v3toys/<_c>/<_a>',
                 ]
             ],
 
