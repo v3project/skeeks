@@ -9,22 +9,16 @@
 namespace v3toys\skeeks\components;
 
 use skeeks\cms\base\Component;
-
-use skeeks\yii2\dadataSuggestApi\helpers\YandexGecodeHelper;
 use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\models\CmsContent;
 use skeeks\cms\shop\models\ShopCmsContentElement;
-use skeeks\cms\shop\models\ShopOrderStatus;
 use skeeks\cms\shop\models\ShopPersonType;
 use skeeks\widget\chosen\Chosen;
+use skeeks\yii2\dadataSuggestApi\helpers\YandexGecodeHelper;
 use v3toys\skeeks\helpers\ShippingHelper;
-use Yii;
-use yii\base\BootstrapInterface;
-use yii\base\Event;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /**

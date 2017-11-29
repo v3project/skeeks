@@ -10,7 +10,6 @@ namespace v3toys\skeeks\models;
 
 use skeeks\modules\cms\money\Money;
 use skeeks\yii2\dadataSuggestApi\helpers\SuggestAddressModel;
-use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
