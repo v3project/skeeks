@@ -1,7 +1,7 @@
 CHANGELOG
 ==============
 
-2.1.8.pre
+2.1.8
 -----------------
  * Renamed v3toys module in urls
  * Pgsql
