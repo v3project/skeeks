@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+2.1.9.pre
+-----------------
+ * Fixed gii canurl
+ 
 2.1.8
 -----------------
  * Renamed v3toys module in urls

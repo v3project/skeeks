@@ -31,13 +31,13 @@ use yii\helpers\Json;
  */
 class AgentsController extends Controller
 {
-    public function init()
-    {
-        parent::init();
-
-        ini_set("memory_limit", "8192M");
-        set_time_limit(0);
-    }
+        public function init()
+        {
+            parent::init();
+    
+            ini_set("memory_limit", "8192M");
+            set_time_limit(0);
+        }
 
     /**
      * Обновление цен и налчия товаров
