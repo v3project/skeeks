@@ -3,6 +3,8 @@
 namespace v3toys\skeeks\models;
 
 use skeeks\cms\models\CmsContentElement;
+use v3p\aff\models\V3pProduct;
+use v3p\aff\models\V3pProductFeatureValue;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
@@ -51,6 +53,7 @@ use yii\helpers\ArrayHelper;
  *
  *
  * @property CmsContentElement $cmsContentElement
+ * @property V3pProduct $v3pProduct
  */
 class V3toysProductProperty extends \yii\db\ActiveRecord
 {
@@ -60,6 +63,22 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%v3toys_product_property}}';
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getV3pProduct()
+    {
+        return $this->hasOne(V3pProduct::className(), ['id' => 'v3toys_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getProductFeatureValues()
+    {
+        return $this->hasMany(V3pProductFeatureValue::class, ['product_id' => 'v3toys_id']);
     }
 
     /**

@@ -9,6 +9,7 @@
 namespace v3toys\skeeks\models;
 
 use skeeks\cms\shop\models\ShopCmsContentElement;
+use v3p\aff\models\V3pProduct;
 
 /**
  * @property V3toysProductProperty $v3toysProductProperty
@@ -26,6 +27,8 @@ class V3toysProductContentElement extends ShopCmsContentElement
     {
         return $this->hasOne(V3toysProductProperty::className(), ['id' => 'id']);
     }
+
+
 
 
 }
