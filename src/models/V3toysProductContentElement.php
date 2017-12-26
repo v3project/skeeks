@@ -25,7 +25,7 @@ class V3toysProductContentElement extends ShopCmsContentElement
      */
     public function getV3toysProductProperty()
     {
-        return $this->hasOne(V3toysProductProperty::className(), ['id' => 'id']);
+        return $this->hasOne(V3toysProductProperty::className(), ['id' => 'id'])->from(['v3property' => V3toysProductProperty::tableName()]);
     }
 
 

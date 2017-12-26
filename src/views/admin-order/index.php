@@ -87,7 +87,8 @@
     $purchasingPrice = 0;
     $notFoundProducts = 0;
     ?>
-    <? foreach ($dataProvider->query->all() as $order) : ?>
+    
+    <? foreach ($dataProvider->query->each(100) as $order) : ?>
 
         <?
         if ($order->products) {
