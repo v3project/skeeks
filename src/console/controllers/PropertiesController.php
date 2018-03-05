@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\console\controllers;
 
 use skeeks\cms\relatedProperties\propertyTypes\PropertyTypeText;
@@ -33,12 +34,11 @@ class PropertiesController extends Controller
      */
     public function actionLoad($isAll = 0)
     {
-        ini_set("memory_limit","8192M");
+        ini_set("memory_limit", "8192M");
         set_time_limit(0);
 
-        $contentIds = (array) \Yii::$app->v3toysSettings->content_ids;
-        if (!$contentIds)
-        {
+        $contentIds = (array)\Yii::$app->v3toysSettings->content_ids;
+        if (!$contentIds) {
             $this->stdout("Не настроен v3toys комонент: {$total}\n", Console::FG_RED);
             return;
         }
@@ -48,16 +48,13 @@ class PropertiesController extends Controller
 
         $query = V3toysProductContentElement::find()
             ->where(['content_id' => $contentIds])
-            ->joinWith('v3toysProductProperty as v3p')
-        ;
+            ->joinWith('v3toysProductProperty as v3p');
 
-        if ($isAll != 1)
-        {
+        if ($isAll != 1) {
             $query
                 ->andWhere([
                     'v3p.sex' => null
-                ])
-            ;
+                ]);
         }
 
         $queryEach = clone $query;
@@ -66,30 +63,24 @@ class PropertiesController extends Controller
 
         $this->stdout("Товаров к обновлению: {$total}\n", Console::BOLD);
 
-        if ($total)
-        {
+        if ($total) {
             /**
              * @var $element V3toysProductContentElement
              */
-            foreach ($queryEach->orderBy(['id' => SORT_ASC])->each(100) as $element)
-            {
+            foreach ($queryEach->orderBy(['id' => SORT_ASC])->each(100) as $element) {
                 $this->stdout("\t{$element->id}: {$element->name}\n");
                 //$v3id = $element->relatedPropertiesModel->getAttribute(\Yii::$app->v3toysSettings->v3toysIdPropertyName);
                 $v3id = $element->v3toysProductProperty->v3toys_id;
-                if ($v3id)
-                {
-                    if (!$v3toysProperty = $element->v3toysProductProperty)
-                    {
+                if ($v3id) {
+                    if (!$v3toysProperty = $element->v3toysProductProperty) {
                         $v3toysProperty = new V3toysProductProperty([
                             'id' => $element->id
                         ]);
 
-                        if (!$v3toysProperty->save())
-                        {
+                        if (!$v3toysProperty->save()) {
                             $this->stdout("\t\t\t Свойство не создано\n", Console::FG_RED);
                             continue;
-                        } else
-                        {
+                        } else {
                             $this->stdout("\t\t\t Свойство создано\n", Console::FG_GREEN);
                         }
                     }
@@ -107,11 +98,10 @@ class PropertiesController extends Controller
                     $dataProperties = $query->one(\Yii::$app->dbV3project);
                     $dataAdditional = $query2->one(\Yii::$app->dbV3project);
 
-                    if ($dataProperties)
-                    {
+                    if ($dataProperties) {
                         $v3toysProperty->hero_id = ArrayHelper::getValue($dataProperties, 'hero_id');
                         $v3toysProperty->series_id = ArrayHelper::getValue($dataProperties, 'series_id');
-                        $v3toysProperty->sex = (int) ArrayHelper::getValue($dataProperties, 'sex');
+                        $v3toysProperty->sex = (int)ArrayHelper::getValue($dataProperties, 'sex');
                         $v3toysProperty->age_from = ArrayHelper::getValue($dataProperties, 'age_from');
                         $v3toysProperty->age_to = ArrayHelper::getValue($dataProperties, 'age_to');
                         $v3toysProperty->to_who = ArrayHelper::getValue($dataProperties, 'to_who');
@@ -122,7 +112,8 @@ class PropertiesController extends Controller
                         $v3toysProperty->complect = ArrayHelper::getValue($dataProperties, 'complect');
                         $v3toysProperty->players_number = ArrayHelper::getValue($dataProperties, 'players_number');
                         $v3toysProperty->allowable_weight = ArrayHelper::getValue($dataProperties, 'allowable_weight');
-                        $v3toysProperty->availability_batteries = ArrayHelper::getValue($dataProperties, 'availability_batteries');
+                        $v3toysProperty->availability_batteries = ArrayHelper::getValue($dataProperties,
+                            'availability_batteries');
                         $v3toysProperty->batteries_type = ArrayHelper::getValue($dataProperties, 'batteries_type');
                         $v3toysProperty->game_time = ArrayHelper::getValue($dataProperties, 'game_time');
                         $v3toysProperty->charge_time = ArrayHelper::getValue($dataProperties, 'charge_time');
@@ -132,38 +123,33 @@ class PropertiesController extends Controller
                         $v3toysProperty->volume = ArrayHelper::getValue($dataProperties, 'volume');
                         $v3toysProperty->size_of_box = ArrayHelper::getValue($dataProperties, 'size_of_box');
                         $v3toysProperty->size_of_toy = ArrayHelper::getValue($dataProperties, 'size_of_toy');
-                        $v3toysProperty->producing_country = ArrayHelper::getValue($dataProperties, 'producing_country');
+                        $v3toysProperty->producing_country = ArrayHelper::getValue($dataProperties,
+                            'producing_country');
                         $v3toysProperty->extra = ArrayHelper::getValue($dataProperties, 'extra');
-                        $v3toysProperty->packing = (int) ArrayHelper::getValue($dataProperties, 'packing');
+                        $v3toysProperty->packing = (int)ArrayHelper::getValue($dataProperties, 'packing');
 
                         $v3toysProperty->sku = ArrayHelper::getValue($dataAdditional, 'sku');
                         $barcode = ArrayHelper::getValue($dataAdditional, 'stock_barcodes');
-                        if ($barcode)
-                        {
+                        if ($barcode) {
                             $barcodeData = Json::decode($barcode);
-                            if ($barcodeData && is_array($barcodeData))
-                            {
+                            if ($barcodeData && is_array($barcodeData)) {
                                 $v3toysProperty->stock_barcode = $barcodeData[0];
                             }
                         }
 
-                        if ($v3toysProperty->save())
-                        {
+                        if ($v3toysProperty->save()) {
                             $this->stdout("\t\t Данные сохранены\n", Console::FG_GREEN);
-                        } else
-                        {
+                        } else {
                             $error = Json::encode($v3toysProperty->errors);
                             $this->stdout("\t\t Данные не сохранены: {$error}\n", Console::FG_RED);
                         }
 
-                    } else
-                    {
+                    } else {
                         $v3toysProperty->cmsContentElement->active = "N";
                         $v3toysProperty->cmsContentElement->save();
                         $this->stdout("\t\t Данные не получены со стороны v3toys\n", Console::FG_RED);
                     }
-                } else
-                {
+                } else {
                     $this->stdout("\t\t v3toysId не указан\n", Console::FG_RED);
                     continue;
                 }

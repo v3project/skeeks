@@ -5,11 +5,11 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.09.2016
  */
+
 namespace v3toys\skeeks\models;
 
 use skeeks\modules\cms\money\Money;
 use skeeks\yii2\dadataSuggestApi\helpers\SuggestAddressModel;
-use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
@@ -47,7 +47,6 @@ class V3toysOutletModel extends Model
     public $deliveryData = [];
 
 
-
     /**
      * @return mixed
      * @deprecated
@@ -74,6 +73,7 @@ class V3toysOutletModel extends Model
     {
         return 'description';
     }
+
     /**
      * @return mixed
      * @deprecated
@@ -82,6 +82,7 @@ class V3toysOutletModel extends Model
     {
         return $this->dadataModel ? $this->dadataModel->regionString : "";
     }
+
     /**
      * @return mixed
      * @deprecated
@@ -90,6 +91,7 @@ class V3toysOutletModel extends Model
     {
         return $this->dadataModel ? $this->dadataModel->unrestrictedValue : "";
     }
+
     /**
      * @return mixed
      * @deprecated
@@ -109,10 +111,8 @@ class V3toysOutletModel extends Model
      */
     public function getDadataModel()
     {
-        if ($this->_dadata === null)
-        {
-            if ($this->geobject_jsoned)
-            {
+        if ($this->_dadata === null) {
+            if ($this->geobject_jsoned) {
                 $data = Json::decode($this->geobject_jsoned);
                 ArrayHelper::remove($data, 'updated_at');
                 ArrayHelper::remove($data, 'distance_from');
@@ -162,7 +162,7 @@ class V3toysOutletModel extends Model
      */
     public function getCoords()
     {
-        return [(float) $this->lat, (float) $this->lon];
+        return [(float)$this->lat, (float)$this->lon];
     }
 
     /**
@@ -184,18 +184,15 @@ class V3toysOutletModel extends Model
         $result = [];
 
         $query = (new \yii\db\Query())
-                    ->from('apiv5.outlet')
-                    ;
+            ->from('apiv5.outlet');
 
         $outlets = $query->all(\Yii::$app->dbV3project);
 
 
-        if ($outlets)
-        {
+        if ($outlets) {
             $result = [];
 
-            foreach ($outlets as $row)
-            {
+            foreach ($outlets as $row) {
                 $result[ArrayHelper::getValue($row, 'id')] = $row;
             }
         }
@@ -210,25 +207,21 @@ class V3toysOutletModel extends Model
      */
     static public function getAll()
     {
-        if (static::$models !== null)
-        {
+        if (static::$models !== null) {
             return static::$models;
         }
 
         $key = "sx-v3toys-outlets";
 
-        if (!$result = \Yii::$app->cache->get($key))
-        {
+        if (!$result = \Yii::$app->cache->get($key)) {
             $result = static::getAllDataFromApi();
 
-            if ($result)
-            {
-                \Yii::$app->cache->set($key, $result, 3600*5);
+            if ($result) {
+                \Yii::$app->cache->set($key, $result, 3600 * 5);
             }
         }
 
-        foreach ($result as $key => $row)
-        {
+        foreach ($result as $key => $row) {
             static::$models[$key] = new static($row);
         }
 
@@ -243,17 +236,14 @@ class V3toysOutletModel extends Model
      */
     static public function getAllByIds($ids = [])
     {
-        if (!$all = static::getAll())
-        {
+        if (!$all = static::getAll()) {
             return [];
         }
 
         $result = [];
 
-        foreach ($ids as $id)
-        {
-            if (isset($all[$id]))
-            {
+        foreach ($ids as $id) {
+            if (isset($all[$id])) {
                 $result[$id] = $all[$id];
             }
         }
@@ -272,17 +262,14 @@ class V3toysOutletModel extends Model
     {
         $result = [];
 
-        if (!$deliveryData)
-        {
+        if (!$deliveryData) {
             return [];
         }
 
-        foreach ($deliveryData as $row)
-        {
-            if ($model = static::getById(ArrayHelper::getValue($row, 'v3p_outlet_id')))
-            {
-                $model->deliveryData            = $row;
-                $result[$model->v3p_outlet_id]  = $model;
+        foreach ($deliveryData as $row) {
+            if ($model = static::getById(ArrayHelper::getValue($row, 'v3p_outlet_id'))) {
+                $model->deliveryData = $row;
+                $result[$model->v3p_outlet_id] = $model;
             }
         }
 
@@ -296,13 +283,11 @@ class V3toysOutletModel extends Model
      */
     static public function getById($id)
     {
-        if (!$all = static::getAll())
-        {
+        if (!$all = static::getAll()) {
             return null;
         }
 
-        if (isset($all[$id]))
-        {
+        if (isset($all[$id])) {
             return $all[$id];
         }
 
@@ -314,7 +299,8 @@ class V3toysOutletModel extends Model
      */
     public function getGuidingRealizePriceAmount()
     {
-        return (int) \yii\helpers\ArrayHelper::getValue($this->deliveryData, 'guiding_realize_price') + (int) \Yii::$app->v3toysSettings->pickup_discaunt_value;
+        return (int)\yii\helpers\ArrayHelper::getValue($this->deliveryData,
+                'guiding_realize_price') + (int)\Yii::$app->v3toysSettings->pickup_discaunt_value;
     }
 
     /**
@@ -322,7 +308,7 @@ class V3toysOutletModel extends Model
      */
     public function getGuidingRealizeMoney()
     {
-        return Money::fromString((string) $this->guidingRealizePriceAmount, "RUB");
+        return Money::fromString((string)$this->guidingRealizePriceAmount, "RUB");
     }
 
 }

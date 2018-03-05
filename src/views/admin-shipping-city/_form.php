@@ -9,13 +9,14 @@ use skeeks\cms\models\Tree;
 ?>
 <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'shipping_type')->listBox(\v3toys\skeeks\models\V3toysOrder::getShippingMethods(), ['size' => 1]); ?>
+<?= $form->field($model, 'shipping_type')->listBox(\v3toys\skeeks\models\V3toysOrder::getShippingMethods(),
+    ['size' => 1]); ?>
 
-    <?= $form->field($model, 'name')->textInput(); ?>
-    <?= $form->field($model, 'price'); ?>
+<?= $form->field($model, 'name')->textInput(); ?>
+<?= $form->field($model, 'price'); ?>
 
-    <?= $form->field($model, 'description')->textarea(); ?>
+<?= $form->field($model, 'description')->textarea(); ?>
 
-    <?= $form->buttonsStandart($model) ?>
+<?= $form->buttonsStandart($model) ?>
 
 <?php ActiveForm::end(); ?>

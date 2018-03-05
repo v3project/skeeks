@@ -5,6 +5,7 @@
  * @copyright (c) 2010 SkeekS
  * @date 17.03.2017
  */
+
 namespace v3toys\skeeks\models\v5api;
 
 use yii\base\Model;

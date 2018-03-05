@@ -1,6 +1,26 @@
 CHANGELOG
 ==============
 
+2.1.9.pre
+-----------------
+ * Fixed gii canurl
+ 
+2.1.8
+-----------------
+ * Renamed v3toys module in urls
+ * Pgsql
+ * Renamed api url to /~v3p-api/v04
+ * Code style
+ 
+2.1.7
+-----------------
+ * Выгрузка на маркет свойств v3toys
+ 
+2.1.3
+-----------------
+ * Config agents
+ * Code style
+ 
 2.1.2.8
 -----------------
  * Fixed console submit orders

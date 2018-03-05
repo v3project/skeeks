@@ -8,8 +8,8 @@
 
 namespace v3toys\skeeks\models;
 
-use skeeks\cms\models\CmsContentElement;
 use skeeks\cms\shop\models\ShopCmsContentElement;
+use v3p\aff\models\V3pProduct;
 
 /**
  * @property V3toysProductProperty $v3toysProductProperty
@@ -25,8 +25,10 @@ class V3toysProductContentElement extends ShopCmsContentElement
      */
     public function getV3toysProductProperty()
     {
-        return $this->hasOne(V3toysProductProperty::className(), ['id' => 'id']);
+        return $this->hasOne(V3toysProductProperty::className(), ['id' => 'id'])->from(['v3property' => V3toysProductProperty::tableName()]);
     }
+
+
 
 
 }

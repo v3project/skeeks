@@ -21,12 +21,10 @@ $filter->addRule('v3toys_statuses', 'safe');
 
 $filter->load(\Yii::$app->request->get());
 
-if ($filter->id)
-{
+if ($filter->id) {
     $dataProvider->query->andWhere(['id' => $filter->id]);
 }
-if ($filter->q)
-{
+if ($filter->q) {
     $dataProvider->query->andWhere([
         'or',
         ['like', 'id', $filter->q],
@@ -36,25 +34,24 @@ if ($filter->q)
         ['like', 'v3toys_order_id', $filter->q],
     ]);
 }
-if ($filter->v3toys_statuses)
-{
+if ($filter->v3toys_statuses) {
     $dataProvider->query->andWhere([
         'v3toys_status_id' => $filter->v3toys_statuses
     ]);
 }
 ?>
 <? $form = \skeeks\cms\modules\admin\widgets\filters\AdminFiltersForm::begin([
-        'action' => '/' . \Yii::$app->request->pathInfo,
-    ]); ?>
+    'action' => '/' . \Yii::$app->request->pathInfo,
+]); ?>
 
-    <?= $form->field($filter, 'q')->label('Поиск')->textInput([
+<?= $form->field($filter, 'q')->label('Поиск')->textInput([
     'placeholder' => 'Поиск по имени, телефону, email, номеру зкаказа'
 ])->setVisible(); ?>
-    <?= $form->field($filter, 'id'); ?>
-    <?= $form->field($searchModel, 'name'); ?>
-    <?= $form->field($searchModel, 'phone'); ?>
-    <?= $form->field($searchModel, 'email'); ?>
-    <?= $form->field($filter, 'v3toys_statuses')->label('Статус')->widget(
+<?= $form->field($filter, 'id'); ?>
+<?= $form->field($searchModel, 'name'); ?>
+<?= $form->field($searchModel, 'phone'); ?>
+<?= $form->field($searchModel, 'email'); ?>
+<?= $form->field($filter, 'v3toys_statuses')->label('Статус')->widget(
     \skeeks\widget\chosen\Chosen::className(),
     [
         'multiple' => true,
@@ -62,6 +59,6 @@ if ($filter->v3toys_statuses)
             \v3toys\skeeks\models\V3toysOrderStatus::find()->all(), 'v3toys_id', 'name'
         )
     ]
-    ); ?>
+); ?>
 
 <? $form::end(); ?>

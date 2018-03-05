@@ -7,15 +7,16 @@
  */
 /* @var $this yii\web\View */
 ?>
-<?= \yii\helpers\Html::a('Документация: http://www.v3toys.ru/index.php?nid=api', 'http://www.v3toys.ru/index.php?nid=api', [
-    'target' => '_blank'
-])?>
+<?= \yii\helpers\Html::a('Документация: http://www.v3toys.ru/index.php?nid=api',
+    'http://www.v3toys.ru/index.php?nid=api', [
+        'target' => '_blank'
+    ]) ?>
 <?= \yii\widgets\DetailView::widget([
-    'model'         => \Yii::$app->v3toysApi,
-    'attributes'    =>
-    [
-        'url',
-        'version',
-        'affiliate_key',
-    ]
-])?>
+    'model' => \Yii::$app->v3toysApi,
+    'attributes' =>
+        [
+            'url',
+            'version',
+            'affiliate_key',
+        ]
+]) ?>

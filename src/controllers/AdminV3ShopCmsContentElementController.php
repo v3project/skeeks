@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
 
 use skeeks\cms\backend\actions\BackendModelAction;
@@ -40,16 +41,16 @@ class AdminV3ShopCmsContentElementController extends AdminCmsContentElementContr
     {
         $actions = parent::actions();
 
-        if ($this->content && \Yii::$app->v3toysSettings->content_ids && in_array($this->content->id, (array) \Yii::$app->v3toysSettings->content_ids ))
-        {
+        if ($this->content && \Yii::$app->v3toysSettings->content_ids && in_array($this->content->id,
+                (array)\Yii::$app->v3toysSettings->content_ids)) {
             $actions['v3project'] =
-            [
-                'class'         => BackendModelAction::class,
-                'name'          => 'Сязь с V3project',
-                "icon"          => "fa fa-child",
-                "priority"      => 500,
-                "callback"      => [$this, 'actionV3project'],
-            ];
+                [
+                    'class' => BackendModelAction::class,
+                    'name' => 'Сязь с V3project',
+                    "icon" => "fa fa-child",
+                    "priority" => 500,
+                    "callback" => [$this, 'actionV3project'],
+                ];
         }
 
         return $actions;
@@ -64,26 +65,21 @@ class AdminV3ShopCmsContentElementController extends AdminCmsContentElementContr
         $model = $this->model;
         $property = $model->v3toysProductProperty;
 
-        if (!$property)
-        {
+        if (!$property) {
             $property = new V3toysProductProperty();
             $property->id = $model->id;
         }
 
-        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax)
-        {
+        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
             return $rr->ajaxValidateForm($property);
         }
 
-        if ($rr->isRequestAjaxPost)
-        {
-            if ($property->load(\Yii::$app->request->post()) && $property->save())
-            {
-                \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms','Saved'));
+        if ($rr->isRequestAjaxPost) {
+            if ($property->load(\Yii::$app->request->post()) && $property->save()) {
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms', 'Saved'));
 
-                if (\Yii::$app->request->post('submit-btn') == 'apply')
-                {} else
-                {
+                if (\Yii::$app->request->post('submit-btn') == 'apply') {
+                } else {
                     return $this->redirect(
                         $this->url
                     );

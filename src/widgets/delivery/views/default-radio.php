@@ -18,10 +18,12 @@ $widget = $this->context;
         <? if (\Yii::$app->v3toysSettings->currentShipping->isCourier) : ?>
             <div class="radio with-icon col-md-4">
                 <input type="radio" name="<?= $widget->id ?>-visible-input" id="<?= $widget->id ?>-delivery-courier"
-                    value="<?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_COURIER; ?>"
+                       value="<?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_COURIER; ?>"
                     <?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_COURIER == $widget->getCurrentValue() ? "checked" : ""; ?>/>
                 <label for="<?= $widget->id ?>-delivery-courier">
-                    <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-courier.png'); ?>" alt=""></span>
+                    <span class="icon"><img
+                                src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-courier.png'); ?>"
+                                alt=""></span>
                     Курьер <span class="small">- <?= \Yii::$app->money->convertAndFormat(
                             \Yii::$app->v3toysSettings->currentShipping->courierMinPrice
                         ); ?></span>
@@ -33,9 +35,11 @@ $widget = $this->context;
             <div class="radio with-icon col-md-4">
                 <input type="radio" name="<?= $widget->id ?>-visible-input" id="<?= $widget->id ?>-delivery-pickup"
                        value="<?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_PICKUP; ?>"
-                        <?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_PICKUP == $widget->getCurrentValue() ? "checked" : ""; ?>/>
+                    <?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_PICKUP == $widget->getCurrentValue() ? "checked" : ""; ?>/>
                 <label for="<?= $widget->id ?>-delivery-pickup">
-                    <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-self.jpg'); ?>" alt=""></span>
+                    <span class="icon"><img
+                                src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/people-self.jpg'); ?>"
+                                alt=""></span>
                     Самовывоз <span class="small">- от <?= \Yii::$app->money->convertAndFormat(
                             \Yii::$app->v3toysSettings->currentShipping->pickupMinPrice
                         ); ?></span>
@@ -45,10 +49,12 @@ $widget = $this->context;
         <? if (\Yii::$app->v3toysSettings->currentShipping->isPost) : ?>
             <div class="radio with-icon col-md-4">
                 <input type="radio" name="<?= $widget->id ?>-visible-input" id="<?= $widget->id ?>-delivery-post"
-                    value="<?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_POST; ?>"
+                       value="<?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_POST; ?>"
                     <?= \v3toys\skeeks\models\V3toysOrder::SHIPPING_METHOD_POST == $widget->getCurrentValue() ? "checked" : ""; ?>/>
                 <label for="<?= $widget->id ?>-delivery-post">
-                    <span class="icon"><img src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/delivery-post.png'); ?>" alt=""></span>
+                    <span class="icon"><img
+                                src="<?= \v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset::getAssetUrl('img/delivery-post.png'); ?>"
+                                alt=""></span>
                     Почта России <span class="small">- <?= \Yii::$app->money->convertAndFormat(
                             \Yii::$app->v3toysSettings->currentShipping->postMinPrice
                         ); ?></span>

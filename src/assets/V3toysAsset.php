@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\assets;
+
 use yii\web\AssetBundle;
 
 /**

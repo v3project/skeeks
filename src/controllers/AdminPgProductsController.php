@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
+
 namespace v3toys\skeeks\controllers;
 
 use skeeks\cms\components\marketplace\models\PackageModel;
@@ -28,10 +29,10 @@ class AdminPgProductsController extends AdminModelEditorController
 {
     public function init()
     {
-        $this->name                   = \Yii::t('v3toys/skeeks', 'Все товары');
-        $this->modelClassName         = PgProductModel::class;
-        $this->modelPkAttribute       = 'id';
-        $this->modelShowAttribute     = "id";
+        $this->name = \Yii::t('v3toys/skeeks', 'Все товары');
+        $this->modelClassName = PgProductModel::class;
+        $this->modelPkAttribute = 'id';
+        $this->modelShowAttribute = "id";
         parent::init();
     }
 
@@ -42,20 +43,17 @@ class AdminPgProductsController extends AdminModelEditorController
         $id = \Yii::$app->request->post('id');
         $action = \Yii::$app->request->post('action');
 
-        if (!$id && !$action)
-        {
+        if (!$id && !$action) {
             return false;
         }
 
         $insert_type = 3; //Все характеристики
 
-        if ($action == 'text')
-        {
+        if ($action == 'text') {
             $insert_type = 2; //Все характеристики
         }
 
-        if ($action == 'prop')
-        {
+        if ($action == 'prop') {
             $insert_type = 1; //Все характеристики
         }
 

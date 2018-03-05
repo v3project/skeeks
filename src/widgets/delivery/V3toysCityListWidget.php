@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.09.2016
  */
+
 namespace v3toys\skeeks\widgets\delivery;
 
 use v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryWidgetAsset;
@@ -19,11 +20,11 @@ use yii\helpers\Url;
  */
 class V3toysCityListWidget extends Widget
 {
-    public $options     = [];
+    public $options = [];
 
-    public $clientOptions     = [];
+    public $clientOptions = [];
 
-    public $viewFile    = 'city-list';
+    public $viewFile = 'city-list';
 
     public function init()
     {
@@ -100,7 +101,7 @@ class V3toysCityListWidget extends Widget
 
         new sx.classes.SaveRegion({$js});
 JS
-);
+        );
 
         return $this->render($this->viewFile);
     }

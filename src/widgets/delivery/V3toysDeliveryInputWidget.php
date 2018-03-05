@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.09.2016
  */
+
 namespace v3toys\skeeks\widgets\delivery;
 
 use v3toys\skeeks\widgets\delivery\assets\V3toysDeliveryMapWidgetAsset;
@@ -25,8 +26,8 @@ class V3toysDeliveryInputWidget extends InputWidget
 {
     public static $autoIdPrefix = 'V3toysDeliveryInputWidget';
 
-    public $wrapperOptions         = [];
-    public $clientOptions   = [];
+    public $wrapperOptions = [];
+    public $clientOptions = [];
 
     public $viewFile = 'default-radio';
 
@@ -34,20 +35,18 @@ class V3toysDeliveryInputWidget extends InputWidget
     {
         parent::init();
 
-        $this->wrapperOptions['id']  = $this->options['id'] . "-wrapper";
+        $this->wrapperOptions['id'] = $this->options['id'] . "-wrapper";
 
-        $this->clientOptions['id']  = $this->options['id'];
-        $this->clientOptions['wrapperId']  = $this->wrapperOptions['id'];
+        $this->clientOptions['id'] = $this->options['id'];
+        $this->clientOptions['wrapperId'] = $this->wrapperOptions['id'];
 
     }
 
     public function run()
     {
-        if ($this->hasModel())
-        {
+        if ($this->hasModel()) {
             $formElement = Html::activeTextInput($this->model, $this->attribute, $this->options);
-        } else
-        {
+        } else {
             $formElement = Html::textInput($this->name, $this->value, $this->options);
         }
 
@@ -58,7 +57,7 @@ class V3toysDeliveryInputWidget extends InputWidget
         $this->view->registerJs(<<<JS
 new sx.classes.V3toysDeliveryRadio({$js});
 JS
-);
+        );
 
         return $this->render($this->viewFile, [
             'formElement' => $formElement
@@ -70,11 +69,9 @@ JS
      */
     public function getCurrentValue()
     {
-        if ($this->hasModel())
-        {
-            return (string) $this->model->{$this->attribute};
-        } else
-        {
+        if ($this->hasModel()) {
+            return (string)$this->model->{$this->attribute};
+        } else {
             return $this->value;
         }
     }

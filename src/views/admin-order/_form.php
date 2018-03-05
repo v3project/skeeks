@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use skeeks\cms\models\Tree;
 
@@ -9,17 +10,17 @@ use skeeks\cms\models\Tree;
 <?= \yii\widgets\DetailView::widget([
     'model' => $model,
     'attributes' =>
-    [
-        'id',
-        'name',
-        'phone',
-        'email',
-        'v3toys_order_id',
         [
-             'label' => 'Дата создания заказа',
-             'value' => \Yii::$app->formatter->asDatetime($model->created_at),
+            'id',
+            'name',
+            'phone',
+            'email',
+            'v3toys_order_id',
+            [
+                'label' => 'Дата создания заказа',
+                'value' => \Yii::$app->formatter->asDatetime($model->created_at),
+            ]
         ]
-    ]
 ]); ?>
 <pre>
 <? print_r($model->getApiRequestData()); ?>
@@ -27,7 +28,7 @@ use skeeks\cms\models\Tree;
 <pre>
 <? print_r($model->dadataAddress->toArray()); ?>
 </pre>
-<?/*= \yii\widgets\DetailView::widget([
+<? /*= \yii\widgets\DetailView::widget([
     'model' => $model->dadataAddress,
     'attributes' => array_keys($model->dadataAddress->toArray())
-]); */?>
+]); */ ?>

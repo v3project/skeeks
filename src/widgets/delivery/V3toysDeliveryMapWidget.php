@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.09.2016
  */
+
 namespace v3toys\skeeks\widgets\delivery;
 
 use skeeks\yii2\dadataSuggestApi\helpers\YandexGecodeHelper;
@@ -25,26 +26,26 @@ class V3toysDeliveryMapWidget extends InputWidget
 {
     public static $autoIdPrefix = 'V3toysDeliveryMapWidget';
 
-    public $wrapperOptions     = [];
+    public $wrapperOptions = [];
 
-    public $clientOptions     = [];
+    public $clientOptions = [];
 
-    public $viewFile    = 'default-map';
+    public $viewFile = 'default-map';
 
-    public $mapId       = '';
+    public $mapId = '';
 
     public function init()
     {
         parent::init();
 
-        $this->wrapperOptions['id']  = $this->options['id'] . "-wrapper";
+        $this->wrapperOptions['id'] = $this->options['id'] . "-wrapper";
 
-        $this->clientOptions['id']  = $this->options['id'];
-        $this->clientOptions['wrapperId']  = $this->wrapperOptions['id'];
+        $this->clientOptions['id'] = $this->options['id'];
+        $this->clientOptions['wrapperId'] = $this->wrapperOptions['id'];
 
 
         $this->mapId = $this->id . "-map";
-        $this->clientOptions['mapId']  = $this->mapId;
+        $this->clientOptions['mapId'] = $this->mapId;
 
         Html::addCssClass($this->wrapperOptions, 'order-delivery--map');
 
@@ -55,28 +56,23 @@ class V3toysDeliveryMapWidget extends InputWidget
     public function run()
     {
 
-        if ($this->hasModel())
-        {
+        if ($this->hasModel()) {
             $formElement = Html::activeTextInput($this->model, $this->attribute, $this->options);
-        } else
-        {
+        } else {
             $formElement = Html::textInput($this->name, $this->value, $this->options);
         }
 
         V3toysDeliveryMapWidgetAsset::register($this->view);
 
-        if (\Yii::$app->dadataSuggest->address->coordinates)
-        {
+        if (\Yii::$app->dadataSuggest->address->coordinates) {
             $this->clientOptions['coordinates'] = \Yii::$app->dadataSuggest->address->coordinates;
-        } else
-        {
+        } else {
             $yandex = new YandexGecodeHelper([
                 'addressObject' => \Yii::$app->dadataSuggest->address
             ]);
 
 
-            if ($yandex->coordinates)
-            {
+            if ($yandex->coordinates) {
                 $data = \Yii::$app->dadataSuggest->address->data;
                 $coord = $yandex->coordinates;
                 $data['geo_lat'] = $coord[0];
@@ -97,7 +93,7 @@ class V3toysDeliveryMapWidget extends InputWidget
         $this->view->registerJs(<<<JS
 new sx.classes.V3toysDeliveryMap({$js});
 JS
-);
+        );
 
         echo $this->render($this->viewFile, [
             'formElement' => $formElement
@@ -110,11 +106,9 @@ JS
      */
     public function getCurrentValue()
     {
-        if ($this->hasModel())
-        {
-            return (string) $this->model->{$this->attribute};
-        } else
-        {
+        if ($this->hasModel()) {
+            return (string)$this->model->{$this->attribute};
+        } else {
             return $this->value;
         }
     }

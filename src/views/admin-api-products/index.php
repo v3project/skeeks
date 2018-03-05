@@ -15,27 +15,27 @@ $response = \Yii::$app->v3toysApi->getProductsDataByIds(['in_stock' => 1]);
     <? echo $response->error_code; ?>
     <? echo $response->error_message; ?>
 <? else : ?>
-    <?/*
+    <? /*
         print_r($response->data);
-    */?>
+    */ ?>
     <?= \skeeks\cms\modules\admin\widgets\GridViewStandart::widget([
         'dataProvider' => new \yii\data\ArrayDataProvider([
-            'models' => (array) $response->data
+            'models' => (array)$response->data
         ]),
         'columns' =>
-        [
-            'id',
-            'title',
-            'deleted',
-            'quantity',
-            'buy_price',
-            'base_price',
-            'mr_price',
-            'price',
-            'excl_quantity',
-            'sku',
-            'barcode',
-            'brand',
-        ]
+            [
+                'id',
+                'title',
+                'deleted',
+                'quantity',
+                'buy_price',
+                'base_price',
+                'mr_price',
+                'price',
+                'excl_quantity',
+                'sku',
+                'barcode',
+                'brand',
+            ]
     ]); ?>
 <? endif; ?>

@@ -1,4 +1,3 @@
-
 <?php
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
@@ -6,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 23.07.2016
  */
+
 use yii\db\Schema;
 use yii\db\Migration;
 

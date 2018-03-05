@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 14.12.2016
  */
+
 namespace v3toys\skeeks\controllers;
 
 use v3toys\skeeks\models\V3toysMessage;
@@ -26,8 +27,8 @@ use yii\web\NotFoundHttpException;
  */
 class ApiV04Controller extends Controller
 {
-    public $version         = '0.4';
-    public $defaultAction   = 'request';
+    public $version = '0.4';
+    public $defaultAction = 'request';
 
     protected function verbs()
     {
@@ -41,8 +42,7 @@ class ApiV04Controller extends Controller
         $behaviors = parent::behaviors();
         $behaviors['AccessControl'] = [
             'class' => AccessControl::className(),
-            'denyCallback' => function($rule, $action)
-            {
+            'denyCallback' => function ($rule, $action) {
                 throw new ForbiddenHttpException(\Yii::t('yii', 'You are not allowed to perform this action.'));
             },
             'rules' => [
@@ -69,57 +69,51 @@ class ApiV04Controller extends Controller
     {
         $data = [];
 
-        try
-        {
+        try {
             $rawBody = trim(\Yii::$app->request->rawBody);
-            if (!$rawBody)
-            {
+            if (!$rawBody) {
                 throw new Exception('Не указаны данные в запросе.');
             }
 
             $requestData = Json::decode($rawBody);
 
-            $version    = (string) ArrayHelper::getValue($requestData, 'v');
-            $method     = (string) ArrayHelper::getValue($requestData, 'method');
-            $params     = (array) ArrayHelper::getValue($requestData, 'params');
+            $version = (string)ArrayHelper::getValue($requestData, 'v');
+            $method = (string)ArrayHelper::getValue($requestData, 'method');
+            $params = (array)ArrayHelper::getValue($requestData, 'params');
 
-            if (!$version || !$method || !array_key_exists('params', $requestData))
-            {
+            if (!$version || !$method || !array_key_exists('params', $requestData)) {
                 throw new Exception('Не указан один из обязательных параметров в запросе: http://www.v3toys.ru/index.php?nid=api (1.1 Описание общих полей запросов)');
             }
 
-            if ($version != $this->version)
-            {
+            if ($version != $this->version) {
                 throw new Exception('Версии апи не совпадают.');
             }
 
-            if (!method_exists($this, $method))
-            {
+            if (!method_exists($this, $method)) {
                 throw new Exception('Запрошенный метод апи не реализован.');
             }
 
             $this->_currentMethod = $method;
             $data = $this->{$method}($params);
 
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             \Yii::$app->response->statusCode = 400;
 
             return [
-                "v"                 => $this->version,
-                "affiliate_key"     => \Yii::$app->v3toysSettings->affiliate_key,
-                "method"            => $this->_currentMethod,
-                "error_code"        => $e->getCode(),
-                "error_message"     => $e->getMessage(),
-                "error_data"        => [],
+                "v" => $this->version,
+                "affiliate_key" => \Yii::$app->v3toysSettings->affiliate_key,
+                "method" => $this->_currentMethod,
+                "error_code" => $e->getCode(),
+                "error_message" => $e->getMessage(),
+                "error_data" => [],
             ];
         }
 
         return [
-            "v"                 => $this->version,
-            "affiliate_key"     => \Yii::$app->v3toysSettings->affiliate_key,
-            "method"            => $this->_currentMethod,
-            "data"              => $data,
+            "v" => $this->version,
+            "affiliate_key" => \Yii::$app->v3toysSettings->affiliate_key,
+            "method" => $this->_currentMethod,
+            "data" => $data,
         ];
     }
 
@@ -136,19 +130,16 @@ class ApiV04Controller extends Controller
 
         $find = V3toysOrder::find()->asArray()->indexBy('id');
 
-        if ($start = ArrayHelper::getValue($params, 'start'))
-        {
+        if ($start = ArrayHelper::getValue($params, 'start')) {
             $find->andWhere(['>=', 'created_at', strtotime($start)]);
         }
 
-        if ($end = ArrayHelper::getValue($params, 'end'))
-        {
+        if ($end = ArrayHelper::getValue($params, 'end')) {
             $find->andWhere(['<=', 'created_at', strtotime($start)]);
         }
 
         $orders = $find->all();
-        if ($orders)
-        {
+        if ($orders) {
             $ids = array_keys($orders);
         }
 
@@ -167,17 +158,15 @@ class ApiV04Controller extends Controller
     public function getOrderDataById($params = [])
     {
         $orderId = ArrayHelper::getValue($params, 'order_id');
-        if (!$orderId)
-        {
+        if (!$orderId) {
             throw new Exception('Не передан обязательный параметр order_id');
         }
 
         /**
          * @var $v3toysOrder V3toysOrder
          */
-        $v3toysOrder = V3toysOrder::findOne((int) $orderId);
-        if (!$v3toysOrder)
-        {
+        $v3toysOrder = V3toysOrder::findOne((int)$orderId);
+        if (!$v3toysOrder) {
             throw new Exception("Заказ не найден");
         }
 
@@ -194,8 +183,7 @@ class ApiV04Controller extends Controller
     public function getProductDataById($params = [])
     {
         $product_id = ArrayHelper::getValue($params, 'product_id');
-        if (!$product_id)
-        {
+        if (!$product_id) {
             throw new Exception('Не передан обязательный параметр product_id.');
         }
 
@@ -204,8 +192,7 @@ class ApiV04Controller extends Controller
             ->where(['p.v3toys_id' => $product_id])
             ->one();
 
-        if (!$element)
-        {
+        if (!$element) {
             throw new Exception('Товар не найден или удален.');
         }
 
@@ -221,52 +208,48 @@ class ApiV04Controller extends Controller
      */
     public function getProductsDataByIds($params = [])
     {
-        $products_ids = (array) ArrayHelper::getValue($params, 'products_ids');
-        if (!$products_ids)
-        {
+        $products_ids = (array)ArrayHelper::getValue($params, 'products_ids');
+        if (!$products_ids) {
             throw new Exception('Не передан обязательный параметр products_ids');
         }
 
         $elements = V3toysProductContentElement::find()
             ->joinWith('v3toysProductProperty as p')
-            ->where(['p.v3toys_id' => (array) $products_ids])
+            ->where(['p.v3toys_id' => (array)$products_ids])
             ->all();
 
-        if (!$elements)
-        {
+        if (!$elements) {
             throw new Exception('Товары не найдены или удалены.');
         }
 
         $result = [];
 
-        foreach ($elements as $element)
-        {
+        foreach ($elements as $element) {
             $result[] = $this->_convertForApi($element);
         }
         return $result;
     }
 
-    
+
     protected function _convertForApi(V3toysProductContentElement $element)
     {
         $images = [];
 
-        if ($element->image)
-        {
+        if ($element->image) {
             $images[] = $element->image->absoluteSrc;
         }
 
         $data = [
-            'product_id'    => (int) $element->v3toysProductProperty->v3toys_id,
-            'title'         => $element->name,
-            'url'           => $element->getUrl(true),
-            'price'         => (float) $element->shopProduct->baseProductPrice->money->getValue(),
-            'images'        => $images,
+            'product_id' => (int)$element->v3toysProductProperty->v3toys_id,
+            'title' => $element->name,
+            'url' => $element->getUrl(true),
+            'price' => (float)$element->shopProduct->baseProductPrice->money->getValue(),
+            'images' => $images,
         ];
 
         return $data;
     }
-    
+
     /**
      * 2.2.1 Метод getMessageIdsByPeriod - получение списка номеров заявок за период времени
      *
@@ -278,19 +261,16 @@ class ApiV04Controller extends Controller
 
         $find = V3toysMessage::find()->asArray()->indexBy('id');
 
-        if ($start = ArrayHelper::getValue($params, 'start'))
-        {
+        if ($start = ArrayHelper::getValue($params, 'start')) {
             $find->andWhere(['>=', 'created_at', strtotime($start)]);
         }
 
-        if ($end = ArrayHelper::getValue($params, 'end'))
-        {
+        if ($end = ArrayHelper::getValue($params, 'end')) {
             $find->andWhere(['<=', 'created_at', strtotime($start)]);
         }
 
         $orders = $find->all();
-        if ($orders)
-        {
+        if ($orders) {
             $ids = array_keys($orders);
         }
 
@@ -308,17 +288,15 @@ class ApiV04Controller extends Controller
     public function getMessageDataById($params = [])
     {
         $message_id = ArrayHelper::getValue($params, 'message_id');
-        if (!$message_id)
-        {
+        if (!$message_id) {
             throw new Exception('Не передан обязательный параметр message_id');
         }
 
         /**
          * @var $v3toysMessage V3toysMessage
          */
-        $v3toysMessage = V3toysMessage::findOne((int) $message_id);
-        if (!$v3toysMessage)
-        {
+        $v3toysMessage = V3toysMessage::findOne((int)$message_id);
+        if (!$v3toysMessage) {
             throw new Exception("Заявка не найдена");
         }
 
