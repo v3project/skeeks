@@ -5,7 +5,6 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 16.07.2016
  */
-
 namespace v3toys\skeeks\components;
 
 use skeeks\cms\backend\BackendComponent;
@@ -38,7 +37,7 @@ class V3toysComponent extends Component
          * @var $element V3toysProductContentElement
          */
         $element = V3toysProductContentElement::findOne($cmsContentElement->id);
-        return (int)$element->v3toysProductProperty->v3toys_id;
+        return (int) $element->v3toysProductProperty->v3toys_id;
     }
 
     /**
@@ -46,22 +45,29 @@ class V3toysComponent extends Component
      */
     public function bootstrap($application)
     {
-        if ($application instanceof Application) {
-            $application->on(Application::EVENT_BEFORE_REQUEST, function ($e) {
+        if ($application instanceof Application)
+        {
+            $application->on(Application::EVENT_BEFORE_REQUEST, function($e)
+            {
 
-                //Поисковые запросы К11111
-                if (!isset(\Yii::$app->cmsSearch)) {
+                //Поисковые запросы К11111 и A22221
+                if (!isset(\Yii::$app->cmsSearch))
+                {
                     return false;
                 }
 
                 $query = trim(\Yii::$app->cmsSearch->searchQuery);
                 $matches = [];
-                if (preg_match('/s*[KkКк]\s*(\d+)\s*$/', $query, $matches)) {
-                    if (isset($matches[1])) {
+                if (preg_match('/s*[KkКк]\s*(\d+)\s*$/', $query, $matches))
+                {
+                    if (isset($matches[1]))
+                    {
                         $query = \v3toys\skeeks\models\V3toysProductContentElement::find()
-                            ->joinWith('v3toysProductProperty as p')
-                            ->andWhere(['p.v3toys_id' => $matches[1]]);
-                        if ($element = $query->one()) {
+                                    ->joinWith('v3toysProductProperty as p')
+                                    ->andWhere(['p.v3toys_id' => $matches[1]])
+                        ;
+                        if ($element = $query->one())
+                        {
                             \Yii::$app->response->redirect($element->url);
                             //\Yii::$app->end();
                         }
@@ -81,8 +87,9 @@ class V3toysComponent extends Component
             });
 
 
-            Event::on(Controller::class, Controller::EVENT_BEFORE_ACTION, function ($e) {
-                if (!BackendComponent::getCurrent()) {
+            Event::on(Controller::class, Controller::EVENT_BEFORE_ACTION, function($e) {
+                if (!BackendComponent::getCurrent())
+                {
                     \Yii::$app->cms->descriptor->homepage = 'система управления сайтом';
                 }
 
@@ -90,17 +97,21 @@ class V3toysComponent extends Component
             });
 
 
-            $application->on(Application::EVENT_AFTER_REQUEST, function ($e) {
+            $application->on(Application::EVENT_AFTER_REQUEST, function($e)
+            {
 
-                if ($this->isTrigerEventCanUrl()) {
+                if ($this->isTrigerEventCanUrl())
+                {
                     \Yii::$app->canurl->event_after_request($e);
                 }
 
 
             });
 
-            $application->view->on(View::EVENT_END_PAGE, function ($e) {
-                if ($this->isTrigerEventCanUrl()) {
+            $application->view->on(View::EVENT_END_PAGE, function($e)
+            {
+                if ($this->isTrigerEventCanUrl())
+                {
                     \Yii::$app->canurl->event_end_page($e);
                 }
             });
@@ -109,23 +120,24 @@ class V3toysComponent extends Component
 
     public function initDefaultCanUrl()
     {
-        if (\Yii::$app->requestedRoute) {
-            $requestedUrl = Url::to(ArrayHelper::merge(["/" . \Yii::$app->requestedRoute],
-                (array)\Yii::$app->request->queryParams));
+        if (\Yii::$app->requestedRoute)
+        {
+            $requestedUrl = Url::to(ArrayHelper::merge(["/" . \Yii::$app->requestedRoute], (array) \Yii::$app->request->queryParams));
             $autoPath = ArrayHelper::getValue(parse_url($requestedUrl), 'path');
             \Yii::$app->canurl->path = $autoPath;
-        } else {
-            if (\Yii::$app->cms->currentTree) {
-                \Yii::$app->canurl->path = \Yii::$app->cms->currentTree->url;
-            } else {
-                //print_r(\Yii::$app->request);
-            }
+        } else if (\Yii::$app->cms->currentTree)
+        {
+            \Yii::$app->canurl->path = \Yii::$app->cms->currentTree->url;
+        } else 
+        {
+            //print_r(\Yii::$app->request);
         }
 
         \Yii::$app->canurl->SETcore_params([]);
         \Yii::$app->canurl->SETimportant_params([]);
 
-        if (in_array(\Yii::$app->controller->action->uniqueId, ['cms/tree/view', 'savedFilters/saved-filters/view'])) {
+        if (in_array(\Yii::$app->controller->action->uniqueId, ['cms/tree/view', 'savedFilters/saved-filters/view']))
+        {
             \Yii::$app->canurl->ADDminor_params(['per-page' => null]);
             \Yii::$app->canurl->ADDminor_params(['page' => null]);
             \Yii::$app->canurl->ADDimportant_pnames(['ProductFilters']);
@@ -133,16 +145,18 @@ class V3toysComponent extends Component
             \Yii::$app->canurl->ADDimportant_pnames(['SearchRelatedPropertiesModel']);
         }
 
+        if (\Yii::$app->controller->action->uniqueId == 'v3toys/cart/finish')
+        {
+            \Yii::$app->canurl->ADDimportant_pnames(['key']);
+        }
+
         if (\Yii::$app->controller->action->uniqueId == 'externallinks/redirect/redirect')
         {
             \Yii::$app->canurl->ADDimportant_pnames(['url']);
         }
 
-        if (\Yii::$app->controller->action->uniqueId == 'v3toys/cart/finish') {
-            \Yii::$app->canurl->ADDimportant_pnames(['key']);
-        }
-
-        if (\Yii::$app->controller->action->uniqueId == 'cmsSearch/result/index') {
+        if (\Yii::$app->controller->action->uniqueId == 'cmsSearch/result/index')
+        {
             \Yii::$app->canurl->ADDimportant_pnames(['q']);
         }
     }
@@ -150,23 +164,23 @@ class V3toysComponent extends Component
 
     public function isTrigerEventCanUrl()
     {
-        if (BackendComponent::getCurrent()) {
+        if (BackendComponent::getCurrent())
+        {
             return false;
         }
 
-        if (\Yii::$app->controller && \Yii::$app->controller->uniqueId == 'cms/imaging') {
+        if (\Yii::$app->controller && \Yii::$app->controller->uniqueId == 'cms/imaging')
+        {
             return false;
         }
 
-        if (\Yii::$app->controller && \Yii::$app->controller->module->id == 'gii') {
+        if (\Yii::$app->controller && \Yii::$app->controller->uniqueId == 'debug/default')
+        {
             return false;
         }
-
-        if (\Yii::$app->controller && \Yii::$app->controller->uniqueId == 'debug/default') {
-            return false;
-        }
-
-        if (!\Yii::$app->requestedRoute) {
+        
+        if (!\Yii::$app->requestedRoute)
+        {
             return false;
         }
 
