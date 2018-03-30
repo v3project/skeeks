@@ -51,6 +51,11 @@ return [
             'canurl' => [
                 'class' => 'v3project\helpers\CanUrl',
             ],
+
+            //Не добавлять cannonical модулем seo, его добавит canUrl
+            'seo' => [
+                'canonicalPageParams' => false,
+            ]
         ],
 
     'modules' => [
