@@ -1,8 +1,9 @@
 CHANGELOG
 ==============
 
-2.1.9.pre
+2.1.9
 -----------------
+ * Не добавлять cannonical модулем seo, его добавит canUrl
  * Fixed gii canurl
  
 2.1.8
