@@ -70,7 +70,7 @@ class V3toysComponent extends Component
             });
 
 
-            Event::on(Controller::class, Controller::EVENT_BEFORE_ACTION, function ($e) {
+            /*Event::on(Controller::class, Controller::EVENT_BEFORE_ACTION, function ($e) {
                 if (!BackendComponent::getCurrent()) {
                     \Yii::$app->cms->descriptor->homepage = 'система управления сайтом';
                 }
@@ -92,7 +92,7 @@ class V3toysComponent extends Component
                 if ($this->isTrigerEventCanUrl()) {
                     \Yii::$app->canurl->event_end_page($e);
                 }
-            });
+            });*/
         }
     }
 
