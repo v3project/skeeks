@@ -36,7 +36,8 @@ class InitController extends Controller
         $response = \Yii::$app->v3toysApi->getStatus();
 
         if ($response->isError) {
-            $this->stdout("Ошибка апи: {$response->error_message}\n", Console::FG_RED);
+            $aff_key = \Yii::$app->v3toysSettings->affiliate_key;
+            $this->stdout("Ошибка апи: {$response->error_message} {$aff_key}\n", Console::FG_RED);
             return false;
         }
 
