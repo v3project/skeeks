@@ -90,7 +90,7 @@ return [
                     'interval' => 10600,
                 ],
 
-                'v3toys/products/load' => [
+                /*'v3toys/products/load' => [
                     'class'    => \skeeks\cms\agent\CmsAgent::class,
                     'name'     => 'Получение и обновление данных по товарам аффилиата',
                     'interval' => 3600,
@@ -100,7 +100,7 @@ return [
                     'class'    => \skeeks\cms\agent\CmsAgent::class,
                     'name'     => 'Получение и обновление данных по товарам аффилиата v2',
                     'interval' => 3600,
-                ],
+                ],*/
             ],
         ],
 
