@@ -694,7 +694,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
             return $this->moneyDeliveryFromApi;
         }
 
-        return Money::fromString((string)$this->shipping_cost, "RUB");;
+        return new \skeeks\cms\money\Money((string)$this->shipping_cost, "RUB");
     }
 
     /**
