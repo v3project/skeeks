@@ -69,12 +69,12 @@ use yii\helpers\ArrayHelper;
  *
  * @property SuggestAddressModel $dadataAddress
  *
- * @property Money $money
- * @property Money $moneyOriginal
- * @property Money $moneyDiscount
- * @property Money $moneyDelivery
+ * @property \skeeks\cms\money\Money $money
+ * @property \skeeks\cms\money\Money $moneyOriginal
+ * @property \skeeks\cms\money\Money $moneyDiscount
+ * @property \skeeks\cms\money\Money $moneyDelivery
  *
- * @property Money $moneyDeliveryFromApi
+ * @property \skeeks\cms\money\Money $moneyDeliveryFromApi
  *
  *
  * @see http://www.v3toys.ru/index.php?nid=api
@@ -349,7 +349,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
 
         $products = [];
 
-        if (\Yii::$app->shop->shopFuser->shopBaskets) {
+        if (\Yii::$app->shop->cart->shopBaskets) {
             foreach (\Yii::$app->shop->cart->shopBaskets as $shopBasket) {
                 if ($shopBasket->product) {
                     $v3toys_id = \Yii::$app->v3toys->getV3toysIdByCmsElement($shopBasket->product->cmsContentElement);
@@ -372,7 +372,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
         if (\Yii::$app->dadataSuggest->address) {
             $object->dadata_address = \Yii::$app->dadataSuggest->address->toArray();
         }
-        $object->discount = \Yii::$app->shop->shopFuser->moneyDiscount->getValue();
+        $object->discount = \Yii::$app->shop->cart->moneyDiscount->getValue();
 
         if ($object->dadataAddress) {
             //print_r(\Yii::$app->dadataSuggest->address->toArray());die;
@@ -713,7 +713,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function getMoneyOriginal()
     {
-        $money = \Yii::$app->money->newMoney();
+        $money = new \skeeks\cms\money\Money(0, "RUB");
 
         foreach ($this->baskets as $basket) {
             $money = $money->add($basket->moneyTotal);

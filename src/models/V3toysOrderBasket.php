@@ -39,7 +39,7 @@ class V3toysOrderBasket extends Model
      */
     public function getMoney()
     {
-        return \Yii::$app->money->newMoney($this->price);
+        return new \skeeks\cms\money\Money($this->price, "RUB");
     }
 
     /**
