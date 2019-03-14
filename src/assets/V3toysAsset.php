@@ -16,5 +16,5 @@ use yii\web\AssetBundle;
  */
 class V3toysAsset extends AssetBundle
 {
-    public $sourcePath = '@v3toys/skeeks/assets';
+    public $sourcePath = '@vendor/v3project/skeeks/src/assets';
 }
