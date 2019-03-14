@@ -669,7 +669,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
                     $outlet = $shipping->outlets[$this->pickup_point_id];
                     $value = (int)ArrayHelper::getValue($outlet->deliveryData, 'guiding_realize_price');
                     $value = $value + (int)\Yii::$app->v3toysSettings->pickup_discaunt_value;
-                    $this->_moneyDeliveryFromApi = Money::fromString((string)$value, "RUB");
+                    $this->_moneyDeliveryFromApi = new \skeeks\cms\money\Money((string)$value, "RUB");
                 }
             }
 
@@ -680,7 +680,7 @@ class V3toysOrder extends \skeeks\cms\models\Core
         }
 
         if ($this->_moneyDeliveryFromApi === null) {
-            $this->_moneyDeliveryFromApi = Money::fromString((string)0, "RUB");
+            $this->_moneyDeliveryFromApi = new \skeeks\cms\money\Money((string)0, "RUB");
         }
         return $this->_moneyDeliveryFromApi;
     }

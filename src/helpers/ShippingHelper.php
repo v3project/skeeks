@@ -66,7 +66,7 @@ class ShippingHelper extends Component
     {
         $value = \yii\helpers\ArrayHelper::getValue($this->apiData, 'post.guiding_realize_price');
         $value = $value + (int)\Yii::$app->v3toysSettings->post_discaunt_value;
-        return Money::fromString((string)$value, 'RUB');
+        return new \skeeks\cms\money\Money((string)$value, 'RUB');
     }
 
     /**
@@ -76,7 +76,7 @@ class ShippingHelper extends Component
     {
         $value = \yii\helpers\ArrayHelper::getValue($this->apiData, 'courier.guiding_realize_price');
         $value = $value + (int)\Yii::$app->v3toysSettings->courier_discaunt_value;
-        return Money::fromString((string)$value, 'RUB');
+        return  new \skeeks\cms\money\Money((string)$value, 'RUB');
     }
 
     /**
@@ -105,7 +105,7 @@ class ShippingHelper extends Component
 
         $minPrice = $minPrice + (int)\Yii::$app->v3toysSettings->pickup_discaunt_value;
 
-        return Money::fromString((string)$minPrice, 'RUB');
+        return  new \skeeks\cms\money\Money((string)$minPrice, 'RUB');
     }
 
 

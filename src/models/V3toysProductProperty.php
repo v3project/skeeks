@@ -196,6 +196,11 @@ class V3toysProductProperty extends \yii\db\ActiveRecord
         unset($result['v3toys_video']);
         unset($result['v3toys_id']);
 
+        unset($result['v3toys_parsing_h1']);
+        unset($result['v3toys_parsing_videos']);
+        unset($result['v3toys_parsing_images']);
+        unset($result['v3toys_main_section_id']);
+
         $return = [];
 
         foreach ($result as $code => $value) {

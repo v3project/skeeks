@@ -308,7 +308,7 @@ class V3toysOutletModel extends Model
      */
     public function getGuidingRealizeMoney()
     {
-        return Money::fromString((string)$this->guidingRealizePriceAmount, "RUB");
+        return new \skeeks\cms\money\Money((string)$this->guidingRealizePriceAmount, "RUB");
     }
 
 }

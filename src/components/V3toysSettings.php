@@ -315,6 +315,8 @@ class V3toysSettings extends Component
             if ($response->isOk) {
                 $data = $response->data;
                 \Yii::$app->cache->set($cacheKey, $data, 3600 * 12);
+            } else {
+                \Yii::error(print_r($response, true), self::class);
             }
         }
 

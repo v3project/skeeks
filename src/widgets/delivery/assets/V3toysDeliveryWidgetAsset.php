@@ -12,7 +12,7 @@ use skeeks\cms\base\AssetBundle;
 
 class V3toysDeliveryWidgetAsset extends AssetBundle
 {
-    public $sourcePath = '@v3toys/skeeks/widgets/delivery/assets/src';
+    public $sourcePath = '@vendor/v3project/skeeks/src/widgets/delivery/assets/src';
 
     public $css = [
         'css/delivery-style.css',
