@@ -8,18 +8,10 @@
 
 namespace v3toys\skeeks\controllers;
 
+use skeeks\cms\backend\controllers\BackendModelStandartController;
 use skeeks\cms\components\marketplace\models\PackageModel;
-use skeeks\cms\helpers\UrlHelper;
 use skeeks\cms\models\Comment;
-use skeeks\cms\modules\admin\actions\AdminAction;
-use skeeks\cms\modules\admin\controllers\AdminController;
-use skeeks\cms\modules\admin\controllers\AdminModelEditorController;
-use skeeks\cms\modules\admin\traits\AdminModelEditorStandartControllerTrait;
-use v3toys\skeeks\models\V3toysOrder;
 use v3toys\skeeks\models\V3toysOrderStatus;
-use Yii;
-use skeeks\cms\models\User;
-use skeeks\cms\models\searchs\User as UserSearch;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -27,16 +19,42 @@ use yii\helpers\ArrayHelper;
  *
  * @package v3toys\skeeks\controllers
  */
-class AdminOrderStatusController extends AdminModelEditorController
+class AdminOrderStatusController extends BackendModelStandartController
 {
-    use AdminModelEditorStandartControllerTrait;
-
     public function init()
     {
         $this->name = \Yii::t('v3toys/skeeks', 'Статусы заказов');
         $this->modelShowAttribute = "id";
-        $this->modelClassName = V3toysOrderStatus::className();
+        $this->modelClassName = V3toysOrderStatus::class;
 
         parent::init();
+    }
+
+
+    public function actions()
+    {
+        $actions = ArrayHelper::merge(parent::actions(), [
+            'index' => [
+
+                'filters' => false,
+
+                "grid" => [
+                    'defaultOrder'   => [
+                        'v3toys_id' => SORT_DESC,
+                    ],
+                    'visibleColumns' => [
+                        'v3toys_id',
+                        'name',
+                    ],
+
+                ],
+            ],
+        ]);
+
+        ArrayHelper::remove($actions, 'delete');
+        ArrayHelper::remove($actions, 'delete-multi');
+        ArrayHelper::remove($actions, 'update');
+        ArrayHelper::remove($actions, 'create');
+        return $actions;
     }
 }

@@ -286,14 +286,11 @@ class V3toysOrder extends \skeeks\cms\models\Core
      */
     public function attributeLabels()
     {
-        return [
+        return ArrayHelper::merge(parent::attributeLabels(), [
             'id' => Yii::t('v3toys/skeeks', 'ID'),
-            'created_by' => Yii::t('v3toys/skeeks', 'Created By'),
-            'updated_by' => Yii::t('v3toys/skeeks', 'Updated By'),
-            'created_at' => Yii::t('v3toys/skeeks', 'Created At'),
-            'updated_at' => Yii::t('v3toys/skeeks', 'Updated At'),
-            'user_id' => Yii::t('v3toys/skeeks', 'User ID'),
-            'v3toys_order_id' => Yii::t('v3toys/skeeks', 'V3toys Order ID'),
+            'user_id' => Yii::t('v3toys/skeeks', 'Пользователь'),
+            'v3toys_order_id' => Yii::t('v3toys/skeeks', 'ID в системе V3toys'),
+            'v3toys_status_id' => Yii::t('v3toys/skeeks', 'Статус в системе V3toys'),
             'name' => Yii::t('v3toys/skeeks', 'Имя и фамилия'),
             'phone' => Yii::t('v3toys/skeeks', 'Телефон'),
             'email' => Yii::t('v3toys/skeeks', 'Email'),
@@ -301,14 +298,14 @@ class V3toysOrder extends \skeeks\cms\models\Core
             'is_call_me_15_min' => Yii::t('v3toys/skeeks', 'Готов принять звонок в течении 15 минут'),
             'products' => Yii::t('v3toys/skeeks', 'Товары'),
             'discount' => Yii::t('v3toys/skeeks', 'Скидка на заказ, указывается в рублях, без копеек'),
-            'shipping_cost' => Yii::t('v3toys/skeeks', 'стоимость доставки'),
+            'shipping_cost' => Yii::t('v3toys/skeeks', 'Стоимость доставки'),
             'shipping_method' => Yii::t('v3toys/skeeks', 'Доставка'),
             'courier_address' => Yii::t('v3toys/skeeks', 'Адрес'),
             'pickup_point_id' => Yii::t('v3toys/skeeks', 'Пункт самовывоза'),
             'post_index' => Yii::t('v3toys/skeeks', 'Индекс'),
             'post_address' => Yii::t('v3toys/skeeks', 'Адрес'),
             'post_recipient' => Yii::t('v3toys/skeeks', 'Полное ФИО получателя'),
-        ];;
+        ]);
     }
 
 
