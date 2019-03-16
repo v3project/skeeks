@@ -20,8 +20,8 @@
         "skeeks/cms": "^5.0.0 || dev-master",
         "skeeks/cms-ya-map": "^1.1.0",
 
-        "v3project/yii2-api": "^2.0.0",
-        "v3project/yii2-v3project-api": "^2.0.0",
+        "v3project/yii2-api": "^2.0.1",
+        "v3project/yii2-v3project-api": "^2.0.1",
         "v3project/yii2-helpers": "^1.0.8",
 
         "skeeks/cms-dadata-suggest": "^1.1.2"
