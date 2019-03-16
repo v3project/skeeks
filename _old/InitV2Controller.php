@@ -31,7 +31,7 @@ class InitV2Controller extends Controller
 {
 
     /**
-     *
+     * @deprecated
      */
     public function actionProducts()
     {

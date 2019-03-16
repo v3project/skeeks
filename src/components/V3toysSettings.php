@@ -46,6 +46,7 @@ class V3toysSettings extends Component
     }
 
     /**
+     * @deprecated
      * @var string
      */
     public $v3toysIdPropertyName = 'vendorId';
@@ -160,7 +161,7 @@ class V3toysSettings extends Component
     {
         echo $form->fieldSet('Общие настройки');
         echo $form->field($this, 'affiliate_key');
-        echo $form->field($this, 'v3toysIdPropertyName');
+        //echo $form->field($this, 'v3toysIdPropertyName');
         echo $form->field($this, 'content_ids')->widget(Chosen::className(), [
             'multiple' => true,
             'items' => CmsContent::getDataForSelect(),
