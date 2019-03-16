@@ -8,12 +8,7 @@
 
 namespace v3toys\skeeks\console\controllers;
 
-use skeeks\cms\helpers\StringHelper;
-use skeeks\cms\models\CmsContentElement;
-use skeeks\cms\models\CmsContentElementProperty;
 use skeeks\cms\shop\models\ShopCmsContentElement;
-use skeeks\cms\shop\models\ShopOrder;
-use skeeks\cms\shop\models\ShopOrderStatus;
 use v3toys\skeeks\helpers\ShopOrderHelper;
 use v3toys\skeeks\models\V3toysMessage;
 use v3toys\skeeks\models\V3toysOrder;
@@ -31,13 +26,13 @@ use yii\helpers\Json;
  */
 class AgentsController extends Controller
 {
-        public function init()
-        {
-            parent::init();
-    
-            ini_set("memory_limit", "8192M");
-            set_time_limit(0);
-        }
+    public function init()
+    {
+        parent::init();
+
+        ini_set("memory_limit", "8192M");
+        set_time_limit(0);
+    }
 
     /**
      * Обновление цен и налчия товаров
@@ -125,7 +120,7 @@ class AgentsController extends Controller
                             }
                         } else {
                             $data = Json::encode($response->request->data);
-                            \Yii::error('Нет информации о товаре: ' . $element->id . "; Url: {$response->request->url}; Data: {$data}; Response: {$response->response->content}; Response code: Response: {$response->response->statusCode}",
+                            \Yii::error('Нет информации о товаре: '.$element->id."; Url: {$response->request->url}; Data: {$data}; Response: {$response->response->content}; Response code: Response: {$response->response->statusCode}",
                                 self::className());
                             $this->stdout("\tInvalid api response\n", Console::FG_RED);
                             $this->stdout("\tUrl: {$response->request->url}\n", Console::FG_RED);
@@ -212,13 +207,17 @@ class AgentsController extends Controller
     /**
      * Отправка новых заказов в v3toys
      */
-    public function actionSubmitNewOrders($countDay = 3)
+    public function actionSubmitNewOrders($countDay = 30)
     {
-        if ($orders = V3toysOrder::find()->where(['v3toys_order_id' => null])->andWhere([
-            '>=',
-            'created_at',
-            time() - 3600 * 24 * $countDay
-        ])->all()) {
+        if ($orders = V3toysOrder::find()
+            ->where(['v3toys_order_id' => null])
+            ->orderBy(['id' => SORT_DESC])
+            ->andWhere([
+                '>=',
+                'created_at',
+                time() - 3600 * 24 * $countDay,
+            ])
+            ->all()) {
             $totalOrders = count($orders);
             $this->stdout("Заказов к отправке в v3toys: {$totalOrders}\n", Console::BOLD);
 
@@ -231,9 +230,40 @@ class AgentsController extends Controller
 
                 if ($response->isError) {
                     $data = Json::encode($response->request->data);
-                    $message = "Заказ #{$order->id} не отправлен в апи: {$response->error_code} {$response->error_message} {$response->request->url}:{$response->request->method}:{$data}";
-                    \Yii::error($message, V3toysModule::className());
-                    $this->stdout("\t$message\n", Console::FG_RED);
+                    $message = [];
+                    $message[] = "Заказ на сайте #{$order->id} не отправлен в апи:";
+
+                    $message[] = "Request:";
+                    $message[] = $response->request->url;
+                    $message[] = $response->request->method;
+                    $message[] = print_r($data, true);
+                    $message[] = "Response:";
+                    $message[] = "$response->error_code";
+                    $message[] = "$response->error_message";
+                    $message[] = print_r($response->error_data, true);
+                    $message[] = print_r($response->data, true);
+                    $message[] = print_r($response->response->content, true);
+
+                    $message = implode("\n", $message);
+
+
+                    if ($response->error_message == "This order has been saved" && isset($response->error_data['order_id'])) {
+                        $order->v3toys_order_id = $response->error_data['order_id'];
+                        if ($order->save()) {
+                            $this->stdout("Заказ сайта #{$order->id} отправлен в v3toys и получил #{$order->v3toys_order_id}\n", Console::FG_GREEN);
+                        } else {
+                            $message = "Заказ сайта #{$order->id} отправлен в v3toys и получил #{$order->v3toys_order_id}, но не сохранен в нашей базе\n";
+                            \Yii::warning($message, V3toysModule::className());
+                            $this->stdout($message, Console::FG_YELLOW);
+
+
+                            \Yii::error($message, V3toysModule::className());
+                            $this->stdout("\t$message\n", Console::FG_RED);
+                        }
+                    } else {
+                        \Yii::error($message, V3toysModule::className());
+                        $this->stdout("\t$message\n", Console::FG_RED);
+                    }
                 }
 
                 if ($response->isOk) {
@@ -241,9 +271,9 @@ class AgentsController extends Controller
                     $v3ToysOrderId = ArrayHelper::getValue((array)$response->data, 'order_id');
                     $order->v3toys_order_id = $v3ToysOrderId;
                     if ($order->save()) {
-                        $this->stdout("Заказ отправлен в v3toys и получил #{$v3ToysOrderId}\n", Console::FG_GREEN);
+                        $this->stdout("Заказ сайта #{$order->id} отправлен в v3toys и получил #{$v3ToysOrderId}\n", Console::FG_GREEN);
                     } else {
-                        $message = "Заказ отправлен в v3toys и получил #{$v3ToysOrderId}, но не сохранен в нашей базе\n";
+                        $message = "Заказ сайта #{$order->id} отправлен в v3toys и получил #{$v3ToysOrderId}, но не сохранен в нашей базе\n";
                         \Yii::warning($message, V3toysModule::className());
                         $this->stdout($message, Console::FG_YELLOW);
                     }
